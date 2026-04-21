@@ -1,0 +1,357 @@
+{
+    "updatedAt":  "2025-07-28T18:17:46.000Z",
+    "createdAt":  "2025-06-16T23:13:20.923Z",
+    "id":  "cdM0OFaUV4tbiG0i",
+    "name":  "Prod -  WhatsApp Agent",
+    "description":  null,
+    "active":  false,
+    "isArchived":  false,
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "updates":  [
+                                                         "messages"
+                                                     ],
+                                         "options":  {
+                                                         "messageStatusUpdates":  [
+                                                                                      "all"
+                                                                                  ]
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.whatsAppTrigger",
+                      "typeVersion":  1,
+                      "position":  [
+                                       0,
+                                       -368
+                                   ],
+                      "id":  "c7b18816-90b9-4a45-b5b6-537567f87faa",
+                      "name":  "WhatsApp Trigger",
+                      "webhookId":  "be7e2397-e5b6-42ab-9132-31e3d132c89e",
+                      "credentials":  {
+                                          "whatsAppTriggerApi":  {
+                                                                     "id":  "I8FdetjjbTaEXZcn",
+                                                                     "name":  "WhatsApp OAuth account"
+                                                                 }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "resource":  "media",
+                                         "operation":  "mediaUrlGet",
+                                         "mediaGetId":  "={{ $json.messages[0].document.id }}"
+                                     },
+                      "type":  "n8n-nodes-base.whatsApp",
+                      "typeVersion":  1,
+                      "position":  [
+                                       448,
+                                       -464
+                                   ],
+                      "id":  "9458206c-0327-43fe-b807-ca20bf9a8a85",
+                      "name":  "Download Media",
+                      "webhookId":  "dd597be0-7e87-4427-8b6b-2c0e93086848",
+                      "credentials":  {
+                                          "whatsAppApi":  {
+                                                              "id":  "aWLx7bW61wDdkgRl",
+                                                              "name":  "WhatsApp account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "send",
+                                         "phoneNumberId":  "722172990970851",
+                                         "recipientPhoneNumber":  "={{ $(\u0027Edit Fields\u0027).item.json.phone_number }}",
+                                         "textBody":  "=✅ Document received: {{ $(\u0027Execute Workflow\u0027).item.json.file_name }}",
+                                         "additionalFields":  {
+
+                                                              }
+                                     },
+                      "type":  "n8n-nodes-base.whatsApp",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1328,
+                                       -464
+                                   ],
+                      "id":  "b9fed3ec-ab35-4f78-9516-9e8cedf28dec",
+                      "name":  "Send Message",
+                      "webhookId":  "18873451-9733-49f1-9098-435915c222f7",
+                      "credentials":  {
+                                          "whatsAppApi":  {
+                                                              "id":  "aWLx7bW61wDdkgRl",
+                                                              "name":  "WhatsApp account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "url":  "={{ $json.url }}",
+                                         "authentication":  "genericCredentialType",
+                                         "genericAuthType":  "httpBearerAuth",
+                                         "options":  {
+                                                         "response":  {
+                                                                          "response":  {
+
+                                                                                       }
+                                                                      }
+                                                     }
+                                     },
+                      "id":  "bd9a9852-de77-4ecc-aa8c-8bf002ab0bc7",
+                      "name":  "Download Media File",
+                      "type":  "n8n-nodes-base.httpRequest",
+                      "position":  [
+                                       672,
+                                       -464
+                                   ],
+                      "typeVersion":  4.2,
+                      "credentials":  {
+                                          "httpBearerAuth":  {
+                                                                 "id":  "LmmoMJdCeu20D09V",
+                                                                 "name":  "Bearer Auth account"
+                                                             }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "workflowId":  {
+                                                            "__rl":  true,
+                                                            "value":  "kDVB4CXNlZoaq8B4",
+                                                            "mode":  "list",
+                                                            "cachedResultName":  "Supabase Storage WhatsApp File Upload"
+                                                        },
+                                         "workflowInputs":  {
+                                                                "mappingMode":  "defineBelow",
+                                                                "value":  {
+
+                                                                          },
+                                                                "matchingColumns":  [
+
+                                                                                    ],
+                                                                "schema":  [
+
+                                                                           ],
+                                                                "attemptToConvertTypes":  false,
+                                                                "convertFieldsToString":  true
+                                                            },
+                                         "mode":  "each",
+                                         "options":  {
+                                                         "waitForSubWorkflow":  true
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.executeWorkflow",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       1104,
+                                       -464
+                                   ],
+                      "id":  "25008af8-988f-4ffc-b816-37f07afc35f3",
+                      "name":  "Execute Workflow"
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "c1640e74-4376-49c1-9211-9c2b280fa7ad",
+                                                                                     "name":  "phone_number",
+                                                                                     "value":  "={{ $(\u0027WhatsApp Trigger\u0027).item.json.messages[0].from }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "1d0edccf-fa16-4b42-85f4-0af759f38b12",
+                                                                                     "name":  "message_id",
+                                                                                     "value":  "={{ $(\u0027WhatsApp Trigger\u0027).item.json.messages[0].id }}",
+                                                                                     "type":  "string"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "includeOtherFields":  true,
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       880,
+                                       -464
+                                   ],
+                      "id":  "a33edeb5-308d-42c2-b0cf-0802df1f185f",
+                      "name":  "Edit Fields"
+                  },
+                  {
+                      "parameters":  {
+                                         "conditions":  {
+                                                            "options":  {
+                                                                            "caseSensitive":  true,
+                                                                            "leftValue":  "",
+                                                                            "typeValidation":  "strict",
+                                                                            "version":  1
+                                                                        },
+                                                            "conditions":  [
+                                                                               {
+                                                                                   "id":  "document-check",
+                                                                                   "leftValue":  "={{ $json.messages[0].type }}",
+                                                                                   "rightValue":  "document",
+                                                                                   "operator":  {
+                                                                                                    "type":  "string",
+                                                                                                    "operation":  "equals"
+                                                                                                }
+                                                                               }
+                                                                           ],
+                                                            "combinator":  "and"
+                                                        },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.if",
+                      "typeVersion":  2,
+                      "position":  [
+                                       224,
+                                       -368
+                                   ],
+                      "id":  "2a4e189a-0044-4b63-b866-210aa763a688",
+                      "name":  "Check if Document"
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "log-entry",
+                                                                                     "name":  "log_message",
+                                                                                     "value":  "Non-document message received from {{ $json.contacts[0].profile?.name || \u0027Unknown\u0027 }} ({{ $json.messages[0].from }}): {{ $json.messages[0].text?.body || $json.messages[0].type }}",
+                                                                                     "type":  "string"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       448,
+                                       -256
+                                   ],
+                      "id":  "7fd90be1-b8d7-48aa-a048-42f27d5c89d1",
+                      "name":  "Log Non-Document Message"
+                  }
+              ],
+    "connections":  {
+                        "WhatsApp Trigger":  {
+                                                 "main":  [
+                                                              [
+                                                                  {
+                                                                      "node":  "Check if Document",
+                                                                      "type":  "main",
+                                                                      "index":  0
+                                                                  }
+                                                              ]
+                                                          ]
+                                             },
+                        "Download Media":  {
+                                               "main":  [
+                                                            [
+                                                                {
+                                                                    "node":  "Download Media File",
+                                                                    "type":  "main",
+                                                                    "index":  0
+                                                                }
+                                                            ]
+                                                        ]
+                                           },
+                        "Download Media File":  {
+                                                    "main":  [
+                                                                 [
+                                                                     {
+                                                                         "node":  "Edit Fields",
+                                                                         "type":  "main",
+                                                                         "index":  0
+                                                                     }
+                                                                 ]
+                                                             ]
+                                                },
+                        "Execute Workflow":  {
+                                                 "main":  [
+                                                              [
+                                                                  {
+                                                                      "node":  "Send Message",
+                                                                      "type":  "main",
+                                                                      "index":  0
+                                                                  }
+                                                              ]
+                                                          ]
+                                             },
+                        "Edit Fields":  {
+                                            "main":  [
+                                                         [
+                                                             {
+                                                                 "node":  "Execute Workflow",
+                                                                 "type":  "main",
+                                                                 "index":  0
+                                                             }
+                                                         ]
+                                                     ]
+                                        },
+                        "Check if Document":  {
+                                                  "main":  [
+                                                               [
+                                                                   {
+                                                                       "node":  "Download Media",
+                                                                       "type":  "main",
+                                                                       "index":  0
+                                                                   }
+                                                               ],
+                                                               [
+                                                                   {
+                                                                       "node":  "Log Non-Document Message",
+                                                                       "type":  "main",
+                                                                       "index":  0
+                                                                   }
+                                                               ]
+                                                           ]
+                                              }
+                    },
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "staticData":  null,
+    "meta":  {
+                 "templateCredsSetupCompleted":  true
+             },
+    "pinData":  {
+
+                },
+    "versionId":  "488ed4e0-9410-48bf-92e2-7b0247ed1c04",
+    "activeVersionId":  null,
+    "versionCounter":  1,
+    "triggerCount":  1,
+    "tags":  [
+
+             ],
+    "shared":  [
+                   {
+                       "updatedAt":  "2025-06-16T23:13:20.932Z",
+                       "createdAt":  "2025-06-16T23:13:20.932Z",
+                       "role":  "workflow:owner",
+                       "workflowId":  "cdM0OFaUV4tbiG0i",
+                       "projectId":  "LgilvFgQb45ZsfNg",
+                       "project":  {
+                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
+                                       "createdAt":  "2025-05-27T00:15:31.394Z",
+                                       "id":  "LgilvFgQb45ZsfNg",
+                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+                                   }
+                   }
+               ],
+    "versionMetadata":  {
+                            "name":  null,
+                            "description":  null
+                        }
+}

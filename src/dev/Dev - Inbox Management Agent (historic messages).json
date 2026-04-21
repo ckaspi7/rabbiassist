@@ -1,0 +1,1247 @@
+{
+    "updatedAt":  "2025-08-05T06:47:16.000Z",
+    "createdAt":  "2025-07-30T05:49:03.161Z",
+    "id":  "9Smhc1kpdqkoGBZv",
+    "name":  "Dev - Inbox Management Agent (historic messages)",
+    "description":  null,
+    "active":  false,
+    "isArchived":  false,
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "operation":  "addLabels",
+                                         "messageId":  "={{ $json.id }}",
+                                         "labelIds":  [
+                                                          "Label_8"
+                                                      ]
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       0,
+                                       -496
+                                   ],
+                      "id":  "6aab13b9-381a-4ad2-95b0-3f1ab09d097a",
+                      "name":  "Invoices \u0026 Receipts",
+                      "webhookId":  "e11b8d25-34f8-4e3e-8089-239313325834",
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "model":  {
+                                                       "__rl":  true,
+                                                       "value":  "gpt-4o-mini",
+                                                       "mode":  "list",
+                                                       "cachedResultName":  "gpt-4o-mini"
+                                                   },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       -608,
+                                       624
+                                   ],
+                      "id":  "049ef3d0-68fe-4851-aefd-da05387bcb58",
+                      "name":  "OpenAI Chat Model",
+                      "credentials":  {
+                                          "openAiApi":  {
+                                                            "id":  "gkxADOkywqNZ2LpA",
+                                                            "name":  "OpenAi account"
+                                                        }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "addLabels",
+                                         "messageId":  "={{ $json.id }}",
+                                         "labelIds":  [
+                                                          "Label_9"
+                                                      ]
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       352,
+                                       480
+                                   ],
+                      "id":  "95b618fd-96f5-4e16-8f09-46bde560eb12",
+                      "name":  "Rabbinate",
+                      "webhookId":  "611bdb45-c9aa-4eaf-898f-8faabcdde758",
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "addLabels",
+                                         "messageId":  "={{ $json.id }}",
+                                         "labelIds":  [
+                                                          "Label_10"
+                                                      ]
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       352,
+                                       224
+                                   ],
+                      "id":  "930f6558-3c8f-4a52-a190-22b381cf954e",
+                      "name":  "Learning Material",
+                      "webhookId":  "7635fd12-9824-445d-b5d6-bcfc090bb12f",
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "model":  {
+                                                       "__rl":  true,
+                                                       "value":  "gpt-4o-mini",
+                                                       "mode":  "list",
+                                                       "cachedResultName":  "gpt-4o-mini"
+                                                   },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       64,
+                                       1552
+                                   ],
+                      "id":  "3751f1ed-5f2b-4bbe-bb37-4cf5e85e2a1f",
+                      "name":  "OpenAI Chat Model1",
+                      "credentials":  {
+                                          "openAiApi":  {
+                                                            "id":  "gkxADOkywqNZ2LpA",
+                                                            "name":  "OpenAi account"
+                                                        }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "addLabels",
+                                         "messageId":  "={{ $json.id }}",
+                                         "labelIds":  [
+                                                          "Label_3"
+                                                      ]
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       512,
+                                       1392
+                                   ],
+                      "id":  "38c655cb-190a-435a-ac96-e84aaa944db9",
+                      "name":  "Trips/Flights",
+                      "webhookId":  "c61fe4d8-6d27-4a3e-88c8-c9e622323979",
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "addLabels",
+                                         "messageId":  "={{ $json.id }}",
+                                         "labelIds":  [
+                                                          "Label_4"
+                                                      ]
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       512,
+                                       1584
+                                   ],
+                      "id":  "722ca36a-a2af-42ae-9340-1a15b81581b3",
+                      "name":  "Trips/Hotels",
+                      "webhookId":  "10e8ce3d-419d-47cd-9c52-eb3ca3a5bc97",
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "addLabels",
+                                         "messageId":  "={{ $json.id }}",
+                                         "labelIds":  [
+                                                          "Label_5"
+                                                      ]
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       512,
+                                       1792
+                                   ],
+                      "id":  "797690ac-abe0-45ed-94f0-3fba6179b9d8",
+                      "name":  "Trips/Car Rentals",
+                      "webhookId":  "a8147c7b-95b6-413e-a441-f52f2faee325",
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "addLabels",
+                                         "messageId":  "={{ $json.id }}",
+                                         "labelIds":  [
+                                                          "Label_6"
+                                                      ]
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       512,
+                                       1984
+                                   ],
+                      "id":  "d1d97332-7235-438d-84e4-19cdf5918b3c",
+                      "name":  "Trips/Travel Insurance",
+                      "webhookId":  "93844f9c-fac4-4409-b999-713a11e0f460",
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "addLabels",
+                                         "messageId":  "={{ $json.id }}",
+                                         "labelIds":  [
+                                                          "Label_7"
+                                                      ]
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       512,
+                                       2208
+                                   ],
+                      "id":  "8c9d06b1-3f49-41f3-8d71-c5fd04316ef5",
+                      "name":  "Trips/Other",
+                      "webhookId":  "18fd949f-3ce5-4c7c-b3e8-b67da3adcdeb",
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "inputText":  "={{ $json.subject }}\n{{ $json.text }}",
+                                         "categories":  {
+                                                            "categories":  [
+                                                                               {
+                                                                                   "category":  "Flights",
+                                                                                   "description":  " Emails related to flight bookings, flight cancellations, updates, or confirmations."
+                                                                               },
+                                                                               {
+                                                                                   "category":  "Hotels",
+                                                                                   "description":  "Emails about hotel, Airbnb or any type of accommodation bookings, confirmations, cancellations, or other related communications."
+                                                                               },
+                                                                               {
+                                                                                   "category":  "Car Rentals",
+                                                                                   "description":  "Emails concerning car rental bookings, pickup and drop-off details, or car rental confirmations."
+                                                                               },
+                                                                               {
+                                                                                   "category":  "Travel Insurance",
+                                                                                   "description":  "Emails regarding travel insurance bookings, policies, updates, and claims."
+                                                                               },
+                                                                               {
+                                                                                   "category":  "Other",
+                                                                                   "description":  "Emails that relate to travel but don\u0027t fall into the other specific categories, such as tour bookings, visa confirmations or travel-related advice."
+                                                                               }
+                                                                           ]
+                                                        },
+                                         "options":  {
+                                                         "systemPromptTemplate":  "Please classify the text provided by the user into one of the following categories: {categories}. The content may be in English, Hebrew, or Turkish. Understand the meaning regardless of language and use the provided formatting instructions below. Don\u0027t explain, and only output the json."
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.textClassifier",
+                      "typeVersion":  1,
+                      "position":  [
+                                       0,
+                                       1312
+                                   ],
+                      "id":  "314d8df2-dfc1-4998-80ae-d15e5a4ad041",
+                      "name":  "Trips Subcategory Classifier"
+                  },
+                  {
+                      "parameters":  {
+                                         "inputText":  "=Subject: {{ $json.subject }}\nEmail body: {{ $json.text }}",
+                                         "categories":  {
+                                                            "categories":  [
+                                                                               {
+                                                                                   "category":  "Invoices \u0026 Receipts",
+                                                                                   "description":  "Emails containing billing statements, receipts, or invoices NOT related to travel bookings or trip arrangements. These include confirmations for product purchases, service payments, utility bills, subscriptions, consulting fees, or business-related reimbursements. Excludes receipts for flight tickets, hotel reservations, car rentals, travel insurance or any travel related services."
+                                                                               },
+                                                                               {
+                                                                                   "category":  "Learning Material",
+                                                                                   "description":  "Emails related to educational content or materials. This includes lecture notes, Torah portions, study guides, academic research, online course materials, learning resources, and any other content meant for personal or professional development."
+                                                                               },
+                                                                               {
+                                                                                   "category":  "Rabbinate",
+                                                                                   "description":  "Emails from the rabbinate regarding religious duties, events, or responsibilities. This includes correspondence with other clergy, congregational communication, event invitations, or any email connected to religious roles and activities."
+                                                                               },
+                                                                               {
+                                                                                   "category":  "Trips",
+                                                                                   "description":  "Emails related to travel plans, whether for personal or business trips. This includes flight bookings, hotel reservations, car rentals, travel insurance, and their associated receipts or confirmations. It may also include trip itineraries, confirmations, or other documents related to travel such as permits, visas, etc. If an email involves any kind of travel service, even if it\u0027s in the form of a receipt, it belongs here."
+                                                                               }
+                                                                           ]
+                                                        },
+                                         "options":  {
+                                                         "fallback":  "other",
+                                                         "systemPromptTemplate":  "=Please classify the text provided by the user into one of the following categories: {categories}. The content may be in English, Hebrew, or Turkish. Understand the meaning regardless of language and use the provided formatting instructions below. Don\u0027t explain, and only output the json."
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.textClassifier",
+                      "typeVersion":  1,
+                      "position":  [
+                                       -640,
+                                       432
+                                   ],
+                      "id":  "b85b068a-eae5-4443-b869-ffbc6c73e6e8",
+                      "name":  "Email Category Classifier"
+                  },
+                  {
+                      "parameters":  {
+                                         "modelId":  {
+                                                         "__rl":  true,
+                                                         "value":  "gpt-4o-mini",
+                                                         "mode":  "list",
+                                                         "cachedResultName":  "GPT-4O-MINI"
+                                                     },
+                                         "messages":  {
+                                                          "values":  [
+                                                                         {
+                                                                             "content":  "=You are a travel information extraction expert. Your task is to analyze an email about travel (e.g., hotel, car rental, travel insurance) and extract the following information in a structured JSON format:\n\nExtract and return the following fields:\n\n- destination: string — the city and country this travel item relates to (e.g., \"Paris, France\").\n- start_date: string (YYYY-MM-DD) — the earliest relevant date (e.g., departure, check-in, pickup).\n- end_date: string (YYYY-MM-DD) — the latest relevant date (e.g., return, check-out, drop-off).\n- type: string — type of travel info as one of the following: \"hotel\", \"car\", \"travel insurance\", or \"other\".\n- details: string — brief summary of key information (e.g., \"Car rental from Hertz in Istanbul, Turkey\").\n- confidence_score: number — a value from 0 to 1 indicating your confidence in the extracted information.\n- status: string — the completion status of the trip item if determinable, one of: \"incomplete\", \"booked\", \"pending\", \"rescheduled\",  \"canceled\", or \"not needed\" (if indeterminable default to \"incomplete\").\n- document_url: string — any confirmation, ticket, or receipt URL if found (else leave blank).\n- email_id: string — a unique identifier for the email where this information was found (you may receive this as input).\n- user_id: string — the user this email belongs to (you may receive this as input).\n\nReturn the extracted fields in the following JSON format:\n\n{\n  \"destination\": \"City, Country\",\n  \"start_date\": \"YYYY-MM-DD\",\n  \"end_date\": \"YYYY-MM-DD\",\n  \"type\": \"hotel\" | \"car\" | \"travel insurance\" | \"other\",\n  \"details\": \"short summary\",\n  \"confidence_score\": 0.95,\n  \"status\": \"incomplete\",\n  \"document_url\": \"\",\n  \"email_id\": \"198520a817c65c4b\",\n  \"user_id\": \"abc@example.com\"\n}\n",
+                                                                             "role":  "system"
+                                                                         },
+                                                                         {
+                                                                             "content":  "=Here is the subject and context from the email:\n***\n- Subject: {{ $json.subject }}\n- Context: {{ $json.text }}\n- Email Id: {{ $json.id }}\n- User Id: {{ $json.to.value[0].address }}\n***\n\nCan you extract the info in json as you were instructed. In addition, for clarity the passenger lives in Israel, so the destination can never be Israel for their tip. DO NOT make up any information that you have not extracted from the email. If you cannot find the relevant info for a json field, populate it as \"unknown\"."
+                                                                         }
+                                                                     ]
+                                                      },
+                                         "simplify":  false,
+                                         "jsonOutput":  true,
+                                         "options":  {
+                                                         "temperature":  0.5
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.openAi",
+                      "typeVersion":  1.8,
+                      "position":  [
+                                       656,
+                                       1152
+                                   ],
+                      "id":  "a1167d55-4406-46fa-b796-7873c2474aff",
+                      "name":  "Extract Non-Flight Trip Info",
+                      "credentials":  {
+                                          "openAiApi":  {
+                                                            "id":  "gkxADOkywqNZ2LpA",
+                                                            "name":  "OpenAi account"
+                                                        }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "modelId":  {
+                                                         "__rl":  true,
+                                                         "value":  "gpt-4o-mini",
+                                                         "mode":  "list",
+                                                         "cachedResultName":  "GPT-4O-MINI"
+                                                     },
+                                         "messages":  {
+                                                          "values":  [
+                                                                         {
+                                                                             "content":  "=You are a travel information extraction expert. Your task is to analyze an email about travel (e.g., flight, hotel, car rental, travel insurance) and extract the following information in a structured JSON format:\n\nExtract and return the following fields:\n\n- destination: string — the city and country this travel item relates to (e.g., \"Paris, France\").\n- start_date: string (YYYY-MM-DD) — the earliest relevant date (e.g., departure, check-in, pickup).\n- end_date: string (YYYY-MM-DD) — the latest relevant date (e.g., return, check-out, drop-off).\n- type: string — type of travel info as one of the following: \"flight\", \"hotel\", \"car\", \"travel insurance\", or \"other\".\n- details: string — brief summary of key information (e.g., \"Round-trip flight from Toronto to Paris on Air Canada\").\n- confidence_score: number — a value from 0 to 1 indicating your confidence in the extracted information.\n- status: string — the completion status of the trip item if determinable, one of: \n  - \"booked\" (if the booking of the item has been successfully completed),\n  - \"pending\" (if the item is not booked yet and is pending completion),\n  - \"rescheduled\"(if the previously booked item has had new changes made to it such \n    as change of schedule, dates, route, etc.),\n  - \"canceled\" (if the previously booked item has been canceled),\n  - \"not needed\" (if this trip item is not needed, will be a manual option to select \n    for the user in unquie sitations),\n  - \"incomplete\" (default value, if indeterminable default to \"incomplete\"),\n- document_url: string — any confirmation, ticket, or receipt URL if found (else leave blank).\n- email_id: string — a unique identifier for the email where this information was found (you may receive this as input).\n- user_id: string — the user this email belongs to (you may receive this as input).\n\nReturn the extracted fields in the following JSON format:\n\n{\n  \"destination\": \"City, Country\",\n  \"start_date\": \"YYYY-MM-DD\",\n  \"end_date\": \"YYYY-MM-DD\",\n  \"type\": \"flight\" | \"hotel\" | \"car\" | \"travel insurance\" | \"other\",\n  \"details\": \"short summary\",\n  \"confidence_score\": 0.95,\n  \"status\": \"incomplete\",\n  \"document_url\": \"\",\n  \"email_id\": \"198520a817c65c4b\",\n  \"user_id\": \"abc@example.com\"\n}\n",
+                                                                             "role":  "system"
+                                                                         },
+                                                                         {
+                                                                             "content":  "=Here is the subject and context from the email:\n***\n- Subject: {{ $json.subject }}\n- Context: {{ $json.text }}\n- Email Id: {{ $json.id }}\n- User Id: {{ $json.to.value[0].address }}\n***\n\nCan you extract the info in json as you were instructed. To help extract the destination field, ignore any layovers in the context. If there is less than 24 hours between an arrival and departure from a city, that is defined as a layover. Focus on the destination where the passenger is spending more than 24 hours. For example, if the passenger arrives at Warsaw at 8am on 4 May and departs at 11am on the same day, that is a layover. If on the contrary, they arrive at 8am on 4 May but leave at 11am on 6 May, then that is their trip destination.   \n\nIn addition, for clarity the passenger lives in Israel, so the destination can never be Israel for their tip. DO NOT make up any information that you have not extracted from the email. If you cannot find the relevant info for a json field, populate it as \"unknown\". \n"
+                                                                         }
+                                                                     ]
+                                                      },
+                                         "simplify":  false,
+                                         "jsonOutput":  true,
+                                         "options":  {
+                                                         "temperature":  0.5
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.openAi",
+                      "typeVersion":  1.8,
+                      "position":  [
+                                       512,
+                                       912
+                                   ],
+                      "id":  "643d7dde-b94d-44e5-b85e-7c1c967e0b2f",
+                      "name":  "Extract Flight Trip Info",
+                      "credentials":  {
+                                          "openAiApi":  {
+                                                            "id":  "gkxADOkywqNZ2LpA",
+                                                            "name":  "OpenAi account"
+                                                        }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "mode":  "combine",
+                                         "advanced":  true,
+                                         "mergeByFields":  {
+                                                               "values":  [
+                                                                              {
+                                                                                  "field1":  "id",
+                                                                                  "field2":  "email_id"
+                                                                              }
+                                                                          ]
+                                                           },
+                                         "joinMode":  "keepEverything",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.merge",
+                      "typeVersion":  3.1,
+                      "position":  [
+                                       1872,
+                                       832
+                                   ],
+                      "id":  "47e4b1fe-4512-40a6-9bc8-89535610157b",
+                      "name":  "Merge"
+                  },
+                  {
+                      "parameters":  {
+                                         "workflowId":  {
+                                                            "__rl":  true,
+                                                            "value":  "wT3klWvdCtvH0et3",
+                                                            "mode":  "list",
+                                                            "cachedResultName":  "Dev - Trip Inference Agent"
+                                                        },
+                                         "workflowInputs":  {
+                                                                "mappingMode":  "defineBelow",
+                                                                "value":  {
+                                                                              "destination":  "={{ $json.choices[0].message.content.destination }}",
+                                                                              "start_date":  "={{ $json.choices[0].message.content.start_date }}",
+                                                                              "end_date":  "={{ $json.choices[0].message.content.end_date }}",
+                                                                              "type":  "={{ $json.choices[0].message.content.type }}",
+                                                                              "details":  "={{ $json.choices[0].message.content.details }}",
+                                                                              "confidence_score":  "={{ $json.choices[0].message.content.confidence_score }}",
+                                                                              "status":  "={{ $json.choices[0].message.content.status }}",
+                                                                              "document_url":  "={{ $json.choices[0].message.content.document_url }}",
+                                                                              "email_id":  "={{ $json.choices[0].message.content.email_id }}",
+                                                                              "user_id":  "={{ $json.choices[0].message.content.user_id }}"
+                                                                          },
+                                                                "matchingColumns":  [
+
+                                                                                    ],
+                                                                "schema":  [
+                                                                               {
+                                                                                   "id":  "destination",
+                                                                                   "displayName":  "destination",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "string"
+                                                                               },
+                                                                               {
+                                                                                   "id":  "start_date",
+                                                                                   "displayName":  "start_date",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "string"
+                                                                               },
+                                                                               {
+                                                                                   "id":  "end_date",
+                                                                                   "displayName":  "end_date",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "string"
+                                                                               },
+                                                                               {
+                                                                                   "id":  "type",
+                                                                                   "displayName":  "type",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "string"
+                                                                               },
+                                                                               {
+                                                                                   "id":  "details",
+                                                                                   "displayName":  "details",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "string"
+                                                                               },
+                                                                               {
+                                                                                   "id":  "confidence_score",
+                                                                                   "displayName":  "confidence_score",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "number"
+                                                                               },
+                                                                               {
+                                                                                   "id":  "status",
+                                                                                   "displayName":  "status",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "string"
+                                                                               },
+                                                                               {
+                                                                                   "id":  "document_url",
+                                                                                   "displayName":  "document_url",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "string"
+                                                                               },
+                                                                               {
+                                                                                   "id":  "email_id",
+                                                                                   "displayName":  "email_id",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "string"
+                                                                               },
+                                                                               {
+                                                                                   "id":  "user_id",
+                                                                                   "displayName":  "user_id",
+                                                                                   "required":  false,
+                                                                                   "defaultMatch":  false,
+                                                                                   "display":  true,
+                                                                                   "canBeUsedToMatch":  true,
+                                                                                   "type":  "string"
+                                                                               }
+                                                                           ],
+                                                                "attemptToConvertTypes":  false,
+                                                                "convertFieldsToString":  true
+                                                            },
+                                         "mode":  "each",
+                                         "options":  {
+                                                         "waitForSubWorkflow":  true
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.executeWorkflow",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       1696,
+                                       976
+                                   ],
+                      "id":  "445b8257-0e4c-4568-a453-0b7621d7af13",
+                      "name":  "Execute Trip Inference"
+                  },
+                  {
+                      "parameters":  {
+                                         "workflowId":  {
+                                                            "__rl":  true,
+                                                            "value":  "lppAEhublOClPznv",
+                                                            "mode":  "list",
+                                                            "cachedResultName":  "Dev - Supabase Storage Trip File Upload"
+                                                        },
+                                         "workflowInputs":  {
+                                                                "mappingMode":  "defineBelow",
+                                                                "value":  {
+
+                                                                          },
+                                                                "matchingColumns":  [
+
+                                                                                    ],
+                                                                "schema":  [
+
+                                                                           ],
+                                                                "attemptToConvertTypes":  false,
+                                                                "convertFieldsToString":  true
+                                                            },
+                                         "mode":  "each",
+                                         "options":  {
+                                                         "waitForSubWorkflow":  true
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.executeWorkflow",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       2320,
+                                       832
+                                   ],
+                      "id":  "a327c2a9-8964-4261-bd3c-5d73d85b2b16",
+                      "name":  "Execute File Upload"
+                  },
+                  {
+                      "parameters":  {
+                                         "conditions":  {
+                                                            "options":  {
+                                                                            "caseSensitive":  true,
+                                                                            "leftValue":  "",
+                                                                            "typeValidation":  "strict",
+                                                                            "version":  2
+                                                                        },
+                                                            "conditions":  [
+                                                                               {
+                                                                                   "id":  "4b56b8c7-2311-4c77-82e7-67b5d57152b3",
+                                                                                   "leftValue":  "={{ $(\u0027Email Category Classifier\u0027).item.binary }}",
+                                                                                   "rightValue":  "",
+                                                                                   "operator":  {
+                                                                                                    "type":  "object",
+                                                                                                    "operation":  "exists",
+                                                                                                    "singleValue":  true
+                                                                                                }
+                                                                               },
+                                                                               {
+                                                                                   "id":  "6cc31e9c-79a3-4be8-83d4-3383f19524fd",
+                                                                                   "leftValue":  "={{ $(\u0027Email Category Classifier\u0027).item.binary }}",
+                                                                                   "rightValue":  "",
+                                                                                   "operator":  {
+                                                                                                    "type":  "object",
+                                                                                                    "operation":  "notEmpty",
+                                                                                                    "singleValue":  true
+                                                                                                }
+                                                                               }
+                                                                           ],
+                                                            "combinator":  "and"
+                                                        },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.if",
+                      "typeVersion":  2.2,
+                      "position":  [
+                                       2096,
+                                       832
+                                   ],
+                      "id":  "d27f44ac-e61f-445a-befc-aa09a647a6bf",
+                      "name":  "File Data?"
+                  },
+                  {
+                      "parameters":  {
+                                         "modelId":  {
+                                                         "__rl":  true,
+                                                         "value":  "gpt-4o-mini",
+                                                         "mode":  "list",
+                                                         "cachedResultName":  "GPT-4O-MINI"
+                                                     },
+                                         "messages":  {
+                                                          "values":  [
+                                                                         {
+                                                                             "content":  "=You are a receipt and invoice information extraction expert. Your task is to analyze an email containing a receipt or invoice and extract the following information in a structured JSON format.\n\nExtract and return the following fields:\n\n- vendor: string — the company or individual associated with the receipt (e.g., \"Amazon\", \"Home Depot\", \"Rabbi Moshe Cohen\").\n- total_amount: string — the total amount paid. Always format with the currency symbol **before** the number, regardless of local style (e.g., \"$75.99\", \"€120.00\", \"₪250\").\n- received_date: string (YYYY-MM-DD) — the date the receipt or invoice was received (e.g., the email\u0027s received date).\n- expense_date: string (YYYY-MM-DD) — the actual date the expense or transaction occurred. If unclear, use the received_date.\n- category: string — categorize the receipt into one of the following (if determinable):\n  - \"home\"\n  - \"office\"\n  - \"donation\"\n  - \"utilities\"\n  - \"education\"\n  - \"medical\"\n  - \"other\"\n\n- details: string — brief summary of what the receipt is for (e.g., \"Office supplies from Staples\", \"Monthly donation to Yeshiva Ateret\").\n- confidence_score: number — a value between 0 and 1 indicating your confidence in the accuracy of the extracted data.\n- document_url: string — a link to any attached invoice or receipt file if available, else leave blank.\n- email_id: string — a unique identifier for the email this receipt came from (you may receive this as input).\n- user_id: string — the user this email belongs to (you may receive this as input).\n\nReturn the extracted information in the following JSON format:\n\n{\n  \"vendor\": \"Amazon\",\n  \"total_amount\": \"$75.99\",\n  \"received_date\": \"2025-06-10\",\n  \"expense_date\": \"2025-06-09\",\n  \"category\": \"home\",\n  \"details\": \"Home supplies from Amazon\",\n  \"confidence_score\": 0.92,\n  \"document_url\": \"\",\n  \"email_id\": \"CAA5qxOaHtcTqmhmg-wLi+q6PSkHHJi6PLg3mjZHpUpyNtJ612A@mail.gmail.com\",\n  \"user_id\": \"abc@example.com\"\n}\n",
+                                                                             "role":  "system"
+                                                                         },
+                                                                         {
+                                                                             "content":  "=Here is the subject and context from the email:\n***\n- Subject: {{ $json.subject }}\n- Context: {{ $json.text }}\n- Email Id: {{ $json.messageId }}\n- User Id: {{ $json.to.value[0].address }}\n- Date Email Received: {{ $json.headers.date }}\n***\n\nExtract the info in json as you were instructed. DO NOT make up any information that you have not extracted from the email. If you cannot find the relevant info for a json field, populate it as \"unknown\". \n"
+                                                                         }
+                                                                     ]
+                                                      },
+                                         "simplify":  false,
+                                         "jsonOutput":  true,
+                                         "options":  {
+                                                         "temperature":  0.5
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.openAi",
+                      "typeVersion":  1.8,
+                      "position":  [
+                                       0,
+                                       -304
+                                   ],
+                      "id":  "defb2ab2-03dd-4d58-9364-b6be04b71eca",
+                      "name":  "Extract Receipt Info",
+                      "credentials":  {
+                                          "openAiApi":  {
+                                                            "id":  "gkxADOkywqNZ2LpA",
+                                                            "name":  "OpenAi account"
+                                                        }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "mode":  "combine",
+                                         "combineBy":  "combineByPosition",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.merge",
+                      "typeVersion":  3.1,
+                      "position":  [
+                                       400,
+                                       -160
+                                   ],
+                      "id":  "514de134-c6ef-4590-8cb4-cfbd3e7f38ff",
+                      "name":  "Merge1"
+                  },
+                  {
+                      "parameters":  {
+                                         "workflowId":  {
+                                                            "__rl":  true,
+                                                            "value":  "NBz3EUsoBANajTQk",
+                                                            "mode":  "list",
+                                                            "cachedResultName":  "Dev - Supabase Storage Receipt File Upload"
+                                                        },
+                                         "workflowInputs":  {
+                                                                "mappingMode":  "defineBelow",
+                                                                "value":  {
+
+                                                                          },
+                                                                "matchingColumns":  [
+
+                                                                                    ],
+                                                                "schema":  [
+
+                                                                           ],
+                                                                "attemptToConvertTypes":  false,
+                                                                "convertFieldsToString":  true
+                                                            },
+                                         "mode":  "each",
+                                         "options":  {
+                                                         "waitForSubWorkflow":  true
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.executeWorkflow",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       624,
+                                       -160
+                                   ],
+                      "id":  "47ee33ee-7893-4a17-9f2a-a261cad39c31",
+                      "name":  "Execute Workflow"
+                  },
+                  {
+                      "parameters":  {
+                                         "content":  "## Trip Items Logic\n",
+                                         "height":  1660,
+                                         "width":  2616,
+                                         "color":  5
+                                     },
+                      "type":  "n8n-nodes-base.stickyNote",
+                      "position":  [
+                                       -80,
+                                       720
+                                   ],
+                      "typeVersion":  1,
+                      "id":  "118e8dc3-1445-4d8b-9ce3-eb0f22042392",
+                      "name":  "Sticky Note"
+                  },
+                  {
+                      "parameters":  {
+                                         "content":  "## Receipts",
+                                         "height":  660,
+                                         "width":  940
+                                     },
+                      "type":  "n8n-nodes-base.stickyNote",
+                      "position":  [
+                                       -80,
+                                       -608
+                                   ],
+                      "typeVersion":  1,
+                      "id":  "e2b88808-bc5c-4501-9088-5808967af289",
+                      "name":  "Sticky Note1"
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "getAll",
+                                         "returnAll":  true,
+                                         "simple":  false,
+                                         "filters":  {
+                                                         "q":  "=-label:\\\"Invoices \u0026 Receipts\\\" -label:\\\"Learning Material\\\" -label:Rabbinate -label:\\\"Trips/Flights\\\" -label:\\\"Trips/Hotels\\\" -label:\\\"Trips/Car Rentals\\\" -label:\\\"Trips/Travel Insurance\\\" -label:\\\"Trips/Other\\\" -label:Other",
+                                                         "readStatus":  "both",
+                                                         "receivedAfter":  "2025-02-01T00:00:00",
+                                                         "receivedBefore":  "2025-07-28T21:17:56"
+                                                     },
+                                         "options":  {
+                                                         "downloadAttachments":  true
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       -880,
+                                       480
+                                   ],
+                      "id":  "746f576f-545f-4dba-b87e-3ae791455cdd",
+                      "name":  "Get many messages",
+                      "webhookId":  "f16c6169-0856-4382-80de-971c6b2bd58a",
+                      "notesInFlow":  false,
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+
+                                     },
+                      "type":  "n8n-nodes-base.manualTrigger",
+                      "typeVersion":  1,
+                      "position":  [
+                                       -1104,
+                                       480
+                                   ],
+                      "id":  "a3fed82a-e09d-43ef-ac26-366bd62286cb",
+                      "name":  "When clicking ‘Execute workflow’"
+                  },
+                  {
+                      "parameters":  {
+                                         "fieldToSplitOut":  "data",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.splitOut",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1472,
+                                       1040
+                                   ],
+                      "id":  "1fa7fd40-d098-4645-8bad-363d8bcc3fd5",
+                      "name":  "Split Out"
+                  },
+                  {
+                      "parameters":  {
+                                         "aggregate":  "aggregateAllItemData",
+                                         "options":  {
+                                                         "includeBinaries":  true
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.aggregate",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1248,
+                                       1040
+                                   ],
+                      "id":  "8cd32859-31e8-4310-8c6f-da151bc54725",
+                      "name":  "Aggregate"
+                  },
+                  {
+                      "parameters":  {
+
+                                     },
+                      "type":  "n8n-nodes-base.merge",
+                      "typeVersion":  3.2,
+                      "position":  [
+                                       1024,
+                                       1040
+                                   ],
+                      "id":  "cdc8bf87-0545-4883-a31d-3a111fcadf0f",
+                      "name":  "Merge2"
+                  },
+                  {
+                      "parameters":  {
+                                         "numberInputs":  3
+                                     },
+                      "type":  "n8n-nodes-base.merge",
+                      "typeVersion":  3.2,
+                      "position":  [
+                                       480,
+                                       1136
+                                   ],
+                      "id":  "b682be39-8454-4ff1-9fdc-40768b6f18eb",
+                      "name":  "Merge3"
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "addLabels",
+                                         "messageId":  "={{ $json.id }}",
+                                         "labelIds":  [
+                                                          "Label_11"
+                                                      ]
+                                     },
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       -176,
+                                       608
+                                   ],
+                      "id":  "9eaa4274-ccd4-4cd7-823b-590238055d78",
+                      "name":  "Other",
+                      "webhookId":  "611bdb45-c9aa-4eaf-898f-8faabcdde758",
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "L6YJsATLPNfrXFwt",
+                                                              "name":  "cem.kaspi7@gmail.com"
+                                                          }
+                                      }
+                  }
+              ],
+    "connections":  {
+                        "OpenAI Chat Model":  {
+                                                  "ai_languageModel":  [
+                                                                           [
+                                                                               {
+                                                                                   "node":  "Email Category Classifier",
+                                                                                   "type":  "ai_languageModel",
+                                                                                   "index":  0
+                                                                               }
+                                                                           ]
+                                                                       ]
+                                              },
+                        "OpenAI Chat Model1":  {
+                                                   "ai_languageModel":  [
+                                                                            [
+                                                                                {
+                                                                                    "node":  "Trips Subcategory Classifier",
+                                                                                    "type":  "ai_languageModel",
+                                                                                    "index":  0
+                                                                                }
+                                                                            ]
+                                                                        ]
+                                               },
+                        "Trips Subcategory Classifier":  {
+                                                             "main":  [
+                                                                          [
+                                                                              {
+                                                                                  "node":  "Trips/Flights",
+                                                                                  "type":  "main",
+                                                                                  "index":  0
+                                                                              },
+                                                                              {
+                                                                                  "node":  "Extract Flight Trip Info",
+                                                                                  "type":  "main",
+                                                                                  "index":  0
+                                                                              }
+                                                                          ],
+                                                                          [
+                                                                              {
+                                                                                  "node":  "Trips/Hotels",
+                                                                                  "type":  "main",
+                                                                                  "index":  0
+                                                                              },
+                                                                              {
+                                                                                  "node":  "Merge3",
+                                                                                  "type":  "main",
+                                                                                  "index":  0
+                                                                              }
+                                                                          ],
+                                                                          [
+                                                                              {
+                                                                                  "node":  "Trips/Car Rentals",
+                                                                                  "type":  "main",
+                                                                                  "index":  0
+                                                                              },
+                                                                              {
+                                                                                  "node":  "Merge3",
+                                                                                  "type":  "main",
+                                                                                  "index":  1
+                                                                              }
+                                                                          ],
+                                                                          [
+                                                                              {
+                                                                                  "node":  "Trips/Travel Insurance",
+                                                                                  "type":  "main",
+                                                                                  "index":  0
+                                                                              },
+                                                                              {
+                                                                                  "node":  "Merge3",
+                                                                                  "type":  "main",
+                                                                                  "index":  2
+                                                                              }
+                                                                          ],
+                                                                          [
+                                                                              {
+                                                                                  "node":  "Trips/Other",
+                                                                                  "type":  "main",
+                                                                                  "index":  0
+                                                                              }
+                                                                          ]
+                                                                      ]
+                                                         },
+                        "Email Category Classifier":  {
+                                                          "main":  [
+                                                                       [
+                                                                           {
+                                                                               "node":  "Invoices \u0026 Receipts",
+                                                                               "type":  "main",
+                                                                               "index":  0
+                                                                           },
+                                                                           {
+                                                                               "node":  "Extract Receipt Info",
+                                                                               "type":  "main",
+                                                                               "index":  0
+                                                                           },
+                                                                           {
+                                                                               "node":  "Merge1",
+                                                                               "type":  "main",
+                                                                               "index":  0
+                                                                           }
+                                                                       ],
+                                                                       [
+                                                                           {
+                                                                               "node":  "Learning Material",
+                                                                               "type":  "main",
+                                                                               "index":  0
+                                                                           }
+                                                                       ],
+                                                                       [
+                                                                           {
+                                                                               "node":  "Rabbinate",
+                                                                               "type":  "main",
+                                                                               "index":  0
+                                                                           }
+                                                                       ],
+                                                                       [
+                                                                           {
+                                                                               "node":  "Trips Subcategory Classifier",
+                                                                               "type":  "main",
+                                                                               "index":  0
+                                                                           },
+                                                                           {
+                                                                               "node":  "Merge",
+                                                                               "type":  "main",
+                                                                               "index":  0
+                                                                           }
+                                                                       ],
+                                                                       [
+                                                                           {
+                                                                               "node":  "Other",
+                                                                               "type":  "main",
+                                                                               "index":  0
+                                                                           }
+                                                                       ]
+                                                                   ]
+                                                      },
+                        "Extract Non-Flight Trip Info":  {
+                                                             "main":  [
+                                                                          [
+                                                                              {
+                                                                                  "node":  "Merge2",
+                                                                                  "type":  "main",
+                                                                                  "index":  1
+                                                                              }
+                                                                          ]
+                                                                      ]
+                                                         },
+                        "Extract Flight Trip Info":  {
+                                                         "main":  [
+                                                                      [
+                                                                          {
+                                                                              "node":  "Merge2",
+                                                                              "type":  "main",
+                                                                              "index":  0
+                                                                          }
+                                                                      ]
+                                                                  ]
+                                                     },
+                        "Merge":  {
+                                      "main":  [
+                                                   [
+                                                       {
+                                                           "node":  "File Data?",
+                                                           "type":  "main",
+                                                           "index":  0
+                                                       }
+                                                   ]
+                                               ]
+                                  },
+                        "Execute Trip Inference":  {
+                                                       "main":  [
+                                                                    [
+                                                                        {
+                                                                            "node":  "Merge",
+                                                                            "type":  "main",
+                                                                            "index":  1
+                                                                        }
+                                                                    ]
+                                                                ]
+                                                   },
+                        "Execute File Upload":  {
+                                                    "main":  [
+                                                                 [
+
+                                                                 ]
+                                                             ]
+                                                },
+                        "File Data?":  {
+                                           "main":  [
+                                                        [
+                                                            {
+                                                                "node":  "Execute File Upload",
+                                                                "type":  "main",
+                                                                "index":  0
+                                                            }
+                                                        ]
+                                                    ]
+                                       },
+                        "Extract Receipt Info":  {
+                                                     "main":  [
+                                                                  [
+                                                                      {
+                                                                          "node":  "Merge1",
+                                                                          "type":  "main",
+                                                                          "index":  1
+                                                                      }
+                                                                  ]
+                                                              ]
+                                                 },
+                        "Merge1":  {
+                                       "main":  [
+                                                    [
+                                                        {
+                                                            "node":  "Execute Workflow",
+                                                            "type":  "main",
+                                                            "index":  0
+                                                        }
+                                                    ]
+                                                ]
+                                   },
+                        "When clicking ‘Execute workflow’":  {
+                                                                     "main":  [
+                                                                                  [
+                                                                                      {
+                                                                                          "node":  "Get many messages",
+                                                                                          "type":  "main",
+                                                                                          "index":  0
+                                                                                      }
+                                                                                  ]
+                                                                              ]
+                                                                 },
+                        "Get many messages":  {
+                                                  "main":  [
+                                                               [
+                                                                   {
+                                                                       "node":  "Email Category Classifier",
+                                                                       "type":  "main",
+                                                                       "index":  0
+                                                                   }
+                                                               ]
+                                                           ]
+                                              },
+                        "Split Out":  {
+                                          "main":  [
+                                                       [
+                                                           {
+                                                               "node":  "Execute Trip Inference",
+                                                               "type":  "main",
+                                                               "index":  0
+                                                           }
+                                                       ]
+                                                   ]
+                                      },
+                        "Aggregate":  {
+                                          "main":  [
+                                                       [
+                                                           {
+                                                               "node":  "Split Out",
+                                                               "type":  "main",
+                                                               "index":  0
+                                                           }
+                                                       ]
+                                                   ]
+                                      },
+                        "Merge2":  {
+                                       "main":  [
+                                                    [
+                                                        {
+                                                            "node":  "Aggregate",
+                                                            "type":  "main",
+                                                            "index":  0
+                                                        }
+                                                    ]
+                                                ]
+                                   },
+                        "Merge3":  {
+                                       "main":  [
+                                                    [
+                                                        {
+                                                            "node":  "Extract Non-Flight Trip Info",
+                                                            "type":  "main",
+                                                            "index":  0
+                                                        }
+                                                    ]
+                                                ]
+                                   }
+                    },
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "staticData":  {
+                       "node:Gmail Trigger":  {
+                                                  "lastTimeChecked":  1753723075,
+                                                  "possibleDuplicates":  [
+                                                                             "198520a817c65c4b",
+                                                                             "19842c5f3f8f54b5"
+                                                                         ]
+                                              }
+                   },
+    "meta":  {
+                 "templateCredsSetupCompleted":  true
+             },
+    "pinData":  {
+
+                },
+    "versionId":  "ef8ee69c-8c2e-438d-938d-66a39336d2c6",
+    "activeVersionId":  null,
+    "versionCounter":  1,
+    "triggerCount":  1,
+    "tags":  [
+                 {
+                     "updatedAt":  "2025-07-28T16:51:43.261Z",
+                     "createdAt":  "2025-07-28T16:51:43.261Z",
+                     "id":  "wFA0OT7LAjyTBsE4",
+                     "name":  "dev"
+                 }
+             ],
+    "shared":  [
+                   {
+                       "updatedAt":  "2025-07-30T05:49:03.167Z",
+                       "createdAt":  "2025-07-30T05:49:03.167Z",
+                       "role":  "workflow:owner",
+                       "workflowId":  "9Smhc1kpdqkoGBZv",
+                       "projectId":  "LgilvFgQb45ZsfNg",
+                       "project":  {
+                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
+                                       "createdAt":  "2025-05-27T00:15:31.394Z",
+                                       "id":  "LgilvFgQb45ZsfNg",
+                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+                                   }
+                   }
+               ],
+    "versionMetadata":  {
+                            "name":  null,
+                            "description":  null
+                        }
+}

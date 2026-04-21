@@ -1,0 +1,120 @@
+{
+    "updatedAt":  "2025-07-30T07:56:32.000Z",
+    "createdAt":  "2025-07-28T16:52:34.505Z",
+    "id":  "pQFs5zKGHNjdcJqc",
+    "name":  "Dev - Gmail Label Creation",
+    "description":  null,
+    "active":  false,
+    "isArchived":  false,
+    "nodes":  [
+                  {
+                      "parameters":  {
+
+                                     },
+                      "type":  "n8n-nodes-base.manualTrigger",
+                      "typeVersion":  1,
+                      "position":  [
+                                       0,
+                                       0
+                                   ],
+                      "id":  "a1ff0f05-e79c-4d40-b332-af76625bab87",
+                      "name":  "When clicking ‘Test workflow’"
+                  },
+                  {
+                      "parameters":  {
+                                         "functionCode":  "return [\n  { json: { name: \u0027Trips\u0027 } },\n  { json: { name: \u0027Trips/Flights\u0027 } },\n  { json: { name: \u0027Trips/Hotels\u0027 } },\n  { json: { name: \u0027Trips/Car Rentals\u0027 } },\n  { json: { name: \u0027Trips/Travel Insurance\u0027 } },\n  { json: { name: \u0027Trips/Other\u0027 } },\n  { json: { name: \u0027Invoices \u0026 Receipts\u0027 } },\n  { json: { name: \u0027Rabbinate\u0027 } },\n  { json: { name: \u0027Learning Material\u0027 } },\n  { json: { name: \u0027Other\u0027 } }\n];"
+                                     },
+                      "id":  "4be75430-2d18-484c-abca-975408f4a1cf",
+                      "name":  "Prepare Labels",
+                      "type":  "n8n-nodes-base.function",
+                      "typeVersion":  1,
+                      "position":  [
+                                       192,
+                                       0
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "resource":  "label",
+                                         "name":  "={{ $json.name }}"
+                                     },
+                      "id":  "2cf65a4a-1f16-49c6-841c-e0b14471d736",
+                      "name":  "Create Label",
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  1,
+                      "position":  [
+                                       384,
+                                       0
+                                   ]
+                  }
+              ],
+    "connections":  {
+                        "When clicking ‘Test workflow’":  {
+                                                                  "main":  [
+                                                                               [
+                                                                                   {
+                                                                                       "node":  "Prepare Labels",
+                                                                                       "type":  "main",
+                                                                                       "index":  0
+                                                                                   }
+                                                                               ]
+                                                                           ]
+                                                              },
+                        "Prepare Labels":  {
+                                               "main":  [
+                                                            [
+                                                                {
+                                                                    "node":  "Create Label",
+                                                                    "type":  "main",
+                                                                    "index":  0
+                                                                }
+                                                            ]
+                                                        ]
+                                           }
+                    },
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "staticData":  null,
+    "meta":  {
+                 "templateCredsSetupCompleted":  true
+             },
+    "pinData":  {
+
+                },
+    "versionId":  "9fbf3258-0e8b-424b-a5f5-bbf40d991f6d",
+    "activeVersionId":  null,
+    "versionCounter":  1,
+    "triggerCount":  0,
+    "tags":  [
+                 {
+                     "updatedAt":  "2025-07-28T16:51:43.261Z",
+                     "createdAt":  "2025-07-28T16:51:43.261Z",
+                     "id":  "wFA0OT7LAjyTBsE4",
+                     "name":  "dev"
+                 }
+             ],
+    "shared":  [
+                   {
+                       "updatedAt":  "2025-07-28T16:52:34.509Z",
+                       "createdAt":  "2025-07-28T16:52:34.509Z",
+                       "role":  "workflow:owner",
+                       "workflowId":  "pQFs5zKGHNjdcJqc",
+                       "projectId":  "LgilvFgQb45ZsfNg",
+                       "project":  {
+                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
+                                       "createdAt":  "2025-05-27T00:15:31.394Z",
+                                       "id":  "LgilvFgQb45ZsfNg",
+                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+                                   }
+                   }
+               ],
+    "versionMetadata":  {
+                            "name":  null,
+                            "description":  null
+                        }
+}

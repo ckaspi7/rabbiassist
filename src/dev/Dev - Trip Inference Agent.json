@@ -1,0 +1,1021 @@
+{
+    "updatedAt":  "2025-10-23T06:47:24.000Z",
+    "createdAt":  "2025-07-28T18:10:14.784Z",
+    "id":  "wT3klWvdCtvH0et3",
+    "name":  "Dev - Trip Inference Agent",
+    "description":  null,
+    "active":  true,
+    "isArchived":  false,
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "workflowInputs":  {
+                                                                "values":  [
+                                                                               {
+                                                                                   "name":  "destination"
+                                                                               },
+                                                                               {
+                                                                                   "name":  "start_date"
+                                                                               },
+                                                                               {
+                                                                                   "name":  "end_date"
+                                                                               },
+                                                                               {
+                                                                                   "name":  "type"
+                                                                               },
+                                                                               {
+                                                                                   "name":  "details"
+                                                                               },
+                                                                               {
+                                                                                   "name":  "confidence_score",
+                                                                                   "type":  "number"
+                                                                               },
+                                                                               {
+                                                                                   "name":  "status"
+                                                                               },
+                                                                               {
+                                                                                   "name":  "document_url"
+                                                                               },
+                                                                               {
+                                                                                   "name":  "email_id"
+                                                                               },
+                                                                               {
+                                                                                   "name":  "user_id"
+                                                                               }
+                                                                           ]
+                                                            }
+                                     },
+                      "type":  "n8n-nodes-base.executeWorkflowTrigger",
+                      "typeVersion":  1.1,
+                      "position":  [
+                                       -240,
+                                       0
+                                   ],
+                      "id":  "42ea009b-ed3a-4640-a38a-96375f90393f",
+                      "name":  "When Executed by Another Workflow"
+                  },
+                  {
+                      "parameters":  {
+                                         "model":  {
+                                                       "__rl":  true,
+                                                       "mode":  "list",
+                                                       "value":  "gpt-4o-mini"
+                                                   },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       160,
+                                       224
+                                   ],
+                      "id":  "9b0f0b9c-0407-4944-b160-c5e0e3897cf8",
+                      "name":  "OpenAI Chat Model",
+                      "credentials":  {
+                                          "openAiApi":  {
+                                                            "id":  "gkxADOkywqNZ2LpA",
+                                                            "name":  "OpenAi account"
+                                                        }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "descriptionType":  "manual",
+                                         "toolDescription":  "=This tool takes an email address and queries the `users` table in Supabase to retrieve the corresponding user_id. Use this before trying to match any trips or trip items to the input data. \nInput:\n{\n\"trip_item\": {\n\"type\": \"flight\",\n\"destination\": \"City, Country\",\n\"start_date\": \"2025-03-30\",\n\"end_date\": \"2025-04-09\",\n\"confidence_score\": 0.95,\n\"status\": \"status\",\n\"details\": \"Details of trip info\",\n\"raw_email_id\": \"CAA5g@mail.gmail.com\"\n},\n\"user_email\": \"john.doe@gmail.com\"\n}\nOutput:\n{\n      \"id\": \"123\", \n      \"full_name\": null,\n      \"email\": \"john.doe@gmail.com\", \n      \"role\": \"user\",\n      \"created_at\": \"2025-05-07T07:20:55.367858+00:00\"\n}\n\nThe \"id\" field in the json object is the user_id you need to use for the rest of the workflow.",
+                                         "operation":  "get",
+                                         "tableId":  "users",
+                                         "filters":  {
+                                                         "conditions":  [
+                                                                            {
+                                                                                "keyName":  "email",
+                                                                                "keyValue":  "={{ $json.user_id }}"
+                                                                            }
+                                                                        ]
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.supabaseTool",
+                      "typeVersion":  1,
+                      "position":  [
+                                       304,
+                                       224
+                                   ],
+                      "id":  "fd3c7509-2b21-4e08-adcc-c4fe05459266",
+                      "name":  "Get User Id",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "jsonSchemaExample":  "{\n\t\"user_id\": \"179a408c-c5a0-472a\",\n\t\"trip_id\": \"a679aeef-9db7\",\n    \"email_id\": \"196adde601b63024\",\n    \"existing_trip_items\": [\n      { \n        \"trip_id\": \"trip-uuid\",\n        \"id\": \"trip_item_uuid\",\n        \"type\": \"flight\",\n        \"status\": \"rescheduled\"\n      },\n      {\n        \"trip_id\": \"trip-uuid\",\n        \"id\": \"trip_item_uuid-2\",\n        \"type\": \"hotel\",\n        \"status\": \"booked\"\n      }\n    ],\n  \"trip_item\": {\n    \"type\": \"flight\",\n    \"destination\": \"Vancouver, Canada\",\n    \"start_date\": \"2025-09-09\",\n    \"end_date\": \"\",\n    \"confidence_score\": 0.95,\n    \"status\": \"booked\",\n    \"details\": \"Booking confirmation for a flight.\",\n    \"raw_email_id\": \"CAA5qxOYU33p=kTKL@mail.gmail.com\"\n    }\n}"
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.outputParserStructured",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       640,
+                                       224
+                                   ],
+                      "id":  "ee530e2d-8f92-4c2c-bd09-94322ae885d8",
+                      "name":  "Structure JSON Output"
+                  },
+                  {
+                      "parameters":  {
+                                         "descriptionType":  "manual",
+                                         "toolDescription":  "=This tool checks the `trips` table and returns a matching trip for a given user based on:\n\n- Exact or fuzzy match of destination\n- Overlapping or close date range\n- Same user_id\n\nA trip is considered a match **only if all of the following are true**:\n- The user_id matches exactly\n- The destination is a case-insensitive match or a close match to the provided destination (e.g., \"New York\" ≈ \"NYC\")\n- The start_date and end_date are either overlapping or within 1–2 days of the provided values (e.g., 2025-09-07 \u0026 2025-09-08)\n\nInput:\n{\n  \"user_id\": \"abc123\",\n  \"destination\": \"Paris, France\",\n  \"start_date\": \"2025-06-01\",\n  \"end_date\": \"2025-06-07\"\n}\n\nOutput:\nIf a match is found:\n{\n  \"trip_id\": \"ab79-cd5\"\n}\nIf no match is found:\n{\n  \"trip_id\": null\n}\n",
+                                         "operation":  "get",
+                                         "tableId":  "trips",
+                                         "filters":  {
+                                                         "conditions":  [
+                                                                            {
+                                                                                "keyName":  "user_id",
+                                                                                "keyValue":  "={{ $fromAI(\u0027conditions0_Value\u0027, ``, \u0027string\u0027) }}"
+                                                                            },
+                                                                            {
+                                                                                "keyName":  "destination",
+                                                                                "keyValue":  "={{ $fromAI(\u0027conditions1_Value\u0027, ``, \u0027string\u0027) }}"
+                                                                            },
+                                                                            {
+                                                                                "keyName":  "start_date",
+                                                                                "keyValue":  "={{ $fromAI(\u0027conditions2_Value\u0027, ``, \u0027string\u0027) == \"unknown\" ? null : $fromAI(\u0027conditions2_Value\u0027, ``, \u0027string\u0027) }}"
+                                                                            },
+                                                                            {
+                                                                                "keyName":  "end_date",
+                                                                                "keyValue":  "={{ $fromAI(\u0027conditions3_Value\u0027, ``, \u0027string\u0027) == \"unknown\" ? null : $fromAI(\u0027conditions3_Value\u0027, ``, \u0027string\u0027) }}"
+                                                                            }
+                                                                        ]
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.supabaseTool",
+                      "typeVersion":  1,
+                      "position":  [
+                                       400,
+                                       224
+                                   ],
+                      "id":  "a6e6a510-aa4d-40c1-8aa2-d90602db41d1",
+                      "name":  "Get Trips",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "descriptionType":  "manual",
+                                         "toolDescription":  "=This tool queries the trip_items table and fetches all existing trip items for a known trip.\n\nCall this only if:\n- A valid `trip_id` uuid has been found from the **Get Trips Tool** (i.e., not null).\n\nInput:\n{\n  \"user_id\": \"uuid-of-the-user\"\n  \"trip_id\": \"uuid-of-the-matching-trip\"\n}\n\nOutput:\nAn array of trip item objects for the given trip_id, each containing the fields: `trip_id`, `id`, `type`, and `status`.\n\nExample Output:\n[\n  {\n    \"trip_id\": \"trip-uuid\",\n    \"id\": \"trip_item_uuid\",\n    \"type\": \"flight\",\n    \"status\": \"rescheduled\"\n  },\n  {\n    \"trip_id\": \"trip-uuid\",\n    \"id\": \"trip_item_uuid-2\",\n    \"type\": \"hotel\",\n    \"status\": \"booked\"\n  }\n]\n\nUse this output to help the next agent determine whether a trip item already exists or needs updating.",
+                                         "operation":  "get",
+                                         "tableId":  "trip_items",
+                                         "filters":  {
+                                                         "conditions":  [
+                                                                            {
+                                                                                "keyName":  "user_id",
+                                                                                "keyValue":  "={{ $fromAI(\u0027conditions0_Value\u0027, ``, \u0027string\u0027) }}"
+                                                                            },
+                                                                            {
+                                                                                "keyName":  "trip_id",
+                                                                                "keyValue":  "={{ $fromAI(\u0027conditions1_Value\u0027, ``, \u0027string\u0027) }}"
+                                                                            }
+                                                                        ]
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.supabaseTool",
+                      "typeVersion":  1,
+                      "position":  [
+                                       512,
+                                       224
+                                   ],
+                      "id":  "53618f6c-ad8f-494d-b376-78ac18cb932e",
+                      "name":  "Get Trip Items",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "promptType":  "define",
+                                         "text":  "=Here is the input you need to process:\n{\n  \"trip_item\": {\n    \"type\": \"{{ $json.type || \u0027\u0027 }}\",\n    \"destination\": \"{{ $json.destination || \u0027\u0027 }}\",\n    \"start_date\": \"{{ $json.start_date || \u0027\u0027 }}\",\n    \"end_date\": \"{{ $json.end_date || \u0027\u0027 }}\",\n    \"confidence_score\": {{ $json.confidence_score || 0 }},\n    \"status\": \"{{ $json.status || \u0027\u0027 }}\",\n    \"details\": \"{{ $json.details || \u0027\u0027 }}\",\n    \"raw_email_id\": \"{{ $json.email_id || \u0027\u0027 }}\"\n  },\n  \"user_email\": \"{{ $json.user_id }}\"\n}\n",
+                                         "hasOutputParser":  true,
+                                         "options":  {
+                                                         "systemMessage":  "=You are an intelligent travel assistant responsible for gathering structured travel data before passing it to another agent.\n\nYou will receive JSON input containing a parsed travel item with fields like destination, type (flight, hotel, etc.), start_date, end_date, confidence_score, and the user’s email.\n\nYour job is to extract and organize key identifiers using the following tools:\n\nStep 1: Identify the User\n- Use the Get User ID Tool to retrieve the user_id by matching the provided email. Use the returned `id` as `user_id`.\n- Do not proceed without a valid user_id.\n\nStep 2: Determine if the Trip Already Exists\n- Use the Get Trips Tool to check for an existing trip that matches all the following criteria:\n  - user_id matches exactly\n  - destination is a case-insensitive or fuzzy match (e.g., \"New York\" ≈ \"NYC\")\n  - start_date and end_date overlap or are within ±2 days of the input dates\n\nImportant:\n- Only call the Get Trips Tool once per input. Do not retry if it returns no result.\n- If no matching trip is found, set \"trip_id\" to \"unknown\" and skip Step 3.\n\nStep 3: Get Existing Trip Items (Only If a Trip Was Found)\n- If a valid trip_id was found in Step 2, call the Get Trip Items Tool using the user_id and trip_id.\n- This tool returns all existing trip items under that trip.\n\nFinal Output\nReturn a single structured object:\n{\n  \"user_id\": \"uuid-from-user-tool\",\n  \"trip_id\": \"uuid-from-trip-tool-or-unknown\",\n  \"email_id\": \"gmail-internal-message-id-from-input\",\n  \"existing_trip_items\": [...], // Only if trip_id ≠ \"unknown\"\n  \"trip_item\": { ... }          // Original parsed travel item input\n}\n\nRules \u0026 Safeguards:\n- Do not fabricate or guess user_id, trip_id, or trip items\n- Do not retry tools more than once per input\n- Only call Get Trip Items Tool if a matching trip was found (i.e., trip_id ≠ \"unknown\")"
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.agent",
+                      "typeVersion":  1.9,
+                      "position":  [
+                                       240,
+                                       0
+                                   ],
+                      "id":  "5d9fa161-8654-40f7-b5d8-c5a41b6e3804",
+                      "name":  "AI Agent 1",
+                      "retryOnFail":  true,
+                      "onError":  "continueErrorOutput"
+                  },
+                  {
+                      "parameters":  {
+                                         "descriptionType":  "manual",
+                                         "toolDescription":  "=This tool marks the trip item for manual review and inserts a new row into the trip_items_to_review table.\nInput:\n{\n  \"user_id\": \"abc123\",\n  \"title\": \"Trip to Paris, France on 2025-06-01\",\n  \"destination\": \"Paris, France\",\n  \"start_date\": \"2025-06-01\",\n  \"end_date\": \"2025-06-07\",\n  \"inferred_from\": \"flight\",\n  \"confidence_score\": 0.9,\n  \"source_email_id\": \"196adde601b63024\"\n}\n\nThis tool checks if a similar trip item already exists in the trip_items_to_review table to prevent duplicate reviews.\n\nCall this tool BEFORE inserting into trip_items_to_review.\\\n\nInput:\n{\n  \"user_id\": \"abc123\",\n  \"type\": \"flight\",\n  \"raw_email_id\": \"196adde601b63024\",  \n  \"destination\": \"Paris, France\",  \n  \"start_date\": \"2025-06-01\"\n}\n\nOutput:\nReturns an array of matching items if duplicates exist, or an empty array if no duplicates found.\n\nA duplicate is considered to exist if ALL of the following match:\n- same user_id\n- same type (flight, hotel, etc.)\n- same raw_email_id OR (same destination AND overlapping dates within ±2 days)\n\nIf this tool returns any results, DO NOT call the Flag for Review tool.\n\n",
+                                         "operation":  "get",
+                                         "tableId":  "trip_items_to_review",
+                                         "filters":  {
+                                                         "conditions":  [
+                                                                            {
+                                                                                "keyName":  "user_id",
+                                                                                "keyValue":  "={{ $json.output.user_id }}"
+                                                                            },
+                                                                            {
+                                                                                "keyName":  "type",
+                                                                                "keyValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.type }}"
+                                                                            },
+                                                                            {
+                                                                                "keyName":  "raw_email_id",
+                                                                                "keyValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.email_id }}"
+                                                                            }
+                                                                        ]
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.supabaseTool",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1408,
+                                       224
+                                   ],
+                      "id":  "9f7b7587-c59b-463d-91f1-621f4dcc6c6b",
+                      "name":  "Check Duplicate Review Item",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "jsonSchemaExample":  "{\n\t\"user_id\": \"179a408c-c5a0-472a\",\n\t\"trip_id\": \"a679aeef-9db7\",\n    \"email_id\": \"196adde601b63024\",\n    \"existing_trip_items\": [\n      { \n        \"trip_id\": \"trip-uuid\",\n        \"id\": \"trip_item_uuid\",\n        \"type\": \"flight\",\n        \"status\": \"rescheduled\"\n      },\n      {\n        \"trip_id\": \"trip-uuid\",\n        \"id\": \"trip_item_uuid-2\",\n        \"type\": \"hotel\",\n        \"status\": \"booked\"\n      }\n    ]\n}"
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.outputParserStructured",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       1696,
+                                       224
+                                   ],
+                      "id":  "b50ddf7c-2ed0-4292-b9f3-67f7e7b44afc",
+                      "name":  "Structure JSON Output1"
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "952d2343-15a8-4c64-864c-c8b61d6ebc60",
+                                                                                     "name":  "user_id",
+                                                                                     "value":  "={{ $(\u0027AI Agent 1\u0027).item.json.output.user_id || \u0027unknown\u0027 }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "96a726ce-de02-4219-9897-ee409b5ea6b5",
+                                                                                     "name":  "email_id",
+                                                                                     "value":  "={{ $(\u0027AI Agent 1\u0027).item.json.output.email_id || \u0027undefined\u0027 }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "b38d6da3-aa0b-4b9f-a1f2-ad20e8946856",
+                                                                                     "name":  "trip_id",
+                                                                                     "value":  "={{ $(\u0027AI Agent 2\u0027).item.json.output.trip_id }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "ec7fda08-f47e-41b1-a89f-9a36c8a6f734",
+                                                                                     "name":  "trip_item_id",
+                                                                                     "value":  "={{ $(\u0027AI Agent 2\u0027).item.json.output.existing_trip_items[0].id }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "b8010c0a-64c1-4bf0-a7e4-cfa012ed6ed0",
+                                                                                     "name":  "type",
+                                                                                     "value":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.type }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "8ae649a5-7b27-4125-957e-c23c5e15b913",
+                                                                                     "name":  "details",
+                                                                                     "value":  "={{ $json.output }}",
+                                                                                     "type":  "string"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       1680,
+                                       -16
+                                   ],
+                      "id":  "5bbc44b1-a071-426f-abee-a9dfc575389c",
+                      "name":  "Edit Output"
+                  },
+                  {
+                      "parameters":  {
+                                         "promptType":  "define",
+                                         "text":  "=You receive structured JSON with:\n- user_id: UUID\n- trip_id: UUID or null\n- email_id: gmail internal message id\n- existing_trip_items: list of existing items for the given trip_id, if any (each includes type, status, id, etc.)\n- trip_item: includes type, status, destination, start_date, end_date, confidence_score\n\nHere is the input you need to process:\n{\n  \"user_id\": \"{{ $json.output.user_id }}\",\n  \"trip_id\": \"{{ $json.output.trip_id }}\",\n  \"email_id\": \"{{ $json.output.email_id }}\",\n  \"existing_trip_items\": {{ JSON.stringify($json.output.existing_trip_items) }},\n  \"trip_item\": {\n    \"destination\": \"{{ $(\u0027When Executed by Another Workflow\u0027).item.json.destination || \u0027\u0027 }}\",\n    \"start_date\": \"{{ $(\u0027When Executed by Another Workflow\u0027).item.json.start_date || \u0027\u0027 }}\",\n    \"end_date\": \"{{ $(\u0027When Executed by Another Workflow\u0027).item.json.end_date || \u0027\u0027 }}\",\n    \"type\": \"{{ $(\u0027When Executed by Another Workflow\u0027).item.json.type || \u0027\u0027 }}\",\n    \"confidence_score\": {{ $(\u0027When Executed by Another Workflow\u0027).item.json.confidence_score || 0 }},\n    \"raw_email_id\": \"{{ $(\u0027When Executed by Another Workflow\u0027).item.json.email_id || \u0027\u0027 }}\",\n    \"document_url\": \"{{ $(\u0027When Executed by Another Workflow\u0027).item.json.document_url || \u0027\u0027 }}\",\n    \"status\": \"{{ $(\u0027When Executed by Another Workflow\u0027).item.json.status || \u0027\u0027 }}\"\n  }\n}",
+                                         "hasOutputParser":  true,
+                                         "options":  {
+                                                         "systemMessage":  "=# ROLE\nYou are an intelligent **Travel Automation Agent** for a trip organization platform.\n\nYou receive structured JSON input containing:\n- `user_id`: UUID\n- `trip_id`: UUID or `\"unknown\"`\n- `email_id`: Gmail internal message id\n- `trip_item`: object with fields like `type`, `status`, `destination`, `start_date`, `end_date`, `confidence_score`, `raw_email_id`, etc.\n- `existing_trip_items`: list of trip items for the trip (if any)\n\n---\n\n# OBJECTIVE\nPerform **exactly one logical action path per run**.  \nAvoid all duplicates and redundant actions.\n\nActions you may take:\n1. Create a trip (only if needed)  \n2. Insert a trip item (if new)  \n3. Update a trip item (if status changed)  \n4. Flag for review (only if required **and** no duplicate review item exists)\n\n---\n\n# STEP 0 — TRIP CREATION LOGIC\n\nIf `trip_id == \"unknown\"`:\n- Check if both `trip_item.destination` and `trip_item.start_date` exist.\n  - ✅ If both exist:\n    - **Call `Create Trip Tool`**\n      - Inputs: `user_id`, `destination`, `start_date`, `end_date` (optional)\n      - Use returned `trip_id`\n      - Then → **Go to STEP 1**\n  - ❌ If one or both are missing:\n    - **Do NOT flag yet.**\n    - Proceed to **STEP 2 (Review Flow with Duplicate Check)**\n\nIf `trip_id` is a valid UUID:\n- Use it directly → **Go to STEP 1**\n\n---\n\n# STEP 1 — TRIP ITEM DECISION LOGIC\n\nPrecondition: a valid `trip_id` is available.\n\n1. Look in `existing_trip_items` for an item with the same `type`.\n2. Logic:\n   - ✅ If match exists:\n     - If `status` changed → **Call `Update Trip Item Tool`**\n       - Inputs: `id` of the existing item, new `status`\n     - If `status` unchanged → **DO NOTHING**\n   - ❌ If no matching `type`:\n     - **Call `Insert Trip Item Tool`** with `trip_id` and `trip_item`.\n\nAfter this step → **STOP.**  \nDo **not** continue to review flow.\n\n---\n\n# STEP 2 — REVIEW FLOW (STRICT DUPLICATE GATE)\n\nPrecondition: `trip_id == \"unknown\"` and item cannot be linked to a trip.\n\n### 1️⃣ Always start by calling `Check Duplicate Review Item Tool`\n- Inputs:\n  - `user_id`\n  - `trip_item.type`\n  - `trip_item.raw_email_id`\n\n### 2️⃣ Hard gating rules:\n- If the **tool returns any result (array length \u003e 0)**:\n  - ❌ **Immediately STOP.**\n  - Do **not** call any other tools.\n  - Return output: `\"Skipped: duplicate review item already exists\"`\n\n- If the **tool returns an empty array []**:\n  - ✅ Then and only then → **Call `Flag for Review Tool`**\n  - Reason examples:\n    - `\"missing destination\"`\n    - `\"missing start date\"`\n    - `\"missing both destination and start date\"`\n    - `\"unable to attach to existing trip\"`\n\n### Absolutely forbidden:\n- Never call `Flag for Review Tool` before or without checking duplicates.\n- Never call both tools in the same reasoning branch.\n\n---\n\n# HARD LOGIC FLOW SUMMARY\n\nif trip_id == \"unknown\":\n  if destination and start_date:\n    create_trip()\n    insert_item()\n  else:\n    duplicates = check_duplicate_review_item()\n    if len(duplicates) \u003e 0:\n       stop(\"Skipped: duplicate review item already exists\")\n     else:\n       flag_for_review(reason)\nelse:\n  if existing_item_with_same_type():\n    if status_changed():\n      update_item()\n    else:\n      do_nothing()\n  else:\n    insert_item()\n\n---\n\n# RULES \u0026 SAFEGUARDS\n\n- 🔒 Only one logical branch executes per input.\n- 🔒 Never fabricate IDs or retry after uniqueness errors.\n- 🔒 Do not “explain” the logic — just act according to it.\n- ✅ Always use the `trip_id` returned from the Create Trip Tool.\n- ✅ Return a **single final summary string** from this list:\n\n---\n\n# VALID FINAL OUTPUTS\n\n- `\"Trip created and item inserted\"`\n- `\"Trip item inserted\"`\n- `\"Trip item updated\"`\n- `\"No action needed\"`\n- `\"Skipped: duplicate review item already exists\"`\n- `\"Flagged for review (reason: ...)\"`\n\n---\n\n# AVAILABLE TOOLS\n\n| Tool | Description | Required Inputs |\n|------|--------------|----------------|\n| **Create Trip Tool** | Creates a new trip when none exists | `user_id`, `destination`, `start_date`, `end_date` (optional) |\n| **Insert Trip Item Tool** | Adds a new item to an existing trip | `trip_id`, `trip_item` |\n| **Update Trip Item Tool** | Updates status of an existing item | `trip_item.id`, `status` |\n| **Check Duplicate Review Item Tool** | Checks if review item already exists | `user_id`, `trip_item.type`, `trip_item.raw_email_id` |\n| **Flag for Review Tool** | Flags item for manual review | `user_id`, `trip_item`, `reason` |\n\n",
+                                                         "maxIterations":  5
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.agent",
+                      "typeVersion":  1.9,
+                      "position":  [
+                                       1024,
+                                       0
+                                   ],
+                      "id":  "7e475d2d-24db-4308-8c84-7f07959572d6",
+                      "name":  "AI Agent 2",
+                      "onError":  "continueErrorOutput"
+                  },
+                  {
+                      "parameters":  {
+                                         "descriptionType":  "manual",
+                                         "toolDescription":  "=This tool marks the trip item for manual review and inserts a new row into the trip_items_to_review table.\nInput:\n{\n  \"user_id\": \"abc123\",\n  \"title\": \"Trip to Paris, France on 2025-06-01\",\n  \"destination\": \"Paris, France\",\n  \"start_date\": \"2025-06-01\",\n  \"end_date\": \"2025-06-07\",\n  \"inferred_from\": \"flight\",\n  \"confidence_score\": 0.9,\n  \"source_email_id\": \"196adde601b63024\"\n}\n\n",
+                                         "tableId":  "trip_items_to_review",
+                                         "fieldsUi":  {
+                                                          "fieldValues":  [
+                                                                              {
+                                                                                  "fieldId":  "type",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.type }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "status",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.status }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "created_at",
+                                                                                  "fieldValue":  "={{ $now }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "start_date",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.start_date || null }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "end_date",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.end_date || null }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "raw_email_id",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.email_id }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "destination",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.destination }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "reason",
+                                                                                  "fieldValue":  "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI(\u0027fieldValues9_Field_Value\u0027, `Provide a brief, human-readable explanation for why this trip item needs manual review. Focus on missing or ambiguous fields.\nExample reasons:\n- \"Missing destination and travel dates\"\n- \"Destination not found in email\"\n- \"Start and end dates are inconsistent or missing\"\n- \"Unable to associate this item with an existing trip\"\nAvoid generic responses like “not enough info” — be specific about what’s missing or unclear.`, \u0027string\u0027) }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "user_id",
+                                                                                  "fieldValue":  "={{ $json.output.user_id }}"
+                                                                              }
+                                                                          ]
+                                                      }
+                                     },
+                      "type":  "n8n-nodes-base.supabaseTool",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1552,
+                                       224
+                                   ],
+                      "id":  "7f122b8c-8382-4994-bac5-417f0892b48a",
+                      "name":  "Flag for Review",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "descriptionType":  "manual",
+                                         "toolDescription":  "=This tool updates a trip item\u0027s \u0027status\u0027 if the trip item already exists with the same trip_id and same type, but the \u0027status\u0027 has changed.\nInput: {\n  \"trip_id\": \"ab24-cr76\",\n  \"type\": \"hotel\",\n  \"status\": \"booked\"\n}",
+                                         "operation":  "update",
+                                         "tableId":  "trip_items",
+                                         "matchType":  "allFilters",
+                                         "filters":  {
+                                                         "conditions":  [
+                                                                            {
+                                                                                "keyName":  "trip_id",
+                                                                                "condition":  "eq",
+                                                                                "keyValue":  "={{ $json.output.trip_id }}"
+                                                                            },
+                                                                            {
+                                                                                "keyName":  "type",
+                                                                                "condition":  "eq",
+                                                                                "keyValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.type }}"
+                                                                            }
+                                                                        ]
+                                                     },
+                                         "fieldsUi":  {
+                                                          "fieldValues":  [
+                                                                              {
+                                                                                  "fieldId":  "status",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.status }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "updated_at",
+                                                                                  "fieldValue":  "={{ $now }}"
+                                                                              }
+                                                                          ]
+                                                      }
+                                     },
+                      "type":  "n8n-nodes-base.supabaseTool",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1264,
+                                       224
+                                   ],
+                      "id":  "c1009d7a-907e-47c2-bbbb-a92c693adfa8",
+                      "name":  "Update Trip Item",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "model":  {
+                                                       "__rl":  true,
+                                                       "mode":  "list",
+                                                       "value":  "gpt-4o-mini"
+                                                   },
+                                         "options":  {
+                                                         "temperature":  0.5
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       848,
+                                       224
+                                   ],
+                      "id":  "34a58e48-706e-44f7-9695-3d6a853e5384",
+                      "name":  "OpenAI Chat Model1",
+                      "credentials":  {
+                                          "openAiApi":  {
+                                                            "id":  "gkxADOkywqNZ2LpA",
+                                                            "name":  "OpenAi account"
+                                                        }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "descriptionType":  "manual",
+                                         "toolDescription":  "=This tool inserts a new row into the trips table.\nInput:\n{\n  \"user_id\": \"abc123\",\n  \"title\": \"Trip to Paris, France on 2025-06-01\",\n  \"destination\": \"Paris, France\",\n  \"start_date\": \"2025-06-01\",\n  \"end_date\": \"2025-06-07\",\n  \"inferred_from\": \"flight\",\n  \"confidence_score\": 0.9,\n  \"source_email_id\": \"196adde601b63024\"\n}",
+                                         "tableId":  "trips",
+                                         "fieldsUi":  {
+                                                          "fieldValues":  [
+                                                                              {
+                                                                                  "fieldId":  "title",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.destination }} on {{ $(\u0027When Executed by Another Workflow\u0027).item.json.start_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "destination",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.destination }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "start_date",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.start_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "end_date",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.end_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "created_at",
+                                                                                  "fieldValue":  "={{ $now }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "inferred_from",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.type }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "confidence_score",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.confidence_score }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "source_email_id",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.email_id }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "user_id",
+                                                                                  "fieldValue":  "={{ $json.output.user_id }}"
+                                                                              }
+                                                                          ]
+                                                      }
+                                     },
+                      "type":  "n8n-nodes-base.supabaseTool",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1008,
+                                       224
+                                   ],
+                      "id":  "41abb977-19fd-497f-ae70-e54ef216942b",
+                      "name":  "Create Trip",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "descriptionType":  "manual",
+                                         "toolDescription":  "=This tool adds a new trip_item for a specific trip using the trip_id. Use this after you’ve matched or created a new trip.\nInput: {\n  \"trip_id\": \"ab24-cr76\",\n  \"type\": \"hotel\",\n  \"status\": \"incomplete\",\n  \"start_date\": \"2024-06-01\",\n  \"end_date\": \"2024-06-07\",\n  \"document_url\": \"https://link-to-file\",\n  \"raw_email_id\": \"196adde601b63024\",\n  \"destination\": \"Paris, France\"\n  \"user_id\": \"at5-ch2\"\n}",
+                                         "tableId":  "trip_items",
+                                         "fieldsUi":  {
+                                                          "fieldValues":  [
+                                                                              {
+                                                                                  "fieldId":  "trip_id",
+                                                                                  "fieldValue":  "={{ JSON.parse($fromAI(\u0027fieldValues0_Field_Value\u0027, ``, \u0027string\u0027)).trip_id }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "type",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.type }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "status",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.status }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "document_url",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.document_url }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "created_at",
+                                                                                  "fieldValue":  "={{ $now }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "start_date",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.start_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "end_date",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.end_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "raw_email_id",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.email_id }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "destination",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.destination }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "user_id",
+                                                                                  "fieldValue":  "={{ $json.output.user_id }}"
+                                                                              }
+                                                                          ]
+                                                      }
+                                     },
+                      "type":  "n8n-nodes-base.supabaseTool",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1120,
+                                       224
+                                   ],
+                      "id":  "701286f5-a036-4d56-b1d3-cc2f4764fa13",
+                      "name":  "Insert Trip Item",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "e93e9d1b-89d4-4c80-9dc6-b15cf1480f84",
+                                                                                     "name":  "destination",
+                                                                                     "value":  "={{ $json.destination === \u0027unknown\u0027 ? null : $json.destination }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "733d1b76-e10b-4d86-9099-8dd30dddd15c",
+                                                                                     "name":  "start_date",
+                                                                                     "value":  "={{ $json.start_date === \u0027unknown\u0027 ? null : $json.start_date }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "65352360-c691-46b6-9a9b-a2b19f19c75d",
+                                                                                     "name":  "end_date",
+                                                                                     "value":  "={{ $json.end_date === \u0027unknown\u0027 ? null : $json.end_date }}",
+                                                                                     "type":  "string"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "includeOtherFields":  true,
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       0,
+                                       0
+                                   ],
+                      "id":  "a242f637-a2db-4a95-b5e0-9af51ee2b3fa",
+                      "name":  "Edit Fields"
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "b9780ef6-6820-4df6-91e8-7026fd29998c",
+                                                                                     "name":  "error_type",
+                                                                                     "value":  "={{ $json.error.message }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "d883742b-2152-48b5-861b-7dc1764f3d24",
+                                                                                     "name":  "failed_node",
+                                                                                     "value":  "={{ $json.node.name }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "44c1c195-ecc7-4b02-85a6-63eeb750dbde",
+                                                                                     "name":  "timestamp",
+                                                                                     "value":  "={{ $now }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "ad221118-8e7a-4c5d-a39b-7c4f4aa74c67",
+                                                                                     "name":  "input_data",
+                                                                                     "value":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json }}",
+                                                                                     "type":  "string"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       1376,
+                                       16
+                                   ],
+                      "id":  "b8e9f46d-675a-4c75-a97f-d601163e8c8b",
+                      "name":  "Log Error Details"
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "b9780ef6-6820-4df6-91e8-7026fd29998c",
+                                                                                     "name":  "error_type",
+                                                                                     "value":  "={{ $json.error.message }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "d883742b-2152-48b5-861b-7dc1764f3d24",
+                                                                                     "name":  "failed_node",
+                                                                                     "value":  "={{ $json.node.name }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "44c1c195-ecc7-4b02-85a6-63eeb750dbde",
+                                                                                     "name":  "timestamp",
+                                                                                     "value":  "={{ $now }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "ad221118-8e7a-4c5d-a39b-7c4f4aa74c67",
+                                                                                     "name":  "input_data",
+                                                                                     "value":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json }}",
+                                                                                     "type":  "string"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       608,
+                                       16
+                                   ],
+                      "id":  "baeba66f-041a-4c11-b0b5-2a187b804bd5",
+                      "name":  "Log Error Details1"
+                  },
+                  {
+                      "parameters":  {
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.agent",
+                      "typeVersion":  2.2,
+                      "position":  [
+                                       1088,
+                                       464
+                                   ],
+                      "id":  "75cd75fb-7b43-4d9b-b37f-919773c38ef2",
+                      "name":  "AI Agent",
+                      "disabled":  true
+                  },
+                  {
+                      "parameters":  {
+                                         "model":  {
+                                                       "__rl":  true,
+                                                       "mode":  "list",
+                                                       "value":  "claude-sonnet-4-20250514",
+                                                       "cachedResultName":  "Claude 4 Sonnet"
+                                                   },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+                      "typeVersion":  1.3,
+                      "position":  [
+                                       960,
+                                       672
+                                   ],
+                      "id":  "7003e0d0-8f06-4621-af39-516dc2ce1044",
+                      "name":  "Anthropic Chat Model",
+                      "disabled":  true
+                  }
+              ],
+    "connections":  {
+                        "When Executed by Another Workflow":  {
+                                                                  "main":  [
+                                                                               [
+                                                                                   {
+                                                                                       "node":  "Edit Fields",
+                                                                                       "type":  "main",
+                                                                                       "index":  0
+                                                                                   }
+                                                                               ]
+                                                                           ]
+                                                              },
+                        "OpenAI Chat Model":  {
+                                                  "ai_languageModel":  [
+                                                                           [
+                                                                               {
+                                                                                   "node":  "AI Agent 1",
+                                                                                   "type":  "ai_languageModel",
+                                                                                   "index":  0
+                                                                               }
+                                                                           ]
+                                                                       ]
+                                              },
+                        "Get User Id":  {
+                                            "ai_tool":  [
+                                                            [
+                                                                {
+                                                                    "node":  "AI Agent 1",
+                                                                    "type":  "ai_tool",
+                                                                    "index":  0
+                                                                }
+                                                            ]
+                                                        ]
+                                        },
+                        "Structure JSON Output":  {
+                                                      "ai_outputParser":  [
+                                                                              [
+                                                                                  {
+                                                                                      "node":  "AI Agent 1",
+                                                                                      "type":  "ai_outputParser",
+                                                                                      "index":  0
+                                                                                  }
+                                                                              ]
+                                                                          ]
+                                                  },
+                        "Get Trips":  {
+                                          "ai_tool":  [
+                                                          [
+                                                              {
+                                                                  "node":  "AI Agent 1",
+                                                                  "type":  "ai_tool",
+                                                                  "index":  0
+                                                              }
+                                                          ]
+                                                      ]
+                                      },
+                        "Get Trip Items":  {
+                                               "ai_tool":  [
+                                                               [
+                                                                   {
+                                                                       "node":  "AI Agent 1",
+                                                                       "type":  "ai_tool",
+                                                                       "index":  0
+                                                                   }
+                                                               ]
+                                                           ]
+                                           },
+                        "AI Agent 1":  {
+                                           "main":  [
+                                                        [
+                                                            {
+                                                                "node":  "AI Agent 2",
+                                                                "type":  "main",
+                                                                "index":  0
+                                                            }
+                                                        ],
+                                                        [
+                                                            {
+                                                                "node":  "Log Error Details1",
+                                                                "type":  "main",
+                                                                "index":  0
+                                                            }
+                                                        ]
+                                                    ]
+                                       },
+                        "Check Duplicate Review Item":  {
+                                                            "ai_tool":  [
+                                                                            [
+                                                                                {
+                                                                                    "node":  "AI Agent 2",
+                                                                                    "type":  "ai_tool",
+                                                                                    "index":  0
+                                                                                }
+                                                                            ]
+                                                                        ]
+                                                        },
+                        "Structure JSON Output1":  {
+                                                       "ai_outputParser":  [
+                                                                               [
+                                                                                   {
+                                                                                       "node":  "AI Agent 2",
+                                                                                       "type":  "ai_outputParser",
+                                                                                       "index":  0
+                                                                                   }
+                                                                               ]
+                                                                           ]
+                                                   },
+                        "AI Agent 2":  {
+                                           "main":  [
+                                                        [
+                                                            {
+                                                                "node":  "Edit Output",
+                                                                "type":  "main",
+                                                                "index":  0
+                                                            }
+                                                        ],
+                                                        [
+                                                            {
+                                                                "node":  "Log Error Details",
+                                                                "type":  "main",
+                                                                "index":  0
+                                                            }
+                                                        ]
+                                                    ]
+                                       },
+                        "Flag for Review":  {
+                                                "ai_tool":  [
+                                                                [
+                                                                    {
+                                                                        "node":  "AI Agent 2",
+                                                                        "type":  "ai_tool",
+                                                                        "index":  0
+                                                                    }
+                                                                ]
+                                                            ]
+                                            },
+                        "Update Trip Item":  {
+                                                 "ai_tool":  [
+                                                                 [
+                                                                     {
+                                                                         "node":  "AI Agent 2",
+                                                                         "type":  "ai_tool",
+                                                                         "index":  0
+                                                                     }
+                                                                 ]
+                                                             ]
+                                             },
+                        "OpenAI Chat Model1":  {
+                                                   "ai_languageModel":  [
+                                                                            [
+                                                                                {
+                                                                                    "node":  "AI Agent 2",
+                                                                                    "type":  "ai_languageModel",
+                                                                                    "index":  0
+                                                                                }
+                                                                            ]
+                                                                        ]
+                                               },
+                        "Create Trip":  {
+                                            "ai_tool":  [
+                                                            [
+                                                                {
+                                                                    "node":  "AI Agent 2",
+                                                                    "type":  "ai_tool",
+                                                                    "index":  0
+                                                                }
+                                                            ]
+                                                        ]
+                                        },
+                        "Insert Trip Item":  {
+                                                 "ai_tool":  [
+                                                                 [
+                                                                     {
+                                                                         "node":  "AI Agent 2",
+                                                                         "type":  "ai_tool",
+                                                                         "index":  0
+                                                                     }
+                                                                 ]
+                                                             ]
+                                             },
+                        "Edit Fields":  {
+                                            "main":  [
+                                                         [
+                                                             {
+                                                                 "node":  "AI Agent 1",
+                                                                 "type":  "main",
+                                                                 "index":  0
+                                                             }
+                                                         ]
+                                                     ]
+                                        },
+                        "Anthropic Chat Model":  {
+                                                     "ai_languageModel":  [
+                                                                              [
+                                                                                  {
+                                                                                      "node":  "AI Agent",
+                                                                                      "type":  "ai_languageModel",
+                                                                                      "index":  0
+                                                                                  }
+                                                                              ]
+                                                                          ]
+                                                 }
+                    },
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "staticData":  null,
+    "meta":  {
+                 "templateCredsSetupCompleted":  true
+             },
+    "pinData":  {
+
+                },
+    "versionId":  "166d1679-a6d9-4324-8c4c-2bdaa79ae2c6",
+    "activeVersionId":  "166d1679-a6d9-4324-8c4c-2bdaa79ae2c6",
+    "versionCounter":  4,
+    "triggerCount":  0,
+    "tags":  [
+                 {
+                     "updatedAt":  "2025-07-28T16:51:43.261Z",
+                     "createdAt":  "2025-07-28T16:51:43.261Z",
+                     "id":  "wFA0OT7LAjyTBsE4",
+                     "name":  "dev"
+                 }
+             ],
+    "shared":  [
+                   {
+                       "updatedAt":  "2025-07-28T18:10:14.787Z",
+                       "createdAt":  "2025-07-28T18:10:14.787Z",
+                       "role":  "workflow:owner",
+                       "workflowId":  "wT3klWvdCtvH0et3",
+                       "projectId":  "LgilvFgQb45ZsfNg",
+                       "project":  {
+                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
+                                       "createdAt":  "2025-05-27T00:15:31.394Z",
+                                       "id":  "LgilvFgQb45ZsfNg",
+                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+                                   }
+                   }
+               ],
+    "versionMetadata":  {
+                            "name":  null,
+                            "description":  null
+                        }
+}

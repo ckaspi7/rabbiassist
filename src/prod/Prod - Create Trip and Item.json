@@ -1,0 +1,276 @@
+{
+    "updatedAt":  "2025-12-09T07:48:29.000Z",
+    "createdAt":  "2025-12-01T06:51:41.594Z",
+    "id":  "qB4GUhACOWzwLufJ",
+    "name":  "Prod - Create Trip and Item",
+    "description":  null,
+    "active":  true,
+    "isArchived":  false,
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "tableId":  "trips",
+                                         "fieldsUi":  {
+                                                          "fieldValues":  [
+                                                                              {
+                                                                                  "fieldId":  "title",
+                                                                                  "fieldValue":  "={{ $json.destination }} on {{ $json.start_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "destination",
+                                                                                  "fieldValue":  "={{ $json.destination }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "start_date",
+                                                                                  "fieldValue":  "={{ $json.start_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "end_date",
+                                                                                  "fieldValue":  "={{ $json.end_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "created_at",
+                                                                                  "fieldValue":  "={{ $now }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "inferred_from",
+                                                                                  "fieldValue":  "={{ $json.type }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "confidence_score",
+                                                                                  "fieldValue":  "={{ $json.confidence_score }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "source_email_id",
+                                                                                  "fieldValue":  "={{ $json.raw_email_id }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "user_id",
+                                                                                  "fieldValue":  "={{ $json.user_id }}"
+                                                                              }
+                                                                          ]
+                                                      }
+                                     },
+                      "type":  "n8n-nodes-base.supabase",
+                      "typeVersion":  1,
+                      "position":  [
+                                       192,
+                                       -32
+                                   ],
+                      "id":  "bbbce2d3-9c39-4ed2-9d20-33e578360353",
+                      "name":  "Create Trip",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "tableId":  "trip_items",
+                                         "fieldsUi":  {
+                                                          "fieldValues":  [
+                                                                              {
+                                                                                  "fieldId":  "trip_id",
+                                                                                  "fieldValue":  "={{ $json.id }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "type",
+                                                                                  "fieldValue":  "={{ $json.inferred_from }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "status",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.status }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "document_url",
+                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.document_url }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "created_at",
+                                                                                  "fieldValue":  "={{ $now }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "start_date",
+                                                                                  "fieldValue":  "={{ $json.start_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "end_date",
+                                                                                  "fieldValue":  "={{ $json.end_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "raw_email_id",
+                                                                                  "fieldValue":  "={{ $json.source_email_id }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "destination",
+                                                                                  "fieldValue":  "={{ $json.destination }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "user_id",
+                                                                                  "fieldValue":  "={{ $json.user_id }}"
+                                                                              }
+                                                                          ]
+                                                      }
+                                     },
+                      "type":  "n8n-nodes-base.supabase",
+                      "typeVersion":  1,
+                      "position":  [
+                                       416,
+                                       -32
+                                   ],
+                      "id":  "05262b82-30a7-4e46-9e83-a557b791e370",
+                      "name":  "Insert Trip Item",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "inputSource":  "jsonExample",
+                                         "jsonExample":  "{\n  \"user_id\": \"179a408c-c5a0-472a-b343-44abf02f4804\",\n  \"destination\": \"Paris, France\",\n  \"start_date\": \"2025-04-08\",\n  \"end_date\": \"2025-04-09\",\n  \"type\": \"hotel\",\n  \"status\": \"booked\",\n  \"confidence_score\": 0.95,\n  \"raw_email_id\": \"CAA5qxOZ=uMU8S+m+80x8C+6xeZNTvVUcqXC1bxer=d7VvvdkuQ@mail.gmail.com\",\n  \"document_url\": \"https://example.com/document.pdf\"\n}"
+                                     },
+                      "type":  "n8n-nodes-base.executeWorkflowTrigger",
+                      "typeVersion":  1.1,
+                      "position":  [
+                                       -32,
+                                       -32
+                                   ],
+                      "id":  "d9790b62-c3b0-4924-a119-04cd40355161",
+                      "name":  "When Executed by Another Workflow"
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "9623e849-cc05-415a-a2e0-1145de0b7844",
+                                                                                     "name":  "status",
+                                                                                     "value":  "success",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "9ffad2b4-9abf-4def-a5e3-32db47af06cc",
+                                                                                     "name":  "action",
+                                                                                     "value":  "created_trip_and_trip_item",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "f47d07aa-0e9c-417b-bb54-923b54bf8ce1",
+                                                                                     "name":  "trip_id",
+                                                                                     "value":  "={{ $json.trip_id }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "fe266a10-c754-4cfd-8df5-72a8ada848fc",
+                                                                                     "name":  "trip_item_id",
+                                                                                     "value":  "={{ $json.id }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "6fb170cc-65ca-4b29-8fea-21db6735e6da",
+                                                                                     "name":  "reasoning",
+                                                                                     "value":  "Operation complete: created new trip and inserted item",
+                                                                                     "type":  "string"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       640,
+                                       -32
+                                   ],
+                      "id":  "7afbe1c6-f2f4-4b90-a988-9bf0e33f8085",
+                      "name":  "Edit Fields"
+                  }
+              ],
+    "connections":  {
+                        "Create Trip":  {
+                                            "main":  [
+                                                         [
+                                                             {
+                                                                 "node":  "Insert Trip Item",
+                                                                 "type":  "main",
+                                                                 "index":  0
+                                                             }
+                                                         ]
+                                                     ]
+                                        },
+                        "Insert Trip Item":  {
+                                                 "main":  [
+                                                              [
+                                                                  {
+                                                                      "node":  "Edit Fields",
+                                                                      "type":  "main",
+                                                                      "index":  0
+                                                                  }
+                                                              ]
+                                                          ]
+                                             },
+                        "When Executed by Another Workflow":  {
+                                                                  "main":  [
+                                                                               [
+                                                                                   {
+                                                                                       "node":  "Create Trip",
+                                                                                       "type":  "main",
+                                                                                       "index":  0
+                                                                                   }
+                                                                               ]
+                                                                           ]
+                                                              }
+                    },
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "staticData":  null,
+    "meta":  {
+                 "templateCredsSetupCompleted":  true
+             },
+    "pinData":  {
+
+                },
+    "versionId":  "bd433590-ab47-49ee-a3c7-8f7186da71e7",
+    "activeVersionId":  "bd433590-ab47-49ee-a3c7-8f7186da71e7",
+    "versionCounter":  16,
+    "triggerCount":  0,
+    "tags":  [
+                 {
+                     "updatedAt":  "2025-07-28T16:51:48.892Z",
+                     "createdAt":  "2025-07-28T16:51:48.892Z",
+                     "id":  "6d22SbkvGEnpRv79",
+                     "name":  "prod"
+                 }
+             ],
+    "shared":  [
+                   {
+                       "updatedAt":  "2025-12-01T06:51:41.600Z",
+                       "createdAt":  "2025-12-01T06:51:41.600Z",
+                       "role":  "workflow:owner",
+                       "workflowId":  "qB4GUhACOWzwLufJ",
+                       "projectId":  "LgilvFgQb45ZsfNg",
+                       "project":  {
+                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
+                                       "createdAt":  "2025-05-27T00:15:31.394Z",
+                                       "id":  "LgilvFgQb45ZsfNg",
+                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+                                   }
+                   }
+               ],
+    "versionMetadata":  {
+                            "name":  null,
+                            "description":  null
+                        }
+}

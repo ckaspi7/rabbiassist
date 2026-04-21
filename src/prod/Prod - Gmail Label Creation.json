@@ -1,0 +1,121 @@
+{
+    "updatedAt":  "2025-07-30T07:51:53.000Z",
+    "createdAt":  "2025-05-28T04:08:06.618Z",
+    "id":  "2XenHh2D4jPXzmSQ",
+    "name":  "Prod - Gmail Label Creation",
+    "description":  null,
+    "active":  false,
+    "isArchived":  false,
+    "nodes":  [
+                  {
+                      "parameters":  {
+
+                                     },
+                      "type":  "n8n-nodes-base.manualTrigger",
+                      "typeVersion":  1,
+                      "position":  [
+                                       0,
+                                       0
+                                   ],
+                      "id":  "407dc5a9-1b69-42f2-b221-6aedf9379427",
+                      "name":  "When clicking ‘Test workflow’"
+                  },
+                  {
+                      "parameters":  {
+                                         "functionCode":  "return [\n  { json: { name: \u0027Trips\u0027 } },\n  { json: { name: \u0027Trips/Flights\u0027 } },\n  { json: { name: \u0027Trips/Hotels\u0027 } },\n  { json: { name: \u0027Trips/Car Rentals\u0027 } },\n  { json: { name: \u0027Trips/Travel Insurance\u0027 } },\n  { json: { name: \u0027Trips/Other\u0027 } },\n  { json: { name: \u0027Invoices \u0026 Receipts\u0027 } },\n  { json: { name: \u0027Rabbinate\u0027 } },\n  { json: { name: \u0027Learning Material\u0027 } },\n  { json: { name: \u0027Other\u0027 } }\n];"
+                                     },
+                      "id":  "c5d4a8cf-9668-4cfc-a85f-3b5fa8894b10",
+                      "name":  "Prepare Labels",
+                      "type":  "n8n-nodes-base.function",
+                      "typeVersion":  1,
+                      "position":  [
+                                       192,
+                                       0
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "resource":  "label",
+                                         "name":  "={{ $json.name }}"
+                                     },
+                      "id":  "05d5bb51-0ce4-4105-9e0c-6f8316ce4dd5",
+                      "name":  "Create Label",
+                      "type":  "n8n-nodes-base.gmail",
+                      "typeVersion":  1,
+                      "position":  [
+                                       384,
+                                       0
+                                   ],
+                      "credentials":  {
+                                          "gmailOAuth2":  {
+                                                              "id":  "VRG0g6yxBu8Zca2Q",
+                                                              "name":  "Gmail account"
+                                                          }
+                                      }
+                  }
+              ],
+    "connections":  {
+                        "When clicking ‘Test workflow’":  {
+                                                                  "main":  [
+                                                                               [
+                                                                                   {
+                                                                                       "node":  "Prepare Labels",
+                                                                                       "type":  "main",
+                                                                                       "index":  0
+                                                                                   }
+                                                                               ]
+                                                                           ]
+                                                              },
+                        "Prepare Labels":  {
+                                               "main":  [
+                                                            [
+                                                                {
+                                                                    "node":  "Create Label",
+                                                                    "type":  "main",
+                                                                    "index":  0
+                                                                }
+                                                            ]
+                                                        ]
+                                           }
+                    },
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "staticData":  null,
+    "meta":  {
+                 "templateCredsSetupCompleted":  true
+             },
+    "pinData":  {
+
+                },
+    "versionId":  "75536c77-5201-47a6-946f-3997dc495fc2",
+    "activeVersionId":  null,
+    "versionCounter":  1,
+    "triggerCount":  0,
+    "tags":  [
+
+             ],
+    "shared":  [
+                   {
+                       "updatedAt":  "2025-05-28T04:08:06.625Z",
+                       "createdAt":  "2025-05-28T04:08:06.625Z",
+                       "role":  "workflow:owner",
+                       "workflowId":  "2XenHh2D4jPXzmSQ",
+                       "projectId":  "LgilvFgQb45ZsfNg",
+                       "project":  {
+                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
+                                       "createdAt":  "2025-05-27T00:15:31.394Z",
+                                       "id":  "LgilvFgQb45ZsfNg",
+                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+                                   }
+                   }
+               ],
+    "versionMetadata":  {
+                            "name":  null,
+                            "description":  null
+                        }
+}

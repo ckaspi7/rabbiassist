@@ -1,0 +1,5 @@
+# Credentials - never commit these
+credentials-backup.json
+workflows-backup.json
+*.env
+.env*

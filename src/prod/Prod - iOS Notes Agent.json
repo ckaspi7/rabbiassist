@@ -1,0 +1,607 @@
+{
+    "updatedAt":  "2025-07-28T18:17:44.000Z",
+    "createdAt":  "2025-06-30T17:30:54.201Z",
+    "id":  "f7L1wmPseygYaxZ9",
+    "name":  "Prod - iOS Notes Agent",
+    "description":  null,
+    "active":  true,
+    "isArchived":  false,
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.splitInBatches",
+                      "typeVersion":  3,
+                      "position":  [
+                                       2544,
+                                       -464
+                                   ],
+                      "id":  "86965d07-a55b-4844-bc38-516c2e994f67",
+                      "name":  "Loop Over Items"
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "get",
+                                         "tableId":  "users",
+                                         "filters":  {
+                                                         "conditions":  [
+                                                                            {
+                                                                                "keyName":  "user_secret",
+                                                                                "keyValue":  "={{ $json.body[\u0027\u0027].user_secret }}"
+                                                                            }
+                                                                        ]
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.supabase",
+                      "typeVersion":  1,
+                      "position":  [
+                                       224,
+                                       -464
+                                   ],
+                      "id":  "26618e94-60df-483d-850c-ac26453c078e",
+                      "name":  "Get User ID",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "httpMethod":  "POST",
+                                         "path":  "process/reminders",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.webhook",
+                      "typeVersion":  2,
+                      "position":  [
+                                       0,
+                                       -464
+                                   ],
+                      "id":  "1abf2ade-835d-4ffb-9edb-230531224bbf",
+                      "name":  "Get Notes from Shortcuts",
+                      "webhookId":  "89443878-84e0-47cb-a219-d7ff74434232"
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "getAll",
+                                         "tableId":  "reminders",
+                                         "returnAll":  true,
+                                         "matchType":  "allFilters",
+                                         "filters":  {
+                                                         "conditions":  [
+                                                                            {
+                                                                                "keyName":  "user_id",
+                                                                                "condition":  "eq",
+                                                                                "keyValue":  "={{ $(\u0027Get User ID\u0027).item.json.id }}"
+                                                                            },
+                                                                            {
+                                                                                "keyName":  "source",
+                                                                                "condition":  "eq",
+                                                                                "keyValue":  "={{ $(\u0027Get Notes from Shortcuts\u0027).item.json.body[\u0027\u0027].source }}"
+                                                                            }
+                                                                        ]
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.supabase",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1056,
+                                       -560
+                                   ],
+                      "id":  "e6638b14-1029-49cb-bd23-19b09f52777e",
+                      "name":  "Get Existing Tasks",
+                      "executeOnce":  true,
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "modelId":  {
+                                                         "__rl":  true,
+                                                         "value":  "chatgpt-4o-latest",
+                                                         "mode":  "list",
+                                                         "cachedResultName":  "CHATGPT-4O-LATEST"
+                                                     },
+                                         "messages":  {
+                                                          "values":  [
+                                                                         {
+                                                                             "content":  "=You are a smart deduplication assistant. Your job is to identify which tasks are genuinely NEW and haven\u0027t been created before.\n\nYou will receive:\n1. NEW TASKS: extracted from a user\u0027s note (have \"task\" field)\n2. EXISTING TASKS: already in the database (have \"id\" and \"title\" fields)\n\nDEDUPLICATION RULES:\n1. Compare new_task.task with existing_task.title for content similarity\n2. Only mark as duplicate if content is 95%+ semantically identical\n3. Tasks with ANY different due dates are ALWAYS different tasks\n4. Be CONSERVATIVE - when uncertain, classify as NEW\n5. Exact wording doesn\u0027t matter, but meaning must be nearly identical\n\nEXAMPLES:\n- \"Call mom\" vs \"Phone mother\" = DUPLICATE (same meaning)\n- \"Set up call with rabbi\" vs \"Set up call with rabbi on July 5th\" = NOT DUPLICATE (different specificity/timing)\n- \"Fix WhatsApp connection\" vs \"Fix whatsapp connection for auto document ingestion\" = NOT DUPLICATE (different scope)\n\nDEFAULT TO NEW: If you\u0027re not 95% certain it\u0027s a duplicate, mark it as NEW.\n\nReturn JSON:\n{\n  \"new_tasks\": [\n    {\n      \"task\": \"original task text\",\n      \"due_date\": \"original due_date value\", \n      \"user_id\": \"original user_id value\",\n      \"note_title\": \"original note_title value\",\n      \"note_content\": \"original note_content value\",\n      \"created_at\": \"original created_at value\",\n      \"modified_at\": \"original modified_at value\",\n      \"source\": \"original source value\",\n      \"explanation\": \"Brief explanation of what this task involves and why it\u0027s considered new\",\n      \"similarity_score\": [number between 0.0-1.0 indicating confidence of duplicate match]\n    }\n  ],\n  \"duplicates_found\": [\n    {\n      \"task\": \"original task text\",\n      \"due_date\": \"original due_date value\",\n      \"user_id\": \"original user_id value\", \n      \"note_title\": \"original note_title value\",\n      \"note_content\": \"original note_content value\",\n      \"created_at\": \"original created_at value\",\n      \"modified_at\": \"original modified_at value\",\n      \"source\": \"original source value\",\n      \"explanation\": \"Brief explanation of why this task is considered a duplicate and what it matches\",\n      \"similarity_score\": [number between 0.0-1.0 indicating confidence of duplicate match]\n    }\n  ]\n}",
+                                                                             "role":  "system"
+                                                                         },
+                                                                         {
+                                                                             "content":  "=Compare these tasks for duplicates. Remember: only mark as duplicate if you\u0027re 95%+ certain the content and intent are nearly identical.\n\nNEW TASKS:\n{{ JSON.stringify($json.data.filter(item =\u003e item.task !== undefined)) }}\n\nEXISTING TASKS:\n{{ JSON.stringify($json.data.filter(item =\u003e item.id !== undefined)) }}"
+                                                                         }
+                                                                     ]
+                                                      },
+                                         "simplify":  false,
+                                         "jsonOutput":  true,
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.openAi",
+                      "typeVersion":  1.8,
+                      "position":  [
+                                       1728,
+                                       -464
+                                   ],
+                      "id":  "a8eb4a80-83e5-4005-a882-1457cd78f5d5",
+                      "name":  "Deduplication Check",
+                      "executeOnce":  true,
+                      "credentials":  {
+                                          "openAiApi":  {
+                                                            "id":  "gkxADOkywqNZ2LpA",
+                                                            "name":  "OpenAi account"
+                                                        }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+
+                                     },
+                      "type":  "n8n-nodes-base.merge",
+                      "typeVersion":  3.1,
+                      "position":  [
+                                       1280,
+                                       -464
+                                   ],
+                      "id":  "5bcdf24d-f652-4ef7-b673-9dc45d932ec0",
+                      "name":  "Merge"
+                  },
+                  {
+                      "parameters":  {
+                                         "aggregate":  "aggregateAllItemData",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.aggregate",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1504,
+                                       -464
+                                   ],
+                      "id":  "1524f05e-553f-4e99-9636-248561cc5a22",
+                      "name":  "Aggregate"
+                  },
+                  {
+                      "parameters":  {
+                                         "fieldToSplitOut":  "choices[0].message.content.tasks",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.splitOut",
+                      "typeVersion":  1,
+                      "position":  [
+                                       1056,
+                                       -368
+                                   ],
+                      "id":  "3ba08824-6399-450f-a9f3-475468d075b7",
+                      "name":  "Split Out Tasks"
+                  },
+                  {
+                      "parameters":  {
+                                         "modelId":  {
+                                                         "__rl":  true,
+                                                         "value":  "gpt-4o-mini",
+                                                         "mode":  "list",
+                                                         "cachedResultName":  "GPT-4O-MINI"
+                                                     },
+                                         "messages":  {
+                                                          "values":  [
+                                                                         {
+                                                                             "content":  "=You are a smart AI assistant that extracts actionable tasks from user notes.\n\nYour job is to:\n1. Read a user note and identify all actionable tasks or to-dos.\n2. For each task, output a structured JSON object with:\n   - \"task\": a concise description of the task\n   - \"due_date\": if a deadline or timeline is mentioned (e.g., \"by Friday\", \"next week\"), parse it as an ISO 8601 date; otherwise leave as null\n   - \"user_id\", \"note_title\", \"note_content\", \"created_at\", \"modified_at\", and \"source\": use the same values from the input note (do not change or infer)\n3. Always return a \u0027tasks\u0027 array that includes each task object even if there is only one. Return an empty \u0027tasks\u0027 array if there is none.\n\nInput format:\n```json\n{\n  \"user_id\": \"user uuid\"\n  \"note_title\": \"Your note title here\",\n  \"note_content\": \"Your full note body here\",\n  \"created_at\": \"2025-06-30T13:26:29-04:00\",\n  \"modified_at\": \"2025-06-30T13:28:07-04:00\",\n  \"source\": \"ios-notes\"\n}\n",
+                                                                             "role":  "system"
+                                                                         },
+                                                                         {
+                                                                             "content":  "=Extract the json object from the following input:\n\n{\n  \"user_id\": \"{{ $json.id }}\"\n  \"note_title\": \"{{ $(\u0027Get Notes from Shortcuts\u0027).item.json.body[\u0027\u0027].note_title }}\",\n  \"note_content\": \"{{ $(\u0027Get Notes from Shortcuts\u0027).item.json.body[\u0027\u0027].note_content }}\",\n  \"created_at\": \"{{ $(\u0027Get Notes from Shortcuts\u0027).item.json.body[\u0027\u0027].created_at }}\",\n  \"modified_at\": \"{{ $(\u0027Get Notes from Shortcuts\u0027).item.json.body[\u0027\u0027].modified_at }}\",\n  \"source\": \"{{ $(\u0027Get Notes from Shortcuts\u0027).item.json.body[\u0027\u0027].source }}\"\n}\n"
+                                                                         }
+                                                                     ]
+                                                      },
+                                         "simplify":  false,
+                                         "jsonOutput":  true,
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "@n8n/n8n-nodes-langchain.openAi",
+                      "typeVersion":  1.8,
+                      "position":  [
+                                       448,
+                                       -464
+                                   ],
+                      "id":  "74c763d2-17c3-4718-8d0c-4db3aef225fc",
+                      "name":  "Extract Tasks",
+                      "credentials":  {
+                                          "openAiApi":  {
+                                                            "id":  "gkxADOkywqNZ2LpA",
+                                                            "name":  "OpenAi account"
+                                                        }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "ee8db526-b9a3-4106-b2c9-98be3defe245",
+                                                                                     "name":  "new_reminders",
+                                                                                     "value":  "={{ $json.choices[0].message.content.new_tasks }}",
+                                                                                     "type":  "array"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       2096,
+                                       -464
+                                   ],
+                      "id":  "d9531b82-202c-42c0-a1b1-0b1b1848bf4b",
+                      "name":  "Only New Tasks"
+                  },
+                  {
+                      "parameters":  {
+                                         "fieldToSplitOut":  "new_reminders",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.splitOut",
+                      "typeVersion":  1,
+                      "position":  [
+                                       2320,
+                                       -464
+                                   ],
+                      "id":  "2b0d25ea-b1d3-4d18-8406-7528dfc738bf",
+                      "name":  "Split Out New Tasks"
+                  },
+                  {
+                      "parameters":  {
+                                         "tableId":  "reminders",
+                                         "fieldsUi":  {
+                                                          "fieldValues":  [
+                                                                              {
+                                                                                  "fieldId":  "user_id",
+                                                                                  "fieldValue":  "={{ $json.user_id }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "title",
+                                                                                  "fieldValue":  "={{ $json.task }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "due_date",
+                                                                                  "fieldValue":  "={{ $json.due_date }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "source",
+                                                                                  "fieldValue":  "={{ $json.source }}"
+                                                                              },
+                                                                              {
+                                                                                  "fieldId":  "metadata",
+                                                                                  "fieldValue":  "={{ \n{\n  \"note_title\": $json.note_title,\n  \"note_content\": $json.note_content,\n  \"created_at\": $json.created_at,\n  \"modified_at\": $json.modified_at\n}\n}}"
+                                                                              }
+                                                                          ]
+                                                      }
+                                     },
+                      "type":  "n8n-nodes-base.supabase",
+                      "typeVersion":  1,
+                      "position":  [
+                                       2752,
+                                       -464
+                                   ],
+                      "id":  "424f2127-c1bb-4175-b5a1-c2b4f5259285",
+                      "name":  "Insert into Reminders",
+                      "credentials":  {
+                                          "supabaseApi":  {
+                                                              "id":  "eFDq1jTa6XhpCbtl",
+                                                              "name":  "Supabase account"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "content":  "## Receiving notes and turning them into tasks",
+                                         "height":  560,
+                                         "width":  812
+                                     },
+                      "type":  "n8n-nodes-base.stickyNote",
+                      "position":  [
+                                       -64,
+                                       -688
+                                   ],
+                      "typeVersion":  1,
+                      "id":  "95d890fd-4fe4-4b9b-958f-140b126b07b9",
+                      "name":  "Sticky Note"
+                  },
+                  {
+                      "parameters":  {
+                                         "content":  "## Checking existing reminders and removing duplicate tasks",
+                                         "height":  560,
+                                         "width":  1720,
+                                         "color":  5
+                                     },
+                      "type":  "n8n-nodes-base.stickyNote",
+                      "typeVersion":  1,
+                      "position":  [
+                                       752,
+                                       -688
+                                   ],
+                      "id":  "99430747-fa25-4f8d-8c8b-23dd18cacf5b",
+                      "name":  "Sticky Note1"
+                  },
+                  {
+                      "parameters":  {
+                                         "content":  "## Adding new tasks into the reminders table",
+                                         "height":  560,
+                                         "width":  484,
+                                         "color":  4
+                                     },
+                      "type":  "n8n-nodes-base.stickyNote",
+                      "typeVersion":  1,
+                      "position":  [
+                                       2464,
+                                       -688
+                                   ],
+                      "id":  "fd377b9f-9873-4e6a-801b-621fd0e64fca",
+                      "name":  "Sticky Note2"
+                  },
+                  {
+                      "parameters":  {
+                                         "conditions":  {
+                                                            "options":  {
+                                                                            "caseSensitive":  true,
+                                                                            "leftValue":  "",
+                                                                            "typeValidation":  "strict",
+                                                                            "version":  2
+                                                                        },
+                                                            "conditions":  [
+                                                                               {
+                                                                                   "id":  "8ce6e648-7dfb-4ba9-aadb-d17228b76e60",
+                                                                                   "leftValue":  "={{ $json.choices[0].message.content.tasks }}",
+                                                                                   "rightValue":  "",
+                                                                                   "operator":  {
+                                                                                                    "type":  "array",
+                                                                                                    "operation":  "exists",
+                                                                                                    "singleValue":  true
+                                                                                                }
+                                                                               },
+                                                                               {
+                                                                                   "id":  "9800ad19-e117-4f9f-84d3-a1209483d12d",
+                                                                                   "leftValue":  "={{ $json.choices[0].message.content.tasks }}",
+                                                                                   "rightValue":  "",
+                                                                                   "operator":  {
+                                                                                                    "type":  "array",
+                                                                                                    "operation":  "notEmpty",
+                                                                                                    "singleValue":  true
+                                                                                                }
+                                                                               }
+                                                                           ],
+                                                            "combinator":  "and"
+                                                        },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.if",
+                      "typeVersion":  2.2,
+                      "position":  [
+                                       800,
+                                       -464
+                                   ],
+                      "id":  "4e37111a-c008-469d-a5fd-c3412727d6b7",
+                      "name":  "Tasks?"
+                  }
+              ],
+    "connections":  {
+                        "Loop Over Items":  {
+                                                "main":  [
+                                                             [
+
+                                                             ],
+                                                             [
+                                                                 {
+                                                                     "node":  "Insert into Reminders",
+                                                                     "type":  "main",
+                                                                     "index":  0
+                                                                 }
+                                                             ]
+                                                         ]
+                                            },
+                        "Get User ID":  {
+                                            "main":  [
+                                                         [
+                                                             {
+                                                                 "node":  "Extract Tasks",
+                                                                 "type":  "main",
+                                                                 "index":  0
+                                                             }
+                                                         ]
+                                                     ]
+                                        },
+                        "Get Notes from Shortcuts":  {
+                                                         "main":  [
+                                                                      [
+                                                                          {
+                                                                              "node":  "Get User ID",
+                                                                              "type":  "main",
+                                                                              "index":  0
+                                                                          }
+                                                                      ]
+                                                                  ]
+                                                     },
+                        "Get Existing Tasks":  {
+                                                   "main":  [
+                                                                [
+                                                                    {
+                                                                        "node":  "Merge",
+                                                                        "type":  "main",
+                                                                        "index":  0
+                                                                    }
+                                                                ]
+                                                            ]
+                                               },
+                        "Deduplication Check":  {
+                                                    "main":  [
+                                                                 [
+                                                                     {
+                                                                         "node":  "Only New Tasks",
+                                                                         "type":  "main",
+                                                                         "index":  0
+                                                                     }
+                                                                 ]
+                                                             ]
+                                                },
+                        "Merge":  {
+                                      "main":  [
+                                                   [
+                                                       {
+                                                           "node":  "Aggregate",
+                                                           "type":  "main",
+                                                           "index":  0
+                                                       }
+                                                   ]
+                                               ]
+                                  },
+                        "Aggregate":  {
+                                          "main":  [
+                                                       [
+                                                           {
+                                                               "node":  "Deduplication Check",
+                                                               "type":  "main",
+                                                               "index":  0
+                                                           }
+                                                       ]
+                                                   ]
+                                      },
+                        "Split Out Tasks":  {
+                                                "main":  [
+                                                             [
+                                                                 {
+                                                                     "node":  "Merge",
+                                                                     "type":  "main",
+                                                                     "index":  1
+                                                                 }
+                                                             ]
+                                                         ]
+                                            },
+                        "Extract Tasks":  {
+                                              "main":  [
+                                                           [
+                                                               {
+                                                                   "node":  "Tasks?",
+                                                                   "type":  "main",
+                                                                   "index":  0
+                                                               }
+                                                           ]
+                                                       ]
+                                          },
+                        "Only New Tasks":  {
+                                               "main":  [
+                                                            [
+                                                                {
+                                                                    "node":  "Split Out New Tasks",
+                                                                    "type":  "main",
+                                                                    "index":  0
+                                                                }
+                                                            ]
+                                                        ]
+                                           },
+                        "Split Out New Tasks":  {
+                                                    "main":  [
+                                                                 [
+                                                                     {
+                                                                         "node":  "Loop Over Items",
+                                                                         "type":  "main",
+                                                                         "index":  0
+                                                                     }
+                                                                 ]
+                                                             ]
+                                                },
+                        "Insert into Reminders":  {
+                                                      "main":  [
+                                                                   [
+                                                                       {
+                                                                           "node":  "Loop Over Items",
+                                                                           "type":  "main",
+                                                                           "index":  0
+                                                                       }
+                                                                   ]
+                                                               ]
+                                                  },
+                        "Tasks?":  {
+                                       "main":  [
+                                                    [
+                                                        {
+                                                            "node":  "Get Existing Tasks",
+                                                            "type":  "main",
+                                                            "index":  0
+                                                        },
+                                                        {
+                                                            "node":  "Split Out Tasks",
+                                                            "type":  "main",
+                                                            "index":  0
+                                                        }
+                                                    ]
+                                                ]
+                                   }
+                    },
+    "settings":  {
+                     "executionOrder":  "v1",
+                     "timezone":  "America/Vancouver",
+                     "callerPolicy":  "workflowsFromSameOwner"
+                 },
+    "staticData":  null,
+    "meta":  {
+                 "templateCredsSetupCompleted":  true
+             },
+    "pinData":  {
+
+                },
+    "versionId":  "618a0f26-7387-4323-94c6-ca6eeaa5d9b5",
+    "activeVersionId":  "618a0f26-7387-4323-94c6-ca6eeaa5d9b5",
+    "versionCounter":  24,
+    "triggerCount":  1,
+    "tags":  [
+
+             ],
+    "shared":  [
+                   {
+                       "updatedAt":  "2025-06-30T17:30:54.209Z",
+                       "createdAt":  "2025-06-30T17:30:54.209Z",
+                       "role":  "workflow:owner",
+                       "workflowId":  "f7L1wmPseygYaxZ9",
+                       "projectId":  "LgilvFgQb45ZsfNg",
+                       "project":  {
+                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
+                                       "createdAt":  "2025-05-27T00:15:31.394Z",
+                                       "id":  "LgilvFgQb45ZsfNg",
+                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+                                   }
+                   }
+               ],
+    "versionMetadata":  {
+                            "name":  null,
+                            "description":  null
+                        }
+}
