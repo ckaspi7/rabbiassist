@@ -1,637 +1,601 @@
 {
-    "updatedAt":  "2025-12-02T08:19:25.000Z",
-    "createdAt":  "2025-12-02T01:54:57.062Z",
-    "id":  "92c0C5Qk6zpFyrRU",
-    "name":  "Dev - Remove Labels",
-    "description":  null,
-    "active":  false,
-    "isArchived":  false,
-    "nodes":  [
-                  {
-                      "parameters":  {
-
-                                     },
-                      "id":  "db8e3629-87c6-4c64-813a-22e30c88d64b",
-                      "name":  "Manual Trigger",
-                      "type":  "n8n-nodes-base.manualTrigger",
-                      "typeVersion":  1,
-                      "position":  [
-                                       192,
-                                       288
-                                   ]
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "removeLabels",
-                                         "messageId":  "={{ $json.id }}",
-                                         "labelIds":  [
-                                                          "Label_32"
-                                                      ]
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       864,
-                                       -96
-                                   ],
-                      "id":  "3ce50514-5d8f-4b44-a0cb-8492bc2007ad",
-                      "name":  "Remove label from message",
-                      "webhookId":  "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "getAll",
-                                         "returnAll":  true,
-                                         "simple":  false,
-                                         "filters":  {
-                                                         "labelIds":  [
-                                                                          "Label_32"
-                                                                      ],
-                                                         "readStatus":  "both",
-                                                         "receivedAfter":  "2025-06-01T00:00:00"
-                                                     },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       416,
-                                       -96
-                                   ],
-                      "id":  "a988fff7-d8ad-45ec-bf55-2d09c026bd1c",
-                      "name":  "Get many messages",
-                      "webhookId":  "2272b518-96ab-4015-8fae-851312b3d8c0",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       640,
-                                       -96
-                                   ],
-                      "id":  "b23ca439-dab9-4304-a144-204b599d8b80",
-                      "name":  "Loop Over Items",
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "removeLabels",
-                                         "messageId":  "={{ $json.id }}",
-                                         "labelIds":  [
-                                                          "Label_30"
-                                                      ]
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       864,
-                                       96
-                                   ],
-                      "id":  "f461458d-351f-4dcd-9e83-b25e204c6c12",
-                      "name":  "Remove label from message1",
-                      "webhookId":  "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "getAll",
-                                         "returnAll":  true,
-                                         "simple":  false,
-                                         "filters":  {
-                                                         "labelIds":  [
-                                                                          "Label_30"
-                                                                      ],
-                                                         "readStatus":  "both",
-                                                         "receivedAfter":  "2025-06-01T00:00:00"
-                                                     },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       416,
-                                       96
-                                   ],
-                      "id":  "02ec278b-2664-417b-8804-65e988e3dbd2",
-                      "name":  "Get many messages1",
-                      "webhookId":  "2272b518-96ab-4015-8fae-851312b3d8c0",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       640,
-                                       96
-                                   ],
-                      "id":  "e441c788-7d37-4dac-8568-f8714854eab2",
-                      "name":  "Loop Over Items1",
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "removeLabels",
-                                         "messageId":  "={{ $json.id }}",
-                                         "labelIds":  [
-                                                          "Label_31"
-                                                      ]
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       864,
-                                       288
-                                   ],
-                      "id":  "a9cb5183-4ff1-4e6f-bf92-93ec6dbf3072",
-                      "name":  "Remove label from message2",
-                      "webhookId":  "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "getAll",
-                                         "returnAll":  true,
-                                         "simple":  false,
-                                         "filters":  {
-                                                         "labelIds":  [
-                                                                          "Label_31"
-                                                                      ],
-                                                         "readStatus":  "both",
-                                                         "receivedAfter":  "2025-06-01T00:00:00"
-                                                     },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       416,
-                                       288
-                                   ],
-                      "id":  "31e40ed8-c13e-4c00-b759-a87f576a95ed",
-                      "name":  "Get many messages2",
-                      "webhookId":  "2272b518-96ab-4015-8fae-851312b3d8c0",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       640,
-                                       288
-                                   ],
-                      "id":  "ae62c7fb-cbf1-4cdb-ac42-9e480dbe555e",
-                      "name":  "Loop Over Items2",
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "removeLabels",
-                                         "messageId":  "={{ $json.id }}",
-                                         "labelIds":  [
-                                                          "Label_34"
-                                                      ]
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       864,
-                                       480
-                                   ],
-                      "id":  "8a936d9e-17af-4964-bebc-8e536163c307",
-                      "name":  "Remove label from message3",
-                      "webhookId":  "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "getAll",
-                                         "returnAll":  true,
-                                         "simple":  false,
-                                         "filters":  {
-                                                         "labelIds":  [
-                                                                          "Label_34"
-                                                                      ],
-                                                         "readStatus":  "both",
-                                                         "receivedAfter":  "2025-06-01T00:00:00"
-                                                     },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       416,
-                                       480
-                                   ],
-                      "id":  "63abefda-a131-47ed-85f8-238bf224a789",
-                      "name":  "Get many messages3",
-                      "webhookId":  "2272b518-96ab-4015-8fae-851312b3d8c0",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       640,
-                                       480
-                                   ],
-                      "id":  "a91bbc93-2831-4abd-8998-d2dc21340922",
-                      "name":  "Loop Over Items3",
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "removeLabels",
-                                         "messageId":  "={{ $json.id }}",
-                                         "labelIds":  [
-                                                          "Label_33"
-                                                      ]
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       864,
-                                       672
-                                   ],
-                      "id":  "acedd082-411f-4de3-8f2b-d43b4def680a",
-                      "name":  "Remove label from message4",
-                      "webhookId":  "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "getAll",
-                                         "returnAll":  true,
-                                         "simple":  false,
-                                         "filters":  {
-                                                         "labelIds":  [
-                                                                          "Label_33"
-                                                                      ],
-                                                         "readStatus":  "both",
-                                                         "receivedAfter":  "2025-06-01T00:00:00"
-                                                     },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.gmail",
-                      "typeVersion":  2.1,
-                      "position":  [
-                                       416,
-                                       672
-                                   ],
-                      "id":  "1c75a06e-7d16-4b09-aabe-cc6650ac39bb",
-                      "name":  "Get many messages4",
-                      "webhookId":  "2272b518-96ab-4015-8fae-851312b3d8c0",
-                      "credentials":  {
-                                          "gmailOAuth2":  {
-                                                              "id":  "jk4uStea08hqnCuZ",
-                                                              "name":  "avimor29@gmail.com"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       640,
-                                       672
-                                   ],
-                      "id":  "a064bd06-0e08-4a6c-bea9-31ffe2ad87c6",
-                      "name":  "Loop Over Items4",
-                      "onError":  "continueRegularOutput"
-                  }
-              ],
-    "connections":  {
-                        "Manual Trigger":  {
-                                               "main":  [
-                                                            [
-                                                                {
-                                                                    "node":  "Get many messages",
-                                                                    "type":  "main",
-                                                                    "index":  0
-                                                                },
-                                                                {
-                                                                    "node":  "Get many messages1",
-                                                                    "type":  "main",
-                                                                    "index":  0
-                                                                },
-                                                                {
-                                                                    "node":  "Get many messages2",
-                                                                    "type":  "main",
-                                                                    "index":  0
-                                                                },
-                                                                {
-                                                                    "node":  "Get many messages3",
-                                                                    "type":  "main",
-                                                                    "index":  0
-                                                                },
-                                                                {
-                                                                    "node":  "Get many messages4",
-                                                                    "type":  "main",
-                                                                    "index":  0
-                                                                }
-                                                            ]
-                                                        ]
-                                           },
-                        "Get many messages":  {
-                                                  "main":  [
-                                                               [
-                                                                   {
-                                                                       "node":  "Loop Over Items",
-                                                                       "type":  "main",
-                                                                       "index":  0
-                                                                   }
-                                                               ]
-                                                           ]
-                                              },
-                        "Loop Over Items":  {
-                                                "main":  [
-                                                             [
-
-                                                             ],
-                                                             [
-                                                                 {
-                                                                     "node":  "Remove label from message",
-                                                                     "type":  "main",
-                                                                     "index":  0
-                                                                 }
-                                                             ]
-                                                         ]
-                                            },
-                        "Remove label from message":  {
-                                                          "main":  [
-                                                                       [
-                                                                           {
-                                                                               "node":  "Loop Over Items",
-                                                                               "type":  "main",
-                                                                               "index":  0
-                                                                           }
-                                                                       ]
-                                                                   ]
-                                                      },
-                        "Remove label from message1":  {
-                                                           "main":  [
-                                                                        [
-                                                                            {
-                                                                                "node":  "Loop Over Items1",
-                                                                                "type":  "main",
-                                                                                "index":  0
-                                                                            }
-                                                                        ]
-                                                                    ]
-                                                       },
-                        "Get many messages1":  {
-                                                   "main":  [
-                                                                [
-                                                                    {
-                                                                        "node":  "Loop Over Items1",
-                                                                        "type":  "main",
-                                                                        "index":  0
-                                                                    }
-                                                                ]
-                                                            ]
-                                               },
-                        "Loop Over Items1":  {
-                                                 "main":  [
-                                                              [
-
-                                                              ],
-                                                              [
-                                                                  {
-                                                                      "node":  "Remove label from message1",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  }
-                                                              ]
-                                                          ]
-                                             },
-                        "Remove label from message2":  {
-                                                           "main":  [
-                                                                        [
-                                                                            {
-                                                                                "node":  "Loop Over Items2",
-                                                                                "type":  "main",
-                                                                                "index":  0
-                                                                            }
-                                                                        ]
-                                                                    ]
-                                                       },
-                        "Get many messages2":  {
-                                                   "main":  [
-                                                                [
-                                                                    {
-                                                                        "node":  "Loop Over Items2",
-                                                                        "type":  "main",
-                                                                        "index":  0
-                                                                    }
-                                                                ]
-                                                            ]
-                                               },
-                        "Loop Over Items2":  {
-                                                 "main":  [
-                                                              [
-
-                                                              ],
-                                                              [
-                                                                  {
-                                                                      "node":  "Remove label from message2",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  }
-                                                              ]
-                                                          ]
-                                             },
-                        "Remove label from message3":  {
-                                                           "main":  [
-                                                                        [
-                                                                            {
-                                                                                "node":  "Loop Over Items3",
-                                                                                "type":  "main",
-                                                                                "index":  0
-                                                                            }
-                                                                        ]
-                                                                    ]
-                                                       },
-                        "Get many messages3":  {
-                                                   "main":  [
-                                                                [
-                                                                    {
-                                                                        "node":  "Loop Over Items3",
-                                                                        "type":  "main",
-                                                                        "index":  0
-                                                                    }
-                                                                ]
-                                                            ]
-                                               },
-                        "Loop Over Items3":  {
-                                                 "main":  [
-                                                              [
-
-                                                              ],
-                                                              [
-                                                                  {
-                                                                      "node":  "Remove label from message3",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  }
-                                                              ]
-                                                          ]
-                                             },
-                        "Remove label from message4":  {
-                                                           "main":  [
-                                                                        [
-                                                                            {
-                                                                                "node":  "Loop Over Items4",
-                                                                                "type":  "main",
-                                                                                "index":  0
-                                                                            }
-                                                                        ]
-                                                                    ]
-                                                       },
-                        "Get many messages4":  {
-                                                   "main":  [
-                                                                [
-                                                                    {
-                                                                        "node":  "Loop Over Items4",
-                                                                        "type":  "main",
-                                                                        "index":  0
-                                                                    }
-                                                                ]
-                                                            ]
-                                               },
-                        "Loop Over Items4":  {
-                                                 "main":  [
-                                                              [
-
-                                                              ],
-                                                              [
-                                                                  {
-                                                                      "node":  "Remove label from message4",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  }
-                                                              ]
-                                                          ]
-                                             }
-                    },
-    "settings":  {
-                     "executionOrder":  "v1"
-                 },
-    "staticData":  null,
-    "meta":  {
-                 "templateCredsSetupCompleted":  true
-             },
-    "pinData":  {
-
-                },
-    "versionId":  "c39ab271-ddb5-4c99-a1e3-ae4b71ce2004",
-    "activeVersionId":  null,
-    "versionCounter":  10,
-    "triggerCount":  0,
-    "tags":  [
-
-             ],
-    "shared":  [
-                   {
-                       "updatedAt":  "2025-12-02T01:54:57.069Z",
-                       "createdAt":  "2025-12-02T01:54:57.069Z",
-                       "role":  "workflow:owner",
-                       "workflowId":  "92c0C5Qk6zpFyrRU",
-                       "projectId":  "LgilvFgQb45ZsfNg",
-                       "project":  {
-                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
-                                       "createdAt":  "2025-05-27T00:15:31.394Z",
-                                       "id":  "LgilvFgQb45ZsfNg",
-                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
-                                       "type":  "personal",
-                                       "icon":  null,
-                                       "description":  null,
-                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
-                                   }
-                   }
-               ],
-    "versionMetadata":  {
-                            "name":  null,
-                            "description":  null
-                        }
+  "updatedAt": "2025-12-02T08:19:25.000Z",
+  "createdAt": "2025-12-02T01:54:57.062Z",
+  "id": "92c0C5Qk6zpFyrRU",
+  "name": "Dev - Remove Labels",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "db8e3629-87c6-4c64-813a-22e30c88d64b",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        192,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_32"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        -96
+      ],
+      "id": "3ce50514-5d8f-4b44-a0cb-8492bc2007ad",
+      "name": "Remove label from message",
+      "webhookId": "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_32"
+          ],
+          "readStatus": "both",
+          "receivedAfter": "2025-06-01T00:00:00"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "a988fff7-d8ad-45ec-bf55-2d09c026bd1c",
+      "name": "Get many messages",
+      "webhookId": "2272b518-96ab-4015-8fae-851312b3d8c0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        640,
+        -96
+      ],
+      "id": "b23ca439-dab9-4304-a144-204b599d8b80",
+      "name": "Loop Over Items",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_30"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        96
+      ],
+      "id": "f461458d-351f-4dcd-9e83-b25e204c6c12",
+      "name": "Remove label from message1",
+      "webhookId": "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_30"
+          ],
+          "readStatus": "both",
+          "receivedAfter": "2025-06-01T00:00:00"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        96
+      ],
+      "id": "02ec278b-2664-417b-8804-65e988e3dbd2",
+      "name": "Get many messages1",
+      "webhookId": "2272b518-96ab-4015-8fae-851312b3d8c0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        640,
+        96
+      ],
+      "id": "e441c788-7d37-4dac-8568-f8714854eab2",
+      "name": "Loop Over Items1",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_31"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        288
+      ],
+      "id": "a9cb5183-4ff1-4e6f-bf92-93ec6dbf3072",
+      "name": "Remove label from message2",
+      "webhookId": "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_31"
+          ],
+          "readStatus": "both",
+          "receivedAfter": "2025-06-01T00:00:00"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        288
+      ],
+      "id": "31e40ed8-c13e-4c00-b759-a87f576a95ed",
+      "name": "Get many messages2",
+      "webhookId": "2272b518-96ab-4015-8fae-851312b3d8c0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        640,
+        288
+      ],
+      "id": "ae62c7fb-cbf1-4cdb-ac42-9e480dbe555e",
+      "name": "Loop Over Items2",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_34"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        480
+      ],
+      "id": "8a936d9e-17af-4964-bebc-8e536163c307",
+      "name": "Remove label from message3",
+      "webhookId": "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_34"
+          ],
+          "readStatus": "both",
+          "receivedAfter": "2025-06-01T00:00:00"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        480
+      ],
+      "id": "63abefda-a131-47ed-85f8-238bf224a789",
+      "name": "Get many messages3",
+      "webhookId": "2272b518-96ab-4015-8fae-851312b3d8c0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        640,
+        480
+      ],
+      "id": "a91bbc93-2831-4abd-8998-d2dc21340922",
+      "name": "Loop Over Items3",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_33"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        672
+      ],
+      "id": "acedd082-411f-4de3-8f2b-d43b4def680a",
+      "name": "Remove label from message4",
+      "webhookId": "b7229a1b-7f18-42ce-81ba-77f7bc1efd7f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_33"
+          ],
+          "readStatus": "both",
+          "receivedAfter": "2025-06-01T00:00:00"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        672
+      ],
+      "id": "1c75a06e-7d16-4b09-aabe-cc6650ac39bb",
+      "name": "Get many messages4",
+      "webhookId": "2272b518-96ab-4015-8fae-851312b3d8c0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jk4uStea08hqnCuZ",
+          "name": "avimor29@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        640,
+        672
+      ],
+      "id": "a064bd06-0e08-4a6c-bea9-31ffe2ad87c6",
+      "name": "Loop Over Items4",
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many messages",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get many messages1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get many messages2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get many messages3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get many messages4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Remove label from message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove label from message": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove label from message1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Remove label from message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove label from message2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Remove label from message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove label from message3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items3": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Remove label from message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove label from message4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items4": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Remove label from message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "c39ab271-ddb5-4c99-a1e3-ae4b71ce2004",
+  "activeVersionId": null,
+  "versionCounter": 10,
+  "triggerCount": 0,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2025-12-02T01:54:57.069Z",
+      "createdAt": "2025-12-02T01:54:57.069Z",
+      "role": "workflow:owner",
+      "workflowId": "92c0C5Qk6zpFyrRU",
+      "projectId": "LgilvFgQb45ZsfNg",
+      "project": {
+        "updatedAt": "2025-05-27T00:18:21.560Z",
+        "createdAt": "2025-05-27T00:15:31.394Z",
+        "id": "LgilvFgQb45ZsfNg",
+        "name": "Cem Kaspi <cem.kaspi97@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
 }

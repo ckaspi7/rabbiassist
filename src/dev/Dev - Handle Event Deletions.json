@@ -1,365 +1,349 @@
 {
-    "updatedAt":  "2025-12-01T06:13:46.000Z",
-    "createdAt":  "2025-11-30T07:34:09.862Z",
-    "id":  "4FjXxjNKm4bGK6g4",
-    "name":  "Dev - Handle Event Deletions",
-    "description":  null,
-    "active":  true,
-    "isArchived":  false,
-    "nodes":  [
-                  {
-                      "parameters":  {
-                                         "rule":  {
-                                                      "interval":  [
-                                                                       {
-                                                                           "field":  "minutes",
-                                                                           "minutesInterval":  2
-                                                                       }
-                                                                   ]
-                                                  }
-                                     },
-                      "type":  "n8n-nodes-base.scheduleTrigger",
-                      "typeVersion":  1.3,
-                      "position":  [
-                                       0,
-                                       0
-                                   ],
-                      "id":  "096daa7e-018c-4e69-8490-df7258e64d5e",
-                      "name":  "Schedule Trigger"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "get",
-                                         "tableId":  "events",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "deleted",
-                                                                                "keyValue":  "true"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "sync_status",
-                                                                                "keyValue":  "pending"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       208,
-                                       0
-                                   ],
-                      "id":  "9b440634-78f4-4d81-b839-5b158bba47a4",
-                      "name":  "Get Pending Deletions",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       688,
-                                       -16
-                                   ],
-                      "id":  "7d8b8851-e35f-4e4b-be4b-6f07cb9068c9",
-                      "name":  "Loop Over Items"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "delete",
-                                         "calendar":  {
-                                                          "__rl":  true,
-                                                          "value":  "cem.kaspi7@gmail.com",
-                                                          "mode":  "list",
-                                                          "cachedResultName":  "cem.kaspi7@gmail.com"
-                                                      },
-                                         "eventId":  "={{$json.google_event_id}}",
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.googleCalendar",
-                      "typeVersion":  1.3,
-                      "position":  [
-                                       944,
-                                       0
-                                   ],
-                      "id":  "893ef9bf-14e1-45aa-b6aa-62ce5899b49c",
-                      "name":  "Delete Event",
-                      "retryOnFail":  true,
-                      "maxTries":  2,
-                      "credentials":  {
-                                          "googleCalendarOAuth2Api":  {
-                                                                          "id":  "BCLxbF088CScvr1Q",
-                                                                          "name":  "cem.kaspi7@gmail.com"
-                                                                      }
-                                      },
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "update",
-                                         "tableId":  "events",
-                                         "matchType":  "allFilters",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "id",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "={{$node[\"Loop Over Items\"].json.id}}"
-                                                                            }
-                                                                        ]
-                                                     },
-                                         "fieldsUi":  {
-                                                          "fieldValues":  [
-                                                                              {
-                                                                                  "fieldId":  "deletion_synced_at",
-                                                                                  "fieldValue":  "={{$now}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "sync_status",
-                                                                                  "fieldValue":  "synced"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "last_synced_at",
-                                                                                  "fieldValue":  "={{$now}}"
-                                                                              }
-                                                                          ]
-                                                      }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       1408,
-                                       -16
-                                   ],
-                      "id":  "6432e1a4-47a4-481f-8514-dde3acaba313",
-                      "name":  "Update a row",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "conditions":  {
-                                                            "options":  {
-                                                                            "caseSensitive":  true,
-                                                                            "leftValue":  "",
-                                                                            "typeValidation":  "loose",
-                                                                            "version":  2
-                                                                        },
-                                                            "conditions":  [
-                                                                               {
-                                                                                   "id":  "491cc2e0-df53-4597-a0cc-75e13da8a660",
-                                                                                   "leftValue":  "={{ $json.success }}",
-                                                                                   "rightValue":  true,
-                                                                                   "operator":  {
-                                                                                                    "type":  "boolean",
-                                                                                                    "operation":  "equals"
-                                                                                                }
-                                                                               }
-                                                                           ],
-                                                            "combinator":  "and"
-                                                        },
-                                         "looseTypeValidation":  true,
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.if",
-                      "typeVersion":  2.2,
-                      "position":  [
-                                       1152,
-                                       0
-                                   ],
-                      "id":  "32d73d15-f115-472b-a88c-1edb8b4eb420",
-                      "name":  "Success?"
-                  },
-                  {
-                      "parameters":  {
-                                         "conditions":  {
-                                                            "options":  {
-                                                                            "caseSensitive":  true,
-                                                                            "leftValue":  "",
-                                                                            "typeValidation":  "loose",
-                                                                            "version":  2
-                                                                        },
-                                                            "conditions":  [
-                                                                               {
-                                                                                   "id":  "f0953fa4-3715-42cc-9bf0-2e9a85ae3ee8",
-                                                                                   "leftValue":  "={{$json.isNotEmpty()}}",
-                                                                                   "rightValue":  0,
-                                                                                   "operator":  {
-                                                                                                    "type":  "boolean",
-                                                                                                    "operation":  "true",
-                                                                                                    "singleValue":  true
-                                                                                                }
-                                                                               }
-                                                                           ],
-                                                            "combinator":  "and"
-                                                        },
-                                         "looseTypeValidation":  true,
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.if",
-                      "typeVersion":  2.2,
-                      "position":  [
-                                       416,
-                                       0
-                                   ],
-                      "id":  "997d0a39-0b1a-4ba5-9a32-82905fc50f74",
-                      "name":  "Not Empty?"
-                  }
-              ],
-    "connections":  {
-                        "Schedule Trigger":  {
-                                                 "main":  [
-                                                              [
-                                                                  {
-                                                                      "node":  "Get Pending Deletions",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  }
-                                                              ]
-                                                          ]
-                                             },
-                        "Get Pending Deletions":  {
-                                                      "main":  [
-                                                                   [
-                                                                       {
-                                                                           "node":  "Not Empty?",
-                                                                           "type":  "main",
-                                                                           "index":  0
-                                                                       }
-                                                                   ]
-                                                               ]
-                                                  },
-                        "Loop Over Items":  {
-                                                "main":  [
-                                                             [
-
-                                                             ],
-                                                             [
-                                                                 {
-                                                                     "node":  "Delete Event",
-                                                                     "type":  "main",
-                                                                     "index":  0
-                                                                 }
-                                                             ]
-                                                         ]
-                                            },
-                        "Delete Event":  {
-                                             "main":  [
-                                                          [
-                                                              {
-                                                                  "node":  "Success?",
-                                                                  "type":  "main",
-                                                                  "index":  0
-                                                              }
-                                                          ]
-                                                      ]
-                                         },
-                        "Update a row":  {
-                                             "main":  [
-                                                          [
-                                                              {
-                                                                  "node":  "Loop Over Items",
-                                                                  "type":  "main",
-                                                                  "index":  0
-                                                              }
-                                                          ]
-                                                      ]
-                                         },
-                        "Success?":  {
-                                         "main":  [
-                                                      [
-                                                          {
-                                                              "node":  "Update a row",
-                                                              "type":  "main",
-                                                              "index":  0
-                                                          }
-                                                      ],
-                                                      [
-
-                                                      ]
-                                                  ]
-                                     },
-                        "Not Empty?":  {
-                                           "main":  [
-                                                        [
-                                                            {
-                                                                "node":  "Loop Over Items",
-                                                                "type":  "main",
-                                                                "index":  0
-                                                            }
-                                                        ]
-                                                    ]
-                                       }
-                    },
-    "settings":  {
-                     "executionOrder":  "v1"
-                 },
-    "staticData":  {
-                       "node:Schedule Trigger":  {
-                                                     "recurrenceRules":  [
-
-                                                                         ]
-                                                 }
-                   },
-    "meta":  {
-                 "templateCredsSetupCompleted":  true
-             },
-    "pinData":  {
-
-                },
-    "versionId":  "29afcc32-7b9d-4856-afcc-92fdb6c44c29",
-    "activeVersionId":  "29afcc32-7b9d-4856-afcc-92fdb6c44c29",
-    "versionCounter":  38,
-    "triggerCount":  1,
-    "tags":  [
-                 {
-                     "updatedAt":  "2025-07-28T16:51:43.261Z",
-                     "createdAt":  "2025-07-28T16:51:43.261Z",
-                     "id":  "wFA0OT7LAjyTBsE4",
-                     "name":  "dev"
-                 }
-             ],
-    "shared":  [
-                   {
-                       "updatedAt":  "2025-11-30T07:34:09.867Z",
-                       "createdAt":  "2025-11-30T07:34:09.867Z",
-                       "role":  "workflow:owner",
-                       "workflowId":  "4FjXxjNKm4bGK6g4",
-                       "projectId":  "LgilvFgQb45ZsfNg",
-                       "project":  {
-                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
-                                       "createdAt":  "2025-05-27T00:15:31.394Z",
-                                       "id":  "LgilvFgQb45ZsfNg",
-                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
-                                       "type":  "personal",
-                                       "icon":  null,
-                                       "description":  null,
-                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
-                                   }
-                   }
-               ],
-    "versionMetadata":  {
-                            "name":  null,
-                            "description":  null
-                        }
+  "updatedAt": "2025-12-01T06:13:46.000Z",
+  "createdAt": "2025-11-30T07:34:09.862Z",
+  "id": "4FjXxjNKm4bGK6g4",
+  "name": "Dev - Handle Event Deletions",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "096daa7e-018c-4e69-8490-df7258e64d5e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "events",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "deleted",
+              "keyValue": "true"
+            },
+            {
+              "keyName": "sync_status",
+              "keyValue": "pending"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "9b440634-78f4-4d81-b839-5b158bba47a4",
+      "name": "Get Pending Deletions",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        688,
+        -16
+      ],
+      "id": "7d8b8851-e35f-4e4b-be4b-6f07cb9068c9",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "cem.kaspi7@gmail.com",
+          "mode": "list",
+          "cachedResultName": "cem.kaspi7@gmail.com"
+        },
+        "eventId": "={{$json.google_event_id}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        0
+      ],
+      "id": "893ef9bf-14e1-45aa-b6aa-62ce5899b49c",
+      "name": "Delete Event",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "BCLxbF088CScvr1Q",
+          "name": "cem.kaspi7@gmail.com"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "events",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{$node[\"Loop Over Items\"].json.id}}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "deletion_synced_at",
+              "fieldValue": "={{$now}}"
+            },
+            {
+              "fieldId": "sync_status",
+              "fieldValue": "synced"
+            },
+            {
+              "fieldId": "last_synced_at",
+              "fieldValue": "={{$now}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1408,
+        -16
+      ],
+      "id": "6432e1a4-47a4-481f-8514-dde3acaba313",
+      "name": "Update a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "491cc2e0-df53-4597-a0cc-75e13da8a660",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1152,
+        0
+      ],
+      "id": "32d73d15-f115-472b-a88c-1edb8b4eb420",
+      "name": "Success?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f0953fa4-3715-42cc-9bf0-2e9a85ae3ee8",
+              "leftValue": "={{$json.isNotEmpty()}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "997d0a39-0b1a-4ba5-9a32-82905fc50f74",
+      "name": "Not Empty?"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Pending Deletions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Pending Deletions": {
+      "main": [
+        [
+          {
+            "node": "Not Empty?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Delete Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Event": {
+      "main": [
+        [
+          {
+            "node": "Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a row": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success?": {
+      "main": [
+        [
+          {
+            "node": "Update a row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Not Empty?": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "29afcc32-7b9d-4856-afcc-92fdb6c44c29",
+  "activeVersionId": "29afcc32-7b9d-4856-afcc-92fdb6c44c29",
+  "versionCounter": 38,
+  "triggerCount": 1,
+  "tags": [
+    {
+      "updatedAt": "2025-07-28T16:51:43.261Z",
+      "createdAt": "2025-07-28T16:51:43.261Z",
+      "id": "wFA0OT7LAjyTBsE4",
+      "name": "dev"
+    }
+  ],
+  "shared": [
+    {
+      "updatedAt": "2025-11-30T07:34:09.867Z",
+      "createdAt": "2025-11-30T07:34:09.867Z",
+      "role": "workflow:owner",
+      "workflowId": "4FjXxjNKm4bGK6g4",
+      "projectId": "LgilvFgQb45ZsfNg",
+      "project": {
+        "updatedAt": "2025-05-27T00:18:21.560Z",
+        "createdAt": "2025-05-27T00:15:31.394Z",
+        "id": "LgilvFgQb45ZsfNg",
+        "name": "Cem Kaspi <cem.kaspi97@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
 }

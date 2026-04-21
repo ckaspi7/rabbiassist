@@ -1,1054 +1,1030 @@
 {
-    "updatedAt":  "2025-12-01T05:00:46.000Z",
-    "createdAt":  "2025-11-28T05:45:40.476Z",
-    "id":  "nVITWH926eeVhV9l",
-    "name":  "Dev - Supabase to Google Calendar Sync",
-    "description":  null,
-    "active":  true,
-    "isArchived":  false,
-    "nodes":  [
-                  {
-                      "parameters":  {
-                                         "rule":  {
-                                                      "interval":  [
-                                                                       {
-                                                                           "field":  "minutes",
-                                                                           "minutesInterval":  2
-                                                                       }
-                                                                   ]
-                                                  }
-                                     },
-                      "type":  "n8n-nodes-base.scheduleTrigger",
-                      "typeVersion":  1.3,
-                      "position":  [
-                                       0,
-                                       -160
-                                   ],
-                      "id":  "dbcd87ef-9ef1-4791-97fe-3dca1e09c2cb",
-                      "name":  "Schedule Trigger"
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       896,
-                                       -160
-                                   ],
-                      "id":  "1eb49b2a-7874-4dc9-88f5-3588dacd91d9",
-                      "name":  "Loop Over Items"
-                  },
-                  {
-                      "parameters":  {
-                                         "conditions":  {
-                                                            "options":  {
-                                                                            "caseSensitive":  true,
-                                                                            "leftValue":  "",
-                                                                            "typeValidation":  "strict",
-                                                                            "version":  2
-                                                                        },
-                                                            "conditions":  [
-                                                                               {
-                                                                                   "id":  "dc0394ee-654f-4542-94cd-e01b8f426868",
-                                                                                   "leftValue":  "={{$json.isNotEmpty()}}",
-                                                                                   "rightValue":  0,
-                                                                                   "operator":  {
-                                                                                                    "type":  "boolean",
-                                                                                                    "operation":  "true",
-                                                                                                    "singleValue":  true
-                                                                                                }
-                                                                               }
-                                                                           ],
-                                                            "combinator":  "and"
-                                                        },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.if",
-                      "typeVersion":  2.2,
-                      "position":  [
-                                       672,
-                                       -160
-                                   ],
-                      "id":  "85019c9c-c947-4ad7-8589-297aa30305ca",
-                      "name":  "Events Exist?"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "get",
-                                         "tableId":  "events",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "sync_status",
-                                                                                "keyValue":  "pending"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "sync_source",
-                                                                                "keyValue":  "=web"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "deleted",
-                                                                                "keyValue":  "false"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "sync_attempts",
-                                                                                "keyValue":  "=0"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       224,
-                                       -448
-                                   ],
-                      "id":  "a568b4ca-32b8-403f-9dab-c593988b7cac",
-                      "name":  "Get Pending Events",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "get",
-                                         "calendar":  {
-                                                          "__rl":  true,
-                                                          "value":  "cem.kaspi7@gmail.com",
-                                                          "mode":  "list",
-                                                          "cachedResultName":  "cem.kaspi7@gmail.com"
-                                                      },
-                                         "eventId":  "={{$json.google_calendar_id}}",
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.googleCalendar",
-                      "typeVersion":  1.3,
-                      "position":  [
-                                       0,
-                                       -768
-                                   ],
-                      "id":  "77faa9d4-5577-4d78-b0d5-8ecc461c9ab8",
-                      "name":  "Check if Event Exists in Google",
-                      "credentials":  {
-                                          "googleCalendarOAuth2Api":  {
-                                                                          "id":  "BCLxbF088CScvr1Q",
-                                                                          "name":  "cem.kaspi7@gmail.com"
-                                                                      }
-                                      },
-                      "disabled":  true,
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "jsCode":  "const event = $node[\"Split Events\"].json;\nconst googleEvent = $node[\"Check if Event Exists in Google\"].json;\n\n// If Google event exists, update it; otherwise create it\nconst action = googleEvent.id ? \u0027update\u0027 : \u0027create\u0027;\n\nreturn [{\n  json: {\n    action,\n    supabaseEventId: event.id,\n    googleEventId: googleEvent.id || null,\n    summary: event.title,\n    description: event.description,\n    location: event.location,\n    start: {\n      dateTime: event.event_datetime,\n      timeZone: \u0027UTC\u0027\n    },\n    end: {\n      dateTime: event.end_datetime || event.event_datetime,\n      timeZone: \u0027UTC\u0027\n    }\n  }\n}];"
-                                     },
-                      "type":  "n8n-nodes-base.code",
-                      "typeVersion":  2,
-                      "position":  [
-                                       224,
-                                       -768
-                                   ],
-                      "id":  "8b2dfcb2-434a-479f-a5aa-0615a6d1d8c9",
-                      "name":  "Code in JavaScript",
-                      "disabled":  true
-                  },
-                  {
-                      "parameters":  {
-                                         "rules":  {
-                                                       "values":  [
-                                                                      {
-                                                                          "conditions":  {
-                                                                                             "options":  {
-                                                                                                             "caseSensitive":  true,
-                                                                                                             "leftValue":  "",
-                                                                                                             "typeValidation":  "strict",
-                                                                                                             "version":  2
-                                                                                                         },
-                                                                                             "conditions":  [
-                                                                                                                {
-                                                                                                                    "leftValue":  "={{$json.action}}",
-                                                                                                                    "rightValue":  "create",
-                                                                                                                    "operator":  {
-                                                                                                                                     "type":  "string",
-                                                                                                                                     "operation":  "equals"
-                                                                                                                                 },
-                                                                                                                    "id":  "30b5804c-b60c-4f62-8c29-9461d9976f43"
-                                                                                                                }
-                                                                                                            ],
-                                                                                             "combinator":  "and"
-                                                                                         },
-                                                                          "renameOutput":  true,
-                                                                          "outputKey":  "create"
-                                                                      },
-                                                                      {
-                                                                          "conditions":  {
-                                                                                             "options":  {
-                                                                                                             "caseSensitive":  true,
-                                                                                                             "leftValue":  "",
-                                                                                                             "typeValidation":  "strict",
-                                                                                                             "version":  2
-                                                                                                         },
-                                                                                             "conditions":  [
-                                                                                                                {
-                                                                                                                    "id":  "704bc76f-00d2-4250-b73e-0880787cc064",
-                                                                                                                    "leftValue":  "={{$json.action}}",
-                                                                                                                    "rightValue":  "update",
-                                                                                                                    "operator":  {
-                                                                                                                                     "type":  "string",
-                                                                                                                                     "operation":  "equals",
-                                                                                                                                     "name":  "filter.operator.equals"
-                                                                                                                                 }
-                                                                                                                }
-                                                                                                            ],
-                                                                                             "combinator":  "and"
-                                                                                         },
-                                                                          "renameOutput":  true,
-                                                                          "outputKey":  "update"
-                                                                      }
-                                                                  ]
-                                                   },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.switch",
-                      "typeVersion":  3.3,
-                      "position":  [
-                                       448,
-                                       -768
-                                   ],
-                      "id":  "b0660664-d106-4cf5-ae3e-d4b258400c42",
-                      "name":  "Switch",
-                      "disabled":  true
-                  },
-                  {
-                      "parameters":  {
-                                         "calendar":  {
-                                                          "__rl":  true,
-                                                          "value":  "cem.kaspi7@gmail.com",
-                                                          "mode":  "list",
-                                                          "cachedResultName":  "cem.kaspi7@gmail.com"
-                                                      },
-                                         "additionalFields":  {
-
-                                                              }
-                                     },
-                      "type":  "n8n-nodes-base.googleCalendar",
-                      "typeVersion":  1.3,
-                      "position":  [
-                                       672,
-                                       -864
-                                   ],
-                      "id":  "3ddb42f0-931e-4d04-b0b3-17cd9d1588c9",
-                      "name":  "Create an event",
-                      "credentials":  {
-                                          "googleCalendarOAuth2Api":  {
-                                                                          "id":  "BCLxbF088CScvr1Q",
-                                                                          "name":  "cem.kaspi7@gmail.com"
-                                                                      }
-                                      },
-                      "disabled":  true
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "update",
-                                         "calendar":  {
-                                                          "__rl":  true,
-                                                          "value":  "cem.kaspi7@gmail.com",
-                                                          "mode":  "list",
-                                                          "cachedResultName":  "cem.kaspi7@gmail.com"
-                                                      },
-                                         "eventId":  "={{$json.googleEventId}}",
-                                         "updateFields":  {
-
-                                                          }
-                                     },
-                      "type":  "n8n-nodes-base.googleCalendar",
-                      "typeVersion":  1.3,
-                      "position":  [
-                                       672,
-                                       -672
-                                   ],
-                      "id":  "6934ed37-9c99-48a6-80dc-0f26c900c7d0",
-                      "name":  "Update an event",
-                      "credentials":  {
-                                          "googleCalendarOAuth2Api":  {
-                                                                          "id":  "BCLxbF088CScvr1Q",
-                                                                          "name":  "cem.kaspi7@gmail.com"
-                                                                      }
-                                      },
-                      "disabled":  true
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "update",
-                                         "tableId":  "events",
-                                         "matchType":  "allFilters",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "id",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "={{$json.supabaseEventId}}"
-                                                                            }
-                                                                        ]
-                                                     },
-                                         "fieldsUi":  {
-                                                          "fieldValues":  [
-                                                                              {
-                                                                                  "fieldId":  "sync_status",
-                                                                                  "fieldValue":  "synced"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "last_synced",
-                                                                                  "fieldValue":  "={{ $now }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "google_calendar_id",
-                                                                                  "fieldValue":  "={{$node[\"Create an event\"].json.id}}"
-                                                                              }
-                                                                          ]
-                                                      }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       896,
-                                       -864
-                                   ],
-                      "id":  "9a31173b-84c0-4b39-8385-c56258eb010e",
-                      "name":  "Update Supabase Status",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      },
-                      "disabled":  true
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "update",
-                                         "tableId":  "events",
-                                         "matchType":  "allFilters",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "id",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "={{$json.supabaseEventId}}"
-                                                                            }
-                                                                        ]
-                                                     },
-                                         "fieldsUi":  {
-                                                          "fieldValues":  [
-                                                                              {
-                                                                                  "fieldId":  "sync_status",
-                                                                                  "fieldValue":  "synced"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "last_synced",
-                                                                                  "fieldValue":  "={{ $now }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "google_calendar_id",
-                                                                                  "fieldValue":  "={{$node[\"Update an event\"].json.id}}"
-                                                                              }
-                                                                          ]
-                                                      }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       896,
-                                       -672
-                                   ],
-                      "id":  "4d98250f-6462-4640-ad37-242cae9f2d50",
-                      "name":  "Update Supabase Status1",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      },
-                      "disabled":  true
-                  },
-                  {
-                      "parameters":  {
-                                         "conditions":  {
-                                                            "options":  {
-                                                                            "caseSensitive":  true,
-                                                                            "leftValue":  "",
-                                                                            "typeValidation":  "strict",
-                                                                            "version":  2
-                                                                        },
-                                                            "conditions":  [
-                                                                               {
-                                                                                   "id":  "c94ed97b-8ff6-4f25-8d67-133f74c74cd6",
-                                                                                   "leftValue":  "={{$json.google_event_id}}",
-                                                                                   "rightValue":  "={{ null }}",
-                                                                                   "operator":  {
-                                                                                                    "type":  "string",
-                                                                                                    "operation":  "notEquals"
-                                                                                                }
-                                                                               },
-                                                                               {
-                                                                                   "id":  "9642e30e-efd0-4288-abed-6ded234fab23",
-                                                                                   "leftValue":  "={{$json.google_event_id}}",
-                                                                                   "rightValue":  "={{ \u0027\u0027 }}",
-                                                                                   "operator":  {
-                                                                                                    "type":  "string",
-                                                                                                    "operation":  "notEmpty",
-                                                                                                    "singleValue":  true
-                                                                                                }
-                                                                               }
-                                                                           ],
-                                                            "combinator":  "and"
-                                                        },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.if",
-                      "typeVersion":  2.2,
-                      "position":  [
-                                       1120,
-                                       -144
-                                   ],
-                      "id":  "05371073-9d9a-45b3-b24a-9317c6006abd",
-                      "name":  "Has Google Event ID?"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "update",
-                                         "calendar":  {
-                                                          "__rl":  true,
-                                                          "value":  "cem.kaspi7@gmail.com",
-                                                          "mode":  "list",
-                                                          "cachedResultName":  "cem.kaspi7@gmail.com"
-                                                      },
-                                         "eventId":  "={{$node[\"Loop Over Items\"].json.google_event_id}}",
-                                         "updateFields":  {
-                                                              "allday":  "={{$node[\"Loop Over Items\"].json.all_day}}",
-                                                              "description":  "={{$node[\"Loop Over Items\"].json.description}}",
-                                                              "end":  "={{$node[\"Loop Over Items\"].json.end_datetime}}",
-                                                              "location":  "={{$node[\"Loop Over Items\"].json.location}}",
-                                                              "start":  "={{$node[\"Loop Over Items\"].json.event_datetime}}",
-                                                              "summary":  "={{$node[\"Loop Over Items\"].json.title}}"
-                                                          }
-                                     },
-                      "type":  "n8n-nodes-base.googleCalendar",
-                      "typeVersion":  1.3,
-                      "position":  [
-                                       1344,
-                                       -288
-                                   ],
-                      "id":  "679c4aad-b0fa-43a2-9e32-8a18d6650d11",
-                      "name":  "Update Event",
-                      "retryOnFail":  true,
-                      "maxTries":  2,
-                      "credentials":  {
-                                          "googleCalendarOAuth2Api":  {
-                                                                          "id":  "BCLxbF088CScvr1Q",
-                                                                          "name":  "cem.kaspi7@gmail.com"
-                                                                      }
-                                      },
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "calendar":  {
-                                                          "__rl":  true,
-                                                          "value":  "cem.kaspi7@gmail.com",
-                                                          "mode":  "list",
-                                                          "cachedResultName":  "cem.kaspi7@gmail.com"
-                                                      },
-                                         "start":  "={{$node[\"Loop Over Items\"].json.event_datetime}}",
-                                         "end":  "={{$node[\"Loop Over Items\"].json.end_datetime}}",
-                                         "additionalFields":  {
-                                                                  "allday":  "={{$node[\"Loop Over Items\"].json.all_day}}",
-                                                                  "description":  "={{$node[\"Loop Over Items\"].json.description}}",
-                                                                  "location":  "={{$node[\"Loop Over Items\"].json.location}}",
-                                                                  "summary":  "={{$node[\"Loop Over Items\"].json.title}}"
-                                                              }
-                                     },
-                      "type":  "n8n-nodes-base.googleCalendar",
-                      "typeVersion":  1.3,
-                      "position":  [
-                                       1344,
-                                       -128
-                                   ],
-                      "id":  "26b511c6-5860-4698-8692-479707dbdfae",
-                      "name":  "Create Event",
-                      "retryOnFail":  true,
-                      "maxTries":  2,
-                      "credentials":  {
-                                          "googleCalendarOAuth2Api":  {
-                                                                          "id":  "BCLxbF088CScvr1Q",
-                                                                          "name":  "cem.kaspi7@gmail.com"
-                                                                      }
-                                      },
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "mode":  "combine",
-                                         "combineBy":  "combineByPosition",
-                                         "options":  {
-                                                         "includeUnpaired":  true
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.merge",
-                      "typeVersion":  3.2,
-                      "position":  [
-                                       1568,
-                                       -144
-                                   ],
-                      "id":  "ecaa7615-fb79-4561-acc1-f2e7a5e7de3f",
-                      "name":  "Merge"
-                  },
-                  {
-                      "parameters":  {
-                                         "jsCode":  "const supabaseEvent = $node[\"Loop Over Items\"].json;\nconst googleResponse = $input.first().json;\n\n// Check if Google operation succeeded\nconst succeeded = googleResponse \u0026\u0026 googleResponse.id;\n\nreturn [{\n  json: {\n    supabase_id: supabaseEvent.id,\n    google_calendar_id: succeeded ? (googleResponse.organizer?.email || \u0027primary\u0027) : supabaseEvent.google_calendar_id,\n    google_event_id: succeeded ? googleResponse.id : supabaseEvent.google_event_id,\n    google_etag: succeeded ? googleResponse.etag : supabaseEvent.google_etag,\n    remote_modified_at: succeeded ? googleResponse.updated : supabaseEvent.remote_modified_at,\n    sync_status: succeeded ? \u0027synced\u0027 : \u0027error\u0027,\n    last_synced_at: succeeded ? new Date().toISOString() : supabaseEvent.last_synced_at,\n    sync_attempts: supabaseEvent.sync_attempts + 1,\n    sync_error: succeeded ? null : \u0027Google Calendar API error\u0027,\n    is_conflict: false\n  }\n}];"
-                                     },
-                      "type":  "n8n-nodes-base.code",
-                      "typeVersion":  2,
-                      "position":  [
-                                       1792,
-                                       -144
-                                   ],
-                      "id":  "17ded940-545e-4689-8490-5cb9b415ea31",
-                      "name":  "Prepare Supabase Update"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "update",
-                                         "tableId":  "events",
-                                         "matchType":  "allFilters",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "id",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "={{$json.supabase_id}}"
-                                                                            }
-                                                                        ]
-                                                     },
-                                         "fieldsUi":  {
-                                                          "fieldValues":  [
-                                                                              {
-                                                                                  "fieldId":  "google_calendar_id",
-                                                                                  "fieldValue":  "={{$json.google_calendar_id}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "google_event_id",
-                                                                                  "fieldValue":  "={{$json.google_event_id}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "google_etag",
-                                                                                  "fieldValue":  "={{$json.google_etag}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "remote_modified_at",
-                                                                                  "fieldValue":  "={{$json.remote_modified_at}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "sync_status",
-                                                                                  "fieldValue":  "={{$json.sync_status}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "last_synced_at",
-                                                                                  "fieldValue":  "={{$json.last_synced_at}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "sync_attempts",
-                                                                                  "fieldValue":  "={{$json.sync_attempts}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "sync_error",
-                                                                                  "fieldValue":  "={{$json.sync_error}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "is_conflict",
-                                                                                  "fieldValue":  "={{$json.is_conflict}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "local_modified_at",
-                                                                                  "fieldValue":  "={{$now}}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "sync_status",
-                                                                                  "fieldValue":  "={{ $json.sync_status }}"
-                                                                              }
-                                                                          ]
-                                                      }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       2016,
-                                       -144
-                                   ],
-                      "id":  "ccbc3a7c-d2bc-411c-98b2-71520e765e4c",
-                      "name":  "Update Sync Status",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "get",
-                                         "tableId":  "events",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "sync_status",
-                                                                                "keyValue":  "pending"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "sync_source",
-                                                                                "keyValue":  "=web"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "deleted",
-                                                                                "keyValue":  "false"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "sync_attempts",
-                                                                                "keyValue":  "=1"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       224,
-                                       -256
-                                   ],
-                      "id":  "a9e944f1-c98e-426e-b92a-63572decdf05",
-                      "name":  "Get Pending Events1",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "get",
-                                         "tableId":  "events",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "sync_status",
-                                                                                "keyValue":  "pending"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "sync_source",
-                                                                                "keyValue":  "=ios"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "deleted",
-                                                                                "keyValue":  "false"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "sync_attempts",
-                                                                                "keyValue":  "=0"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       224,
-                                       -64
-                                   ],
-                      "id":  "fced44ef-8b72-4dfc-a8a9-ec84d36bb45b",
-                      "name":  "Get Pending Events2",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "get",
-                                         "tableId":  "events",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "sync_status",
-                                                                                "keyValue":  "pending"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "sync_source",
-                                                                                "keyValue":  "=ios"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "deleted",
-                                                                                "keyValue":  "false"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "sync_attempts",
-                                                                                "keyValue":  "=1"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       224,
-                                       128
-                                   ],
-                      "id":  "87723835-1aab-4915-bcec-d0814efc8aab",
-                      "name":  "Get Pending Events3",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "numberInputs":  4
-                                     },
-                      "type":  "n8n-nodes-base.merge",
-                      "typeVersion":  3.2,
-                      "position":  [
-                                       448,
-                                       -192
-                                   ],
-                      "id":  "b6f651e8-d1f9-4ac0-b87e-8adf7e284a79",
-                      "name":  "Merge1"
-                  }
-              ],
-    "connections":  {
-                        "Schedule Trigger":  {
-                                                 "main":  [
-                                                              [
-                                                                  {
-                                                                      "node":  "Get Pending Events",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  },
-                                                                  {
-                                                                      "node":  "Get Pending Events1",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  },
-                                                                  {
-                                                                      "node":  "Get Pending Events2",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  },
-                                                                  {
-                                                                      "node":  "Get Pending Events3",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  }
-                                                              ]
-                                                          ]
-                                             },
-                        "Loop Over Items":  {
-                                                "main":  [
-                                                             [
-
-                                                             ],
-                                                             [
-                                                                 {
-                                                                     "node":  "Has Google Event ID?",
-                                                                     "type":  "main",
-                                                                     "index":  0
-                                                                 }
-                                                             ]
-                                                         ]
-                                            },
-                        "Events Exist?":  {
-                                              "main":  [
-                                                           [
-                                                               {
-                                                                   "node":  "Loop Over Items",
-                                                                   "type":  "main",
-                                                                   "index":  0
-                                                               }
-                                                           ]
-                                                       ]
-                                          },
-                        "Get Pending Events":  {
-                                                   "main":  [
-                                                                [
-                                                                    {
-                                                                        "node":  "Merge1",
-                                                                        "type":  "main",
-                                                                        "index":  0
-                                                                    }
-                                                                ]
-                                                            ]
-                                               },
-                        "Check if Event Exists in Google":  {
-                                                                "main":  [
-                                                                             [
-                                                                                 {
-                                                                                     "node":  "Code in JavaScript",
-                                                                                     "type":  "main",
-                                                                                     "index":  0
-                                                                                 }
-                                                                             ]
-                                                                         ]
-                                                            },
-                        "Code in JavaScript":  {
-                                                   "main":  [
-                                                                [
-                                                                    {
-                                                                        "node":  "Switch",
-                                                                        "type":  "main",
-                                                                        "index":  0
-                                                                    }
-                                                                ]
-                                                            ]
-                                               },
-                        "Switch":  {
-                                       "main":  [
-                                                    [
-                                                        {
-                                                            "node":  "Create an event",
-                                                            "type":  "main",
-                                                            "index":  0
-                                                        }
-                                                    ],
-                                                    [
-                                                        {
-                                                            "node":  "Update an event",
-                                                            "type":  "main",
-                                                            "index":  0
-                                                        }
-                                                    ]
-                                                ]
-                                   },
-                        "Create an event":  {
-                                                "main":  [
-                                                             [
-                                                                 {
-                                                                     "node":  "Update Supabase Status",
-                                                                     "type":  "main",
-                                                                     "index":  0
-                                                                 }
-                                                             ]
-                                                         ]
-                                            },
-                        "Update an event":  {
-                                                "main":  [
-                                                             [
-                                                                 {
-                                                                     "node":  "Update Supabase Status1",
-                                                                     "type":  "main",
-                                                                     "index":  0
-                                                                 }
-                                                             ]
-                                                         ]
-                                            },
-                        "Update Supabase Status":  {
-                                                       "main":  [
-                                                                    [
-
-                                                                    ]
-                                                                ]
-                                                   },
-                        "Update Supabase Status1":  {
-                                                        "main":  [
-                                                                     [
-
-                                                                     ]
-                                                                 ]
-                                                    },
-                        "Has Google Event ID?":  {
-                                                     "main":  [
-                                                                  [
-                                                                      {
-                                                                          "node":  "Update Event",
-                                                                          "type":  "main",
-                                                                          "index":  0
-                                                                      }
-                                                                  ],
-                                                                  [
-                                                                      {
-                                                                          "node":  "Create Event",
-                                                                          "type":  "main",
-                                                                          "index":  0
-                                                                      }
-                                                                  ]
-                                                              ]
-                                                 },
-                        "Update Event":  {
-                                             "main":  [
-                                                          [
-                                                              {
-                                                                  "node":  "Merge",
-                                                                  "type":  "main",
-                                                                  "index":  0
-                                                              }
-                                                          ]
-                                                      ]
-                                         },
-                        "Create Event":  {
-                                             "main":  [
-                                                          [
-                                                              {
-                                                                  "node":  "Merge",
-                                                                  "type":  "main",
-                                                                  "index":  1
-                                                              }
-                                                          ]
-                                                      ]
-                                         },
-                        "Merge":  {
-                                      "main":  [
-                                                   [
-                                                       {
-                                                           "node":  "Prepare Supabase Update",
-                                                           "type":  "main",
-                                                           "index":  0
-                                                       }
-                                                   ]
-                                               ]
-                                  },
-                        "Prepare Supabase Update":  {
-                                                        "main":  [
-                                                                     [
-                                                                         {
-                                                                             "node":  "Update Sync Status",
-                                                                             "type":  "main",
-                                                                             "index":  0
-                                                                         }
-                                                                     ]
-                                                                 ]
-                                                    },
-                        "Update Sync Status":  {
-                                                   "main":  [
-                                                                [
-                                                                    {
-                                                                        "node":  "Loop Over Items",
-                                                                        "type":  "main",
-                                                                        "index":  0
-                                                                    }
-                                                                ]
-                                                            ]
-                                               },
-                        "Get Pending Events1":  {
-                                                    "main":  [
-                                                                 [
-                                                                     {
-                                                                         "node":  "Merge1",
-                                                                         "type":  "main",
-                                                                         "index":  1
-                                                                     }
-                                                                 ]
-                                                             ]
-                                                },
-                        "Get Pending Events2":  {
-                                                    "main":  [
-                                                                 [
-                                                                     {
-                                                                         "node":  "Merge1",
-                                                                         "type":  "main",
-                                                                         "index":  2
-                                                                     }
-                                                                 ]
-                                                             ]
-                                                },
-                        "Get Pending Events3":  {
-                                                    "main":  [
-                                                                 [
-                                                                     {
-                                                                         "node":  "Merge1",
-                                                                         "type":  "main",
-                                                                         "index":  3
-                                                                     }
-                                                                 ]
-                                                             ]
-                                                },
-                        "Merge1":  {
-                                       "main":  [
-                                                    [
-                                                        {
-                                                            "node":  "Events Exist?",
-                                                            "type":  "main",
-                                                            "index":  0
-                                                        }
-                                                    ]
-                                                ]
-                                   }
-                    },
-    "settings":  {
-                     "executionOrder":  "v1"
-                 },
-    "staticData":  {
-                       "node:Schedule Trigger":  {
-                                                     "recurrenceRules":  [
-
-                                                                         ]
-                                                 }
-                   },
-    "meta":  {
-                 "templateCredsSetupCompleted":  true
-             },
-    "pinData":  {
-
+  "updatedAt": "2025-12-01T05:00:46.000Z",
+  "createdAt": "2025-11-28T05:45:40.476Z",
+  "id": "nVITWH926eeVhV9l",
+  "name": "Dev - Supabase to Google Calendar Sync",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        -160
+      ],
+      "id": "dbcd87ef-9ef1-4791-97fe-3dca1e09c2cb",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        896,
+        -160
+      ],
+      "id": "1eb49b2a-7874-4dc9-88f5-3588dacd91d9",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dc0394ee-654f-4542-94cd-e01b8f426868",
+              "leftValue": "={{$json.isNotEmpty()}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -160
+      ],
+      "id": "85019c9c-c947-4ad7-8589-297aa30305ca",
+      "name": "Events Exist?"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "events",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sync_status",
+              "keyValue": "pending"
+            },
+            {
+              "keyName": "sync_source",
+              "keyValue": "=web"
+            },
+            {
+              "keyName": "deleted",
+              "keyValue": "false"
+            },
+            {
+              "keyName": "sync_attempts",
+              "keyValue": "=0"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        224,
+        -448
+      ],
+      "id": "a568b4ca-32b8-403f-9dab-c593988b7cac",
+      "name": "Get Pending Events",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "calendar": {
+          "__rl": true,
+          "value": "cem.kaspi7@gmail.com",
+          "mode": "list",
+          "cachedResultName": "cem.kaspi7@gmail.com"
+        },
+        "eventId": "={{$json.google_calendar_id}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        -768
+      ],
+      "id": "77faa9d4-5577-4d78-b0d5-8ecc461c9ab8",
+      "name": "Check if Event Exists in Google",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "BCLxbF088CScvr1Q",
+          "name": "cem.kaspi7@gmail.com"
+        }
+      },
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const event = $node[\"Split Events\"].json;\nconst googleEvent = $node[\"Check if Event Exists in Google\"].json;\n\n// If Google event exists, update it; otherwise create it\nconst action = googleEvent.id ? 'update' : 'create';\n\nreturn [{\n  json: {\n    action,\n    supabaseEventId: event.id,\n    googleEventId: googleEvent.id || null,\n    summary: event.title,\n    description: event.description,\n    location: event.location,\n    start: {\n      dateTime: event.event_datetime,\n      timeZone: 'UTC'\n    },\n    end: {\n      dateTime: event.end_datetime || event.event_datetime,\n      timeZone: 'UTC'\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -768
+      ],
+      "id": "8b2dfcb2-434a-479f-a5aa-0615a6d1d8c9",
+      "name": "Code in JavaScript",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
                 },
-    "versionId":  "d65ce669-9200-47f8-9c73-62c119781343",
-    "activeVersionId":  "d65ce669-9200-47f8-9c73-62c119781343",
-    "versionCounter":  66,
-    "triggerCount":  1,
-    "tags":  [
-                 {
-                     "updatedAt":  "2025-07-28T16:51:43.261Z",
-                     "createdAt":  "2025-07-28T16:51:43.261Z",
-                     "id":  "wFA0OT7LAjyTBsE4",
-                     "name":  "dev"
-                 }
-             ],
-    "shared":  [
-                   {
-                       "updatedAt":  "2025-11-28T05:45:40.481Z",
-                       "createdAt":  "2025-11-28T05:45:40.481Z",
-                       "role":  "workflow:owner",
-                       "workflowId":  "nVITWH926eeVhV9l",
-                       "projectId":  "LgilvFgQb45ZsfNg",
-                       "project":  {
-                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
-                                       "createdAt":  "2025-05-27T00:15:31.394Z",
-                                       "id":  "LgilvFgQb45ZsfNg",
-                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
-                                       "type":  "personal",
-                                       "icon":  null,
-                                       "description":  null,
-                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
-                                   }
-                   }
-               ],
-    "versionMetadata":  {
-                            "name":  null,
-                            "description":  null
-                        }
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.action}}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "30b5804c-b60c-4f62-8c29-9461d9976f43"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "create"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "704bc76f-00d2-4250-b73e-0880787cc064",
+                    "leftValue": "={{$json.action}}",
+                    "rightValue": "update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "update"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        448,
+        -768
+      ],
+      "id": "b0660664-d106-4cf5-ae3e-d4b258400c42",
+      "name": "Switch",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "cem.kaspi7@gmail.com",
+          "mode": "list",
+          "cachedResultName": "cem.kaspi7@gmail.com"
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        672,
+        -864
+      ],
+      "id": "3ddb42f0-931e-4d04-b0b3-17cd9d1588c9",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "BCLxbF088CScvr1Q",
+          "name": "cem.kaspi7@gmail.com"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "cem.kaspi7@gmail.com",
+          "mode": "list",
+          "cachedResultName": "cem.kaspi7@gmail.com"
+        },
+        "eventId": "={{$json.googleEventId}}",
+        "updateFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        672,
+        -672
+      ],
+      "id": "6934ed37-9c99-48a6-80dc-0f26c900c7d0",
+      "name": "Update an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "BCLxbF088CScvr1Q",
+          "name": "cem.kaspi7@gmail.com"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "events",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{$json.supabaseEventId}}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "sync_status",
+              "fieldValue": "synced"
+            },
+            {
+              "fieldId": "last_synced",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "google_calendar_id",
+              "fieldValue": "={{$node[\"Create an event\"].json.id}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -864
+      ],
+      "id": "9a31173b-84c0-4b39-8385-c56258eb010e",
+      "name": "Update Supabase Status",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "events",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{$json.supabaseEventId}}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "sync_status",
+              "fieldValue": "synced"
+            },
+            {
+              "fieldId": "last_synced",
+              "fieldValue": "={{ $now }}"
+            },
+            {
+              "fieldId": "google_calendar_id",
+              "fieldValue": "={{$node[\"Update an event\"].json.id}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -672
+      ],
+      "id": "4d98250f-6462-4640-ad37-242cae9f2d50",
+      "name": "Update Supabase Status1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c94ed97b-8ff6-4f25-8d67-133f74c74cd6",
+              "leftValue": "={{$json.google_event_id}}",
+              "rightValue": "={{ null }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "9642e30e-efd0-4288-abed-6ded234fab23",
+              "leftValue": "={{$json.google_event_id}}",
+              "rightValue": "={{ '' }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        -144
+      ],
+      "id": "05371073-9d9a-45b3-b24a-9317c6006abd",
+      "name": "Has Google Event ID?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "cem.kaspi7@gmail.com",
+          "mode": "list",
+          "cachedResultName": "cem.kaspi7@gmail.com"
+        },
+        "eventId": "={{$node[\"Loop Over Items\"].json.google_event_id}}",
+        "updateFields": {
+          "allday": "={{$node[\"Loop Over Items\"].json.all_day}}",
+          "description": "={{$node[\"Loop Over Items\"].json.description}}",
+          "end": "={{$node[\"Loop Over Items\"].json.end_datetime}}",
+          "location": "={{$node[\"Loop Over Items\"].json.location}}",
+          "start": "={{$node[\"Loop Over Items\"].json.event_datetime}}",
+          "summary": "={{$node[\"Loop Over Items\"].json.title}}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1344,
+        -288
+      ],
+      "id": "679c4aad-b0fa-43a2-9e32-8a18d6650d11",
+      "name": "Update Event",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "BCLxbF088CScvr1Q",
+          "name": "cem.kaspi7@gmail.com"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "cem.kaspi7@gmail.com",
+          "mode": "list",
+          "cachedResultName": "cem.kaspi7@gmail.com"
+        },
+        "start": "={{$node[\"Loop Over Items\"].json.event_datetime}}",
+        "end": "={{$node[\"Loop Over Items\"].json.end_datetime}}",
+        "additionalFields": {
+          "allday": "={{$node[\"Loop Over Items\"].json.all_day}}",
+          "description": "={{$node[\"Loop Over Items\"].json.description}}",
+          "location": "={{$node[\"Loop Over Items\"].json.location}}",
+          "summary": "={{$node[\"Loop Over Items\"].json.title}}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1344,
+        -128
+      ],
+      "id": "26b511c6-5860-4698-8692-479707dbdfae",
+      "name": "Create Event",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "BCLxbF088CScvr1Q",
+          "name": "cem.kaspi7@gmail.com"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1568,
+        -144
+      ],
+      "id": "ecaa7615-fb79-4561-acc1-f2e7a5e7de3f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const supabaseEvent = $node[\"Loop Over Items\"].json;\nconst googleResponse = $input.first().json;\n\n// Check if Google operation succeeded\nconst succeeded = googleResponse && googleResponse.id;\n\nreturn [{\n  json: {\n    supabase_id: supabaseEvent.id,\n    google_calendar_id: succeeded ? (googleResponse.organizer?.email || 'primary') : supabaseEvent.google_calendar_id,\n    google_event_id: succeeded ? googleResponse.id : supabaseEvent.google_event_id,\n    google_etag: succeeded ? googleResponse.etag : supabaseEvent.google_etag,\n    remote_modified_at: succeeded ? googleResponse.updated : supabaseEvent.remote_modified_at,\n    sync_status: succeeded ? 'synced' : 'error',\n    last_synced_at: succeeded ? new Date().toISOString() : supabaseEvent.last_synced_at,\n    sync_attempts: supabaseEvent.sync_attempts + 1,\n    sync_error: succeeded ? null : 'Google Calendar API error',\n    is_conflict: false\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1792,
+        -144
+      ],
+      "id": "17ded940-545e-4689-8490-5cb9b415ea31",
+      "name": "Prepare Supabase Update"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "events",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{$json.supabase_id}}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "google_calendar_id",
+              "fieldValue": "={{$json.google_calendar_id}}"
+            },
+            {
+              "fieldId": "google_event_id",
+              "fieldValue": "={{$json.google_event_id}}"
+            },
+            {
+              "fieldId": "google_etag",
+              "fieldValue": "={{$json.google_etag}}"
+            },
+            {
+              "fieldId": "remote_modified_at",
+              "fieldValue": "={{$json.remote_modified_at}}"
+            },
+            {
+              "fieldId": "sync_status",
+              "fieldValue": "={{$json.sync_status}}"
+            },
+            {
+              "fieldId": "last_synced_at",
+              "fieldValue": "={{$json.last_synced_at}}"
+            },
+            {
+              "fieldId": "sync_attempts",
+              "fieldValue": "={{$json.sync_attempts}}"
+            },
+            {
+              "fieldId": "sync_error",
+              "fieldValue": "={{$json.sync_error}}"
+            },
+            {
+              "fieldId": "is_conflict",
+              "fieldValue": "={{$json.is_conflict}}"
+            },
+            {
+              "fieldId": "local_modified_at",
+              "fieldValue": "={{$now}}"
+            },
+            {
+              "fieldId": "sync_status",
+              "fieldValue": "={{ $json.sync_status }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2016,
+        -144
+      ],
+      "id": "ccbc3a7c-d2bc-411c-98b2-71520e765e4c",
+      "name": "Update Sync Status",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "events",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sync_status",
+              "keyValue": "pending"
+            },
+            {
+              "keyName": "sync_source",
+              "keyValue": "=web"
+            },
+            {
+              "keyName": "deleted",
+              "keyValue": "false"
+            },
+            {
+              "keyName": "sync_attempts",
+              "keyValue": "=1"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        224,
+        -256
+      ],
+      "id": "a9e944f1-c98e-426e-b92a-63572decdf05",
+      "name": "Get Pending Events1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "events",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sync_status",
+              "keyValue": "pending"
+            },
+            {
+              "keyName": "sync_source",
+              "keyValue": "=ios"
+            },
+            {
+              "keyName": "deleted",
+              "keyValue": "false"
+            },
+            {
+              "keyName": "sync_attempts",
+              "keyValue": "=0"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        224,
+        -64
+      ],
+      "id": "fced44ef-8b72-4dfc-a8a9-ec84d36bb45b",
+      "name": "Get Pending Events2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "events",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sync_status",
+              "keyValue": "pending"
+            },
+            {
+              "keyName": "sync_source",
+              "keyValue": "=ios"
+            },
+            {
+              "keyName": "deleted",
+              "keyValue": "false"
+            },
+            {
+              "keyName": "sync_attempts",
+              "keyValue": "=1"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        224,
+        128
+      ],
+      "id": "87723835-1aab-4915-bcec-d0814efc8aab",
+      "name": "Get Pending Events3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        448,
+        -192
+      ],
+      "id": "b6f651e8-d1f9-4ac0-b87e-8adf7e284a79",
+      "name": "Merge1"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Pending Events",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Pending Events1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Pending Events2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Pending Events3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Has Google Event ID?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Events Exist?": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Pending Events": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Event Exists in Google": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event": {
+      "main": [
+        [
+          {
+            "node": "Update Supabase Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update an event": {
+      "main": [
+        [
+          {
+            "node": "Update Supabase Status1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Supabase Status": {
+      "main": [
+        []
+      ]
+    },
+    "Update Supabase Status1": {
+      "main": [
+        []
+      ]
+    },
+    "Has Google Event ID?": {
+      "main": [
+        [
+          {
+            "node": "Update Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Event": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Event": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Prepare Supabase Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Supabase Update": {
+      "main": [
+        [
+          {
+            "node": "Update Sync Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sync Status": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Pending Events1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get Pending Events2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Get Pending Events3": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Events Exist?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "d65ce669-9200-47f8-9c73-62c119781343",
+  "activeVersionId": "d65ce669-9200-47f8-9c73-62c119781343",
+  "versionCounter": 66,
+  "triggerCount": 1,
+  "tags": [
+    {
+      "updatedAt": "2025-07-28T16:51:43.261Z",
+      "createdAt": "2025-07-28T16:51:43.261Z",
+      "id": "wFA0OT7LAjyTBsE4",
+      "name": "dev"
+    }
+  ],
+  "shared": [
+    {
+      "updatedAt": "2025-11-28T05:45:40.481Z",
+      "createdAt": "2025-11-28T05:45:40.481Z",
+      "role": "workflow:owner",
+      "workflowId": "nVITWH926eeVhV9l",
+      "projectId": "LgilvFgQb45ZsfNg",
+      "project": {
+        "updatedAt": "2025-05-27T00:18:21.560Z",
+        "createdAt": "2025-05-27T00:15:31.394Z",
+        "id": "LgilvFgQb45ZsfNg",
+        "name": "Cem Kaspi <cem.kaspi97@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
 }

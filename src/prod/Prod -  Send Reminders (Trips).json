@@ -1,661 +1,637 @@
 {
-    "updatedAt":  "2025-07-29T03:27:15.000Z",
-    "createdAt":  "2025-07-04T20:55:40.307Z",
-    "id":  "2oePifRVFkzsyqxp",
-    "name":  "Prod -  Send Reminders (Trips)",
-    "description":  null,
-    "active":  true,
-    "isArchived":  false,
-    "nodes":  [
-                  {
-                      "parameters":  {
-
-                                     },
-                      "id":  "683653d2-c1e4-44ef-9cd6-1d696bf9fd74",
-                      "name":  "When clicking \u0027Test workflow\u0027",
-                      "type":  "n8n-nodes-base.manualTrigger",
-                      "position":  [
-                                       -176,
-                                       208
-                                   ],
-                      "typeVersion":  1
-                  },
-                  {
-                      "parameters":  {
-                                         "rule":  {
-                                                      "interval":  [
-                                                                       {
-                                                                           "triggerAtHour":  9
-                                                                       }
-                                                                   ]
-                                                  }
-                                     },
-                      "id":  "f2d5f41c-4847-44df-af90-1fec022ba523",
-                      "name":  "Daily Check",
-                      "type":  "n8n-nodes-base.scheduleTrigger",
-                      "position":  [
-                                       -176,
-                                       0
-                                   ],
-                      "typeVersion":  1.2
-                  },
-                  {
-                      "parameters":  {
-                                         "assignments":  {
-                                                             "assignments":  [
-                                                                                 {
-                                                                                     "id":  "vars-1",
-                                                                                     "name":  "required_trip_types",
-                                                                                     "type":  "array",
-                                                                                     "value":  "=[\"flight\", \"car\", \"hotel\", \"travel_insurance\"]"
-                                                                                 },
-                                                                                 {
-                                                                                     "id":  "vars-2",
-                                                                                     "name":  "days_before_30",
-                                                                                     "type":  "number",
-                                                                                     "value":  "=30"
-                                                                                 },
-                                                                                 {
-                                                                                     "id":  "vars-3",
-                                                                                     "name":  "days_before_15",
-                                                                                     "type":  "number",
-                                                                                     "value":  "=15"
-                                                                                 }
-                                                                             ]
-                                                         },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "id":  "aa076cdb-d557-4a47-84fa-2079bc73d9c7",
-                      "name":  "Set Workflow Variables",
-                      "type":  "n8n-nodes-base.set",
-                      "position":  [
-                                       48,
-                                       112
-                                   ],
-                      "typeVersion":  3.4
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "getAll",
-                                         "tableId":  "trips",
-                                         "returnAll":  true,
-                                         "matchType":  "allFilters",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "start_date",
-                                                                                "condition":  "gt",
-                                                                                "keyValue":  "={{ $now }}"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       272,
-                                       112
-                                   ],
-                      "id":  "5d6c9447-eff1-4cac-8cd7-c45dfbc9cc6c",
-                      "name":  "Get Future Trips",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "getAll",
-                                         "tableId":  "trip_items",
-                                         "returnAll":  true,
-                                         "matchType":  "allFilters",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "trip_id",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "={{ $json.id }}"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       704,
-                                       112
-                                   ],
-                      "id":  "2506351b-671b-40d0-abcb-82af5c9f1b1f",
-                      "name":  "Get Trip Items",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "conditions":  {
-                                                            "options":  {
-                                                                            "caseSensitive":  true,
-                                                                            "leftValue":  "",
-                                                                            "typeValidation":  "strict",
-                                                                            "version":  1
-                                                                        },
-                                                            "conditions":  [
-                                                                               {
-                                                                                   "id":  "condition-1",
-                                                                                   "operator":  {
-                                                                                                    "type":  "string",
-                                                                                                    "operation":  "equals"
-                                                                                                },
-                                                                                   "leftValue":  "={{ $json.reminder_type }}",
-                                                                                   "rightValue":  "30_day"
-                                                                               }
-                                                                           ],
-                                                            "combinator":  "and"
-                                                        },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "id":  "62d1434d-8392-4007-939e-7a117b536dfe",
-                      "name":  "Split by Reminder Type",
-                      "type":  "n8n-nodes-base.if",
-                      "position":  [
-                                       1584,
-                                       112
-                                   ],
-                      "typeVersion":  2.1
-                  },
-                  {
-                      "parameters":  {
-                                         "assignments":  {
-                                                             "assignments":  [
-                                                                                 {
-                                                                                     "id":  "message-30",
-                                                                                     "name":  "message",
-                                                                                     "value":  "=🗓️ \u003cb\u003eTrip Reminder\u003c/b\u003e\n\n\u003cb\u003eTitle:\u003c/b\u003e {{ $json.trip_name }}\n\u003cb\u003eDeparture:\u003c/b\u003e {{ $json.start_date.toDateTime().format(\u0027dd LLL yy\u0027) }}\n\u003cb\u003eDays remaining:\u003c/b\u003e {{ $json.days_until_trip }}\n\n\u003cb\u003eItems needing attention:\u003c/b\u003e\n{{ $json.issues.map(issue =\u003e \u0027• \u0027 + issue.message).join(\u0027\\n\u0027) }}\n\nPlease book these items soon to avoid last-minute stress! 🧳",
-                                                                                     "type":  "string"
-                                                                                 }
-                                                                             ]
-                                                         },
-                                         "includeOtherFields":  true,
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.set",
-                      "typeVersion":  3.4,
-                      "position":  [
-                                       1808,
-                                       0
-                                   ],
-                      "id":  "a21312cb-96c8-4014-80c8-8e42135b5df8",
-                      "name":  "Format 30-Day Message"
-                  },
-                  {
-                      "parameters":  {
-                                         "assignments":  {
-                                                             "assignments":  [
-                                                                                 {
-                                                                                     "id":  "message-15",
-                                                                                     "name":  "message",
-                                                                                     "value":  "=🚨 \u003cb\u003eURGENT: Trip Reminder\u003c/b\u003e\n\n\u003cb\u003eTitle:\u003c/b\u003e {{ $json.trip_name }}\n\u003cb\u003eDeparture:\u003c/b\u003e {{ $json.start_date.toDateTime().format(\u0027dd LLL yy\u0027) }}\n\u003cb\u003eDays remaining:\u003c/b\u003e {{ $json.days_until_trip }}\n\n\u003cb\u003eURGENT items still needed:\u003c/b\u003e\n{{ $json.issues.map(issue =\u003e \u0027• \u0027 + issue.message).join(\u0027\\n\u0027) }}\n\n⚠️ Book these ASAP - your trip is coming up soon! ✈️",
-                                                                                     "type":  "string"
-                                                                                 }
-                                                                             ]
-                                                         },
-                                         "includeOtherFields":  true,
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.set",
-                      "typeVersion":  3.4,
-                      "position":  [
-                                       1808,
-                                       208
-                                   ],
-                      "id":  "702ce242-7adf-413b-add2-9638747847b8",
-                      "name":  "Format 15-Day Message"
-                  },
-                  {
-                      "parameters":  {
-
-                                     },
-                      "id":  "271a8205-d356-423e-94e7-cdd4cb9cebc8",
-                      "name":  "Merge Messages",
-                      "type":  "n8n-nodes-base.merge",
-                      "position":  [
-                                       2032,
-                                       112
-                                   ],
-                      "typeVersion":  3
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       2240,
-                                       112
-                                   ],
-                      "id":  "5ac69d83-6604-4889-a405-4351f09e766b",
-                      "name":  "Loop Over Messages"
-                  },
-                  {
-                      "parameters":  {
-                                         "userKey":  "=s649csud5ik5kvhha7d929ynazwbmu",
-                                         "message":  "={{ $json.message }}",
-                                         "priority":  "={{ $json.reminder_type === \u002715_day\u0027 ? 1 : 0 }}",
-                                         "additionalFields":  {
-                                                                  "device":  "iphone-cem",
-                                                                  "html":  true
-                                                              }
-                                     },
-                      "id":  "5c576103-53a9-4083-8d76-eae928dfe83c",
-                      "name":  "Send Pushover Notification",
-                      "type":  "n8n-nodes-base.pushover",
-                      "position":  [
-                                       2464,
-                                       112
-                                   ],
-                      "typeVersion":  1,
-                      "credentials":  {
-                                          "pushoverApi":  {
-                                                              "id":  "uWTk9dlnh5qmgFR6",
-                                                              "name":  "Pushover account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "compare":  "selectedFields",
-                                         "fieldsToCompare":  "id",
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.removeDuplicates",
-                      "typeVersion":  2,
-                      "position":  [
-                                       480,
-                                       112
-                                   ],
-                      "id":  "e2740b7c-3038-4e91-875c-64714108d1cb",
-                      "name":  "Remove Duplicates"
-                  },
-                  {
-                      "parameters":  {
-                                         "jsCode":  "// Group trip items by trip_id and analyze what\u0027s missing or not booked\nconst tripItems = $input.all();\nconst trips = $(\u0027Get Future Trips\u0027).all();\nconst requiredTypes = $(\u0027Set Workflow Variables\u0027).first().json.required_trip_types;\n\nconst results = [];\n\n// Create a map of trips for easy lookup - use Map for better type safety\nconst tripMap = new Map();\ntrips.forEach(trip =\u003e {\n  tripMap.set(String(trip.json.id), trip.json);\n});\n\n// Group items by trip_id - use Map for better type safety\nconst itemsByTrip = new Map();\ntripItems.forEach(item =\u003e {\n  const tripId = String(item.json.trip_id);\n  if (!itemsByTrip.has(tripId)) {\n    itemsByTrip.set(tripId, []);\n  }\n  itemsByTrip.get(tripId).push(item.json);\n});\n\n// Debug: Log what we have\nconsole.log(\u0027Trip Map keys:\u0027, Array.from(tripMap.keys()));\nconsole.log(\u0027Items by trip keys:\u0027, Array.from(itemsByTrip.keys()));\n\n// Check each trip for missing or unbooked items\nfor (const [tripId, trip] of tripMap) {\n  const items = itemsByTrip.get(tripId) || [];\n  \n  // Check if trip needs reminders (30 days or 15 days before)\n  const startDate = new Date(trip.start_date);\n  const now = new Date();\n  const daysUntilTrip = Math.ceil((startDate - now) / (1000 * 60 * 60 * 24));\n\n  console.log(`Trip ${tripId}: ${daysUntilTrip} days until trip`);\n\n  const needs30DayReminder = daysUntilTrip \u003c= 30 \u0026\u0026 daysUntilTrip \u003e 15;\n  const needs15DayReminder = daysUntilTrip \u003c= 15 \u0026\u0026 daysUntilTrip \u003e 0;\n  \n  if (needs30DayReminder || needs15DayReminder) {\n    const existingTypes = items.map(item =\u003e item.type).filter(type =\u003e type);\n    const bookedTypes = items.filter(item =\u003e item.status === \u0027booked\u0027).map(item =\u003e item.type);\n    \n    const issues = [];\n    \n    // Check for missing types\n    requiredTypes.forEach(type =\u003e {\n      if (!existingTypes.includes(type)) {\n        issues.push({\n          type: \u0027missing\u0027,\n          category: type,\n          message: `${type.replace(\u0027_\u0027, \u0027 \u0027)} not planned`\n        });\n      } else if (!bookedTypes.includes(type)) {\n        issues.push({\n          type: \u0027not_booked\u0027,\n          category: type,\n          message: `${type.replace(\u0027_\u0027, \u0027 \u0027)} not booked`\n        });\n      }\n    });\n    \n    if (issues.length \u003e 0) {\n      results.push({\n        user_id: trip.user_id,\n        trip_id: tripId,\n        trip_name: `Trip to ${trip.destination}`,\n        start_date: trip.start_date,\n        days_until_trip: daysUntilTrip,\n        reminder_type: needs15DayReminder ? \u002715_day\u0027 : \u002730_day\u0027,\n        issues: issues\n      });\n    }\n  }\n}\n\nreturn results;"
-                                     },
-                      "id":  "affb82ac-d414-4fe9-bc11-127d70ddcbb6",
-                      "name":  "Analyze Trip Requirements",
-                      "type":  "n8n-nodes-base.code",
-                      "position":  [
-                                       928,
-                                       112
-                                   ],
-                      "typeVersion":  2
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "getAll",
-                                         "tableId":  "reminders",
-                                         "returnAll":  true,
-                                         "matchType":  "allFilters",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "trip_id",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "={{ $json.trip_id }}"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "reminder_sent",
-                                                                                "condition":  "is",
-                                                                                "keyValue":  "true"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "reminder_type",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "={{ $json.reminder_type }}"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "source",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "trips"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       1152,
-                                       112
-                                   ],
-                      "id":  "8c4d9f0a-6fff-4b6b-9d60-29980ed43dd3",
-                      "name":  "Check Existing Reminders",
-                      "alwaysOutputData":  true,
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "tableId":  "reminders",
-                                         "fieldsUi":  {
-                                                          "fieldValues":  [
-                                                                              {
-                                                                                  "fieldId":  "user_id",
-                                                                                  "fieldValue":  "={{ $(\u0027Loop Over Messages\u0027).item.json.user_id }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "title",
-                                                                                  "fieldValue":  "={{ $(\u0027Loop Over Messages\u0027).item.json.trip_name }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "source",
-                                                                                  "fieldValue":  "trips"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "trip_id",
-                                                                                  "fieldValue":  "={{ $(\u0027Loop Over Messages\u0027).item.json.trip_id }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "description",
-                                                                                  "fieldValue":  "=Automated reminder sent for upcoming trip ({{ $(\u0027Loop Over Messages\u0027).item.json.reminder_type }}). Items needing attention:\n\n{{ $(\u0027Loop Over Messages\u0027).item.json.issues.map(issue =\u003e \u0027• \u0027 + issue.message).join(\u0027\\n\u0027) }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "reminder_sent",
-                                                                                  "fieldValue":  "true"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "reminder_type",
-                                                                                  "fieldValue":  "={{ $(\u0027Loop Over Messages\u0027).item.json.reminder_type }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "due_date",
-                                                                                  "fieldValue":  "={{ $(\u0027Loop Over Messages\u0027).item.json.start_date.toDateTime() }}"
-                                                                              }
-                                                                          ]
-                                                      }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       2688,
-                                       112
-                                   ],
-                      "id":  "5acd98e9-b884-46a3-a1cc-10304d7dd748",
-                      "name":  "Create Tracking Reminder",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "jsCode":  "// Filter out trips that already have reminders sent\nconst tripsNeedingReminders = $(\u0027Analyze Trip Requirements\u0027).all();\nconst existingReminders = $input.all();\n\nconst results = [];\n\ntripsNeedingReminders.forEach(trip =\u003e {\n  const tripData = trip.json;\n  \n  // Check if this trip already has this reminder type sent\n  const reminderExists = existingReminders.some(reminder =\u003e \n    reminder.json.trip_id === tripData.trip_id \u0026\u0026 \n    reminder.json.reminder_type === tripData.reminder_type \u0026\u0026\n    reminder.json.reminder_sent === true\n  );\n  \n  if (!reminderExists) {\n    results.push(tripData);\n  }\n});\n\nreturn results;"
-                                     },
-                      "type":  "n8n-nodes-base.code",
-                      "typeVersion":  2,
-                      "position":  [
-                                       1360,
-                                       112
-                                   ],
-                      "id":  "e9c79a7e-6cf4-47ca-90e7-cd3ad885df7a",
-                      "name":  "Filter Unsent Reminders"
-                  }
-              ],
-    "connections":  {
-                        "When clicking \u0027Test workflow\u0027":  {
-                                                                        "main":  [
-                                                                                     [
-                                                                                         {
-                                                                                             "node":  "Set Workflow Variables",
-                                                                                             "type":  "main",
-                                                                                             "index":  0
-                                                                                         }
-                                                                                     ]
-                                                                                 ]
-                                                                    },
-                        "Daily Check":  {
-                                            "main":  [
-                                                         [
-                                                             {
-                                                                 "node":  "Set Workflow Variables",
-                                                                 "type":  "main",
-                                                                 "index":  0
-                                                             }
-                                                         ]
-                                                     ]
-                                        },
-                        "Set Workflow Variables":  {
-                                                       "main":  [
-                                                                    [
-                                                                        {
-                                                                            "node":  "Get Future Trips",
-                                                                            "type":  "main",
-                                                                            "index":  0
-                                                                        }
-                                                                    ]
-                                                                ]
-                                                   },
-                        "Get Trip Items":  {
-                                               "main":  [
-                                                            [
-                                                                {
-                                                                    "node":  "Analyze Trip Requirements",
-                                                                    "type":  "main",
-                                                                    "index":  0
-                                                                }
-                                                            ]
-                                                        ]
-                                           },
-                        "Split by Reminder Type":  {
-                                                       "main":  [
-                                                                    [
-                                                                        {
-                                                                            "node":  "Format 30-Day Message",
-                                                                            "type":  "main",
-                                                                            "index":  0
-                                                                        }
-                                                                    ],
-                                                                    [
-                                                                        {
-                                                                            "node":  "Format 15-Day Message",
-                                                                            "type":  "main",
-                                                                            "index":  0
-                                                                        }
-                                                                    ]
-                                                                ]
-                                                   },
-                        "Format 30-Day Message":  {
-                                                      "main":  [
-                                                                   [
-                                                                       {
-                                                                           "node":  "Merge Messages",
-                                                                           "type":  "main",
-                                                                           "index":  0
-                                                                       }
-                                                                   ]
-                                                               ]
-                                                  },
-                        "Format 15-Day Message":  {
-                                                      "main":  [
-                                                                   [
-                                                                       {
-                                                                           "node":  "Merge Messages",
-                                                                           "type":  "main",
-                                                                           "index":  1
-                                                                       }
-                                                                   ]
-                                                               ]
-                                                  },
-                        "Merge Messages":  {
-                                               "main":  [
-                                                            [
-                                                                {
-                                                                    "node":  "Loop Over Messages",
-                                                                    "type":  "main",
-                                                                    "index":  0
-                                                                }
-                                                            ]
-                                                        ]
-                                           },
-                        "Loop Over Messages":  {
-                                                   "main":  [
-                                                                [
-
-                                                                ],
-                                                                [
-                                                                    {
-                                                                        "node":  "Send Pushover Notification",
-                                                                        "type":  "main",
-                                                                        "index":  0
-                                                                    }
-                                                                ]
-                                                            ]
-                                               },
-                        "Send Pushover Notification":  {
-                                                           "main":  [
-                                                                        [
-                                                                            {
-                                                                                "node":  "Create Tracking Reminder",
-                                                                                "type":  "main",
-                                                                                "index":  0
-                                                                            }
-                                                                        ]
-                                                                    ]
-                                                       },
-                        "Get Future Trips":  {
-                                                 "main":  [
-                                                              [
-                                                                  {
-                                                                      "node":  "Remove Duplicates",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  }
-                                                              ]
-                                                          ]
-                                             },
-                        "Remove Duplicates":  {
-                                                  "main":  [
-                                                               [
-                                                                   {
-                                                                       "node":  "Get Trip Items",
-                                                                       "type":  "main",
-                                                                       "index":  0
-                                                                   }
-                                                               ]
-                                                           ]
-                                              },
-                        "Analyze Trip Requirements":  {
-                                                          "main":  [
-                                                                       [
-                                                                           {
-                                                                               "node":  "Check Existing Reminders",
-                                                                               "type":  "main",
-                                                                               "index":  0
-                                                                           }
-                                                                       ]
-                                                                   ]
-                                                      },
-                        "Check Existing Reminders":  {
-                                                         "main":  [
-                                                                      [
-                                                                          {
-                                                                              "node":  "Filter Unsent Reminders",
-                                                                              "type":  "main",
-                                                                              "index":  0
-                                                                          }
-                                                                      ]
-                                                                  ]
-                                                     },
-                        "Create Tracking Reminder":  {
-                                                         "main":  [
-                                                                      [
-                                                                          {
-                                                                              "node":  "Loop Over Messages",
-                                                                              "type":  "main",
-                                                                              "index":  0
-                                                                          }
-                                                                      ]
-                                                                  ]
-                                                     },
-                        "Filter Unsent Reminders":  {
-                                                        "main":  [
-                                                                     [
-                                                                         {
-                                                                             "node":  "Split by Reminder Type",
-                                                                             "type":  "main",
-                                                                             "index":  0
-                                                                         }
-                                                                     ]
-                                                                 ]
-                                                    }
-                    },
-    "settings":  {
-                     "executionOrder":  "v1"
-                 },
-    "staticData":  {
-                       "node:Daily Check":  {
-                                                "recurrenceRules":  [
-
-                                                                    ]
-                                            }
-                   },
-    "meta":  {
-                 "templateCredsSetupCompleted":  true
-             },
-    "pinData":  {
-
-                },
-    "versionId":  "0ce8b008-dc3e-44a6-a7a8-451ac27f4240",
-    "activeVersionId":  "0ce8b008-dc3e-44a6-a7a8-451ac27f4240",
-    "versionCounter":  24,
-    "triggerCount":  1,
-    "tags":  [
-
-             ],
-    "shared":  [
-                   {
-                       "updatedAt":  "2025-07-04T20:55:40.309Z",
-                       "createdAt":  "2025-07-04T20:55:40.309Z",
-                       "role":  "workflow:owner",
-                       "workflowId":  "2oePifRVFkzsyqxp",
-                       "projectId":  "LgilvFgQb45ZsfNg",
-                       "project":  {
-                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
-                                       "createdAt":  "2025-05-27T00:15:31.394Z",
-                                       "id":  "LgilvFgQb45ZsfNg",
-                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
-                                       "type":  "personal",
-                                       "icon":  null,
-                                       "description":  null,
-                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
-                                   }
-                   }
-               ],
-    "versionMetadata":  {
-                            "name":  null,
-                            "description":  null
-                        }
+  "updatedAt": "2025-07-29T03:27:15.000Z",
+  "createdAt": "2025-07-04T20:55:40.307Z",
+  "id": "2oePifRVFkzsyqxp",
+  "name": "Prod -  Send Reminders (Trips)",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "683653d2-c1e4-44ef-9cd6-1d696bf9fd74",
+      "name": "When clicking 'Test workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -176,
+        208
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "f2d5f41c-4847-44df-af90-1fec022ba523",
+      "name": "Daily Check",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -176,
+        0
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "vars-1",
+              "name": "required_trip_types",
+              "type": "array",
+              "value": "=[\"flight\", \"car\", \"hotel\", \"travel_insurance\"]"
+            },
+            {
+              "id": "vars-2",
+              "name": "days_before_30",
+              "type": "number",
+              "value": "=30"
+            },
+            {
+              "id": "vars-3",
+              "name": "days_before_15",
+              "type": "number",
+              "value": "=15"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "aa076cdb-d557-4a47-84fa-2079bc73d9c7",
+      "name": "Set Workflow Variables",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        48,
+        112
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "trips",
+        "returnAll": true,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "start_date",
+              "condition": "gt",
+              "keyValue": "={{ $now }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        272,
+        112
+      ],
+      "id": "5d6c9447-eff1-4cac-8cd7-c45dfbc9cc6c",
+      "name": "Get Future Trips",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "trip_items",
+        "returnAll": true,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "trip_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        704,
+        112
+      ],
+      "id": "2506351b-671b-40d0-abcb-82af5c9f1b1f",
+      "name": "Get Trip Items",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.reminder_type }}",
+              "rightValue": "30_day"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "62d1434d-8392-4007-939e-7a117b536dfe",
+      "name": "Split by Reminder Type",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1584,
+        112
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "message-30",
+              "name": "message",
+              "value": "=🗓️ <b>Trip Reminder</b>\n\n<b>Title:</b> {{ $json.trip_name }}\n<b>Departure:</b> {{ $json.start_date.toDateTime().format('dd LLL yy') }}\n<b>Days remaining:</b> {{ $json.days_until_trip }}\n\n<b>Items needing attention:</b>\n{{ $json.issues.map(issue => '• ' + issue.message).join('\\n') }}\n\nPlease book these items soon to avoid last-minute stress! 🧳",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        0
+      ],
+      "id": "a21312cb-96c8-4014-80c8-8e42135b5df8",
+      "name": "Format 30-Day Message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "message-15",
+              "name": "message",
+              "value": "=🚨 <b>URGENT: Trip Reminder</b>\n\n<b>Title:</b> {{ $json.trip_name }}\n<b>Departure:</b> {{ $json.start_date.toDateTime().format('dd LLL yy') }}\n<b>Days remaining:</b> {{ $json.days_until_trip }}\n\n<b>URGENT items still needed:</b>\n{{ $json.issues.map(issue => '• ' + issue.message).join('\\n') }}\n\n⚠️ Book these ASAP - your trip is coming up soon! ✈️",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        208
+      ],
+      "id": "702ce242-7adf-413b-add2-9638747847b8",
+      "name": "Format 15-Day Message"
+    },
+    {
+      "parameters": {},
+      "id": "271a8205-d356-423e-94e7-cdd4cb9cebc8",
+      "name": "Merge Messages",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        2032,
+        112
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2240,
+        112
+      ],
+      "id": "5ac69d83-6604-4889-a405-4351f09e766b",
+      "name": "Loop Over Messages"
+    },
+    {
+      "parameters": {
+        "userKey": "=s649csud5ik5kvhha7d929ynazwbmu",
+        "message": "={{ $json.message }}",
+        "priority": "={{ $json.reminder_type === '15_day' ? 1 : 0 }}",
+        "additionalFields": {
+          "device": "iphone-cem",
+          "html": true
+        }
+      },
+      "id": "5c576103-53a9-4083-8d76-eae928dfe83c",
+      "name": "Send Pushover Notification",
+      "type": "n8n-nodes-base.pushover",
+      "position": [
+        2464,
+        112
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "pushoverApi": {
+          "id": "uWTk9dlnh5qmgFR6",
+          "name": "Pushover account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        480,
+        112
+      ],
+      "id": "e2740b7c-3038-4e91-875c-64714108d1cb",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Group trip items by trip_id and analyze what's missing or not booked\nconst tripItems = $input.all();\nconst trips = $('Get Future Trips').all();\nconst requiredTypes = $('Set Workflow Variables').first().json.required_trip_types;\n\nconst results = [];\n\n// Create a map of trips for easy lookup - use Map for better type safety\nconst tripMap = new Map();\ntrips.forEach(trip => {\n  tripMap.set(String(trip.json.id), trip.json);\n});\n\n// Group items by trip_id - use Map for better type safety\nconst itemsByTrip = new Map();\ntripItems.forEach(item => {\n  const tripId = String(item.json.trip_id);\n  if (!itemsByTrip.has(tripId)) {\n    itemsByTrip.set(tripId, []);\n  }\n  itemsByTrip.get(tripId).push(item.json);\n});\n\n// Debug: Log what we have\nconsole.log('Trip Map keys:', Array.from(tripMap.keys()));\nconsole.log('Items by trip keys:', Array.from(itemsByTrip.keys()));\n\n// Check each trip for missing or unbooked items\nfor (const [tripId, trip] of tripMap) {\n  const items = itemsByTrip.get(tripId) || [];\n  \n  // Check if trip needs reminders (30 days or 15 days before)\n  const startDate = new Date(trip.start_date);\n  const now = new Date();\n  const daysUntilTrip = Math.ceil((startDate - now) / (1000 * 60 * 60 * 24));\n\n  console.log(`Trip ${tripId}: ${daysUntilTrip} days until trip`);\n\n  const needs30DayReminder = daysUntilTrip <= 30 && daysUntilTrip > 15;\n  const needs15DayReminder = daysUntilTrip <= 15 && daysUntilTrip > 0;\n  \n  if (needs30DayReminder || needs15DayReminder) {\n    const existingTypes = items.map(item => item.type).filter(type => type);\n    const bookedTypes = items.filter(item => item.status === 'booked').map(item => item.type);\n    \n    const issues = [];\n    \n    // Check for missing types\n    requiredTypes.forEach(type => {\n      if (!existingTypes.includes(type)) {\n        issues.push({\n          type: 'missing',\n          category: type,\n          message: `${type.replace('_', ' ')} not planned`\n        });\n      } else if (!bookedTypes.includes(type)) {\n        issues.push({\n          type: 'not_booked',\n          category: type,\n          message: `${type.replace('_', ' ')} not booked`\n        });\n      }\n    });\n    \n    if (issues.length > 0) {\n      results.push({\n        user_id: trip.user_id,\n        trip_id: tripId,\n        trip_name: `Trip to ${trip.destination}`,\n        start_date: trip.start_date,\n        days_until_trip: daysUntilTrip,\n        reminder_type: needs15DayReminder ? '15_day' : '30_day',\n        issues: issues\n      });\n    }\n  }\n}\n\nreturn results;"
+      },
+      "id": "affb82ac-d414-4fe9-bc11-127d70ddcbb6",
+      "name": "Analyze Trip Requirements",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        928,
+        112
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "reminders",
+        "returnAll": true,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "trip_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.trip_id }}"
+            },
+            {
+              "keyName": "reminder_sent",
+              "condition": "is",
+              "keyValue": "true"
+            },
+            {
+              "keyName": "reminder_type",
+              "condition": "eq",
+              "keyValue": "={{ $json.reminder_type }}"
+            },
+            {
+              "keyName": "source",
+              "condition": "eq",
+              "keyValue": "trips"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        112
+      ],
+      "id": "8c4d9f0a-6fff-4b6b-9d60-29980ed43dd3",
+      "name": "Check Existing Reminders",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "reminders",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "user_id",
+              "fieldValue": "={{ $('Loop Over Messages').item.json.user_id }}"
+            },
+            {
+              "fieldId": "title",
+              "fieldValue": "={{ $('Loop Over Messages').item.json.trip_name }}"
+            },
+            {
+              "fieldId": "source",
+              "fieldValue": "trips"
+            },
+            {
+              "fieldId": "trip_id",
+              "fieldValue": "={{ $('Loop Over Messages').item.json.trip_id }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "=Automated reminder sent for upcoming trip ({{ $('Loop Over Messages').item.json.reminder_type }}). Items needing attention:\n\n{{ $('Loop Over Messages').item.json.issues.map(issue => '• ' + issue.message).join('\\n') }}"
+            },
+            {
+              "fieldId": "reminder_sent",
+              "fieldValue": "true"
+            },
+            {
+              "fieldId": "reminder_type",
+              "fieldValue": "={{ $('Loop Over Messages').item.json.reminder_type }}"
+            },
+            {
+              "fieldId": "due_date",
+              "fieldValue": "={{ $('Loop Over Messages').item.json.start_date.toDateTime() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2688,
+        112
+      ],
+      "id": "5acd98e9-b884-46a3-a1cc-10304d7dd748",
+      "name": "Create Tracking Reminder",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter out trips that already have reminders sent\nconst tripsNeedingReminders = $('Analyze Trip Requirements').all();\nconst existingReminders = $input.all();\n\nconst results = [];\n\ntripsNeedingReminders.forEach(trip => {\n  const tripData = trip.json;\n  \n  // Check if this trip already has this reminder type sent\n  const reminderExists = existingReminders.some(reminder => \n    reminder.json.trip_id === tripData.trip_id && \n    reminder.json.reminder_type === tripData.reminder_type &&\n    reminder.json.reminder_sent === true\n  );\n  \n  if (!reminderExists) {\n    results.push(tripData);\n  }\n});\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        112
+      ],
+      "id": "e9c79a7e-6cf4-47ca-90e7-cd3ad885df7a",
+      "name": "Filter Unsent Reminders"
+    }
+  ],
+  "connections": {
+    "When clicking 'Test workflow'": {
+      "main": [
+        [
+          {
+            "node": "Set Workflow Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Check": {
+      "main": [
+        [
+          {
+            "node": "Set Workflow Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Workflow Variables": {
+      "main": [
+        [
+          {
+            "node": "Get Future Trips",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Trip Items": {
+      "main": [
+        [
+          {
+            "node": "Analyze Trip Requirements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split by Reminder Type": {
+      "main": [
+        [
+          {
+            "node": "Format 30-Day Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format 15-Day Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format 30-Day Message": {
+      "main": [
+        [
+          {
+            "node": "Merge Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format 15-Day Message": {
+      "main": [
+        [
+          {
+            "node": "Merge Messages",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Messages": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Messages": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Send Pushover Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Pushover Notification": {
+      "main": [
+        [
+          {
+            "node": "Create Tracking Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Future Trips": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Get Trip Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Trip Requirements": {
+      "main": [
+        [
+          {
+            "node": "Check Existing Reminders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Existing Reminders": {
+      "main": [
+        [
+          {
+            "node": "Filter Unsent Reminders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Tracking Reminder": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Unsent Reminders": {
+      "main": [
+        [
+          {
+            "node": "Split by Reminder Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Daily Check": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "0ce8b008-dc3e-44a6-a7a8-451ac27f4240",
+  "activeVersionId": "0ce8b008-dc3e-44a6-a7a8-451ac27f4240",
+  "versionCounter": 24,
+  "triggerCount": 1,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2025-07-04T20:55:40.309Z",
+      "createdAt": "2025-07-04T20:55:40.309Z",
+      "role": "workflow:owner",
+      "workflowId": "2oePifRVFkzsyqxp",
+      "projectId": "LgilvFgQb45ZsfNg",
+      "project": {
+        "updatedAt": "2025-05-27T00:18:21.560Z",
+        "createdAt": "2025-05-27T00:15:31.394Z",
+        "id": "LgilvFgQb45ZsfNg",
+        "name": "Cem Kaspi <cem.kaspi97@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
 }

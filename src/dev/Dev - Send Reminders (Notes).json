@@ -1,584 +1,552 @@
 {
-    "updatedAt":  "2025-07-28T18:17:25.000Z",
-    "createdAt":  "2025-07-28T18:16:07.990Z",
-    "id":  "X5ifhYKLt8Z3xJyG",
-    "name":  "Dev - Send Reminders (Notes)",
-    "description":  null,
-    "active":  false,
-    "isArchived":  false,
-    "nodes":  [
-                  {
-                      "parameters":  {
-
-                                     },
-                      "id":  "675f28be-744c-4b49-a136-8f5530228103",
-                      "name":  "When clicking ‘Test workflow’",
-                      "type":  "n8n-nodes-base.manualTrigger",
-                      "position":  [
-                                       -80,
-                                       640
-                                   ],
-                      "typeVersion":  1
-                  },
-                  {
-                      "parameters":  {
-                                         "rule":  {
-                                                      "interval":  [
-                                                                       {
-                                                                           "field":  "weeks",
-                                                                           "triggerAtDay":  [
-                                                                                                1
-                                                                                            ],
-                                                                           "triggerAtHour":  9
-                                                                       }
-                                                                   ]
-                                                  }
-                                     },
-                      "id":  "4f865a3f-651f-49f2-9b7a-f61051c2b1e7",
-                      "name":  "Schedule Trigger",
-                      "type":  "n8n-nodes-base.scheduleTrigger",
-                      "position":  [
-                                       -80,
-                                       432
-                                   ],
-                      "typeVersion":  1.2
-                  },
-                  {
-                      "parameters":  {
-                                         "userKey":  "=gvkf17dbdqe1bbcugoyijv4cdbd172",
-                                         "message":  "={{ $json.message }}",
-                                         "priority":  0,
-                                         "additionalFields":  {
-                                                                  "device":  "iphone-cem",
-                                                                  "html":  true
-                                                              }
-                                     },
-                      "id":  "35cd3646-ef17-46b2-93e8-db88e23da32b",
-                      "name":  "Pushover",
-                      "type":  "n8n-nodes-base.pushover",
-                      "position":  [
-                                       2032,
-                                       528
-                                   ],
-                      "typeVersion":  1,
-                      "credentials":  {
-
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       1024,
-                                       336
-                                   ],
-                      "id":  "97bf263f-5d17-438b-80ad-43226e9432d8",
-                      "name":  "Loop Over Overdue Items"
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       1024,
-                                       688
-                                   ],
-                      "id":  "1cad6405-2b16-4270-9c71-9be2293437d1",
-                      "name":  "Loop Over Upcoming Items"
-                  },
-                  {
-                      "parameters":  {
-                                         "assignments":  {
-                                                             "assignments":  [
-                                                                                 {
-                                                                                     "id":  "0a2b2046-2fad-4911-839a-50155e603d13",
-                                                                                     "name":  "id",
-                                                                                     "value":  "={{ $json.id }}",
-                                                                                     "type":  "string"
-                                                                                 },
-                                                                                 {
-                                                                                     "id":  "98543f1c-6043-4840-9662-663910096c27",
-                                                                                     "name":  "message",
-                                                                                     "value":  "=📒🛑 \u003cb\u003eNotes Reminder\u003c/b\u003e\n\n\u003cb\u003eTask:\u003c/b\u003e {{ $json.title }}\n\u003cb\u003eDeadline:\u003c/b\u003e {{ $json.due_date.toDateTime().format(\u0027dd-MM-yyyy\u0027) }} \n\u003cb\u003eStatus:\u003c/b\u003e Overdue\n\u003cb\u003eTags:\u003c/b\u003e {{ $json.source }}\n\n",
-                                                                                     "type":  "string"
-                                                                                 }
-                                                                             ]
-                                                         },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.set",
-                      "typeVersion":  3.4,
-                      "position":  [
-                                       1200,
-                                       432
-                                   ],
-                      "id":  "b0735ac5-66d6-4e3f-ba9b-81a70c795bad",
-                      "name":  "Overdue Note"
-                  },
-                  {
-                      "parameters":  {
-                                         "assignments":  {
-                                                             "assignments":  [
-                                                                                 {
-                                                                                     "id":  "97e96027-3f0d-4281-b3cc-1042172cfc83",
-                                                                                     "name":  "id",
-                                                                                     "value":  "={{ $json.id }}",
-                                                                                     "type":  "string"
-                                                                                 },
-                                                                                 {
-                                                                                     "id":  "98543f1c-6043-4840-9662-663910096c27",
-                                                                                     "name":  "message",
-                                                                                     "value":  "=📒 \u003cb\u003eNotes Reminder\u003c/b\u003e\n\n\u003cb\u003eTask:\u003c/b\u003e {{ $json.title }}\n\u003cb\u003eDeadline:\u003c/b\u003e {{ $json.due_date.toDateTime().format(\u0027dd-MM-yyyy\u0027) }} \n\u003cb\u003eStatus:\u003c/b\u003e Upcoming\n\u003cb\u003eTags:\u003c/b\u003e {{ $json.source }}\n\n",
-                                                                                     "type":  "string"
-                                                                                 }
-                                                                             ]
-                                                         },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.set",
-                      "typeVersion":  3.4,
-                      "position":  [
-                                       1200,
-                                       768
-                                   ],
-                      "id":  "0376f232-da60-4632-bdcb-3d9f5fe0011b",
-                      "name":  "Upcoming Note"
-                  },
-                  {
-                      "parameters":  {
-
-                                     },
-                      "id":  "f64f404f-ceb3-4483-ba8f-d18bf45ac8c7",
-                      "name":  "Merge groups",
-                      "type":  "n8n-nodes-base.merge",
-                      "position":  [
-                                       1584,
-                                       528
-                                   ],
-                      "typeVersion":  3
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       1808,
-                                       528
-                                   ],
-                      "id":  "c8f1666a-4565-4a5d-bed3-84c80b1f0bc1",
-                      "name":  "Loop Over Items"
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "update",
-                                         "tableId":  "reminders",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "id",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "={{ $(\u0027Loop Over Items\u0027).item.json.id }}"
-                                                                            }
-                                                                        ]
-                                                     },
-                                         "fieldsUi":  {
-                                                          "fieldValues":  [
-                                                                              {
-                                                                                  "fieldId":  "reminder_sent",
-                                                                                  "fieldValue":  "true"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "reminder_type",
-                                                                                  "fieldValue":  "standard"
-                                                                              }
-                                                                          ]
-                                                      }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       2240,
-                                       528
-                                   ],
-                      "id":  "15352d2c-89a2-4df6-b547-5ca65ccca94c",
-                      "name":  "Update Reminder Info",
-                      "credentials":  {
-
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "sortFieldsUi":  {
-                                                              "sortField":  [
-                                                                                {
-                                                                                    "fieldName":  "=due_date"
-                                                                                }
-                                                                            ]
-                                                          },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "id":  "6a885a2c-1054-47fd-b900-f07ea372bae6",
-                      "name":  "Sort by closest deadline",
-                      "type":  "n8n-nodes-base.sort",
-                      "position":  [
-                                       592,
-                                       544
-                                   ],
-                      "typeVersion":  1
-                  },
-                  {
-                      "parameters":  {
-                                         "conditions":  {
-                                                            "options":  {
-                                                                            "caseSensitive":  true,
-                                                                            "leftValue":  "",
-                                                                            "typeValidation":  "strict",
-                                                                            "version":  1
-                                                                        },
-                                                            "conditions":  [
-                                                                               {
-                                                                                   "id":  "e65c0597-d067-423a-8496-35e91a8ddf1b",
-                                                                                   "operator":  {
-                                                                                                    "type":  "dateTime",
-                                                                                                    "operation":  "beforeOrEquals"
-                                                                                                },
-                                                                                   "leftValue":  "={{ $json.due_date }}",
-                                                                                   "rightValue":  "={{ $now }}"
-                                                                               }
-                                                                           ],
-                                                            "combinator":  "and"
-                                                        },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "id":  "68616ab9-1f23-4453-b55d-9c1207ef22c6",
-                      "name":  "If deadline is overdue",
-                      "type":  "n8n-nodes-base.if",
-                      "position":  [
-                                       800,
-                                       544
-                                   ],
-                      "typeVersion":  2.1
-                  },
-                  {
-                      "parameters":  {
-                                         "assignments":  {
-                                                             "assignments":  [
-                                                                                 {
-                                                                                     "id":  "976aac71-63c6-48a4-a965-8112ae3480bf",
-                                                                                     "name":  "logo_path",
-                                                                                     "type":  "string",
-                                                                                     "value":  ""
-                                                                                 },
-                                                                                 {
-                                                                                     "id":  "d9ec1fff-56ff-4c3e-befd-99520b78200e",
-                                                                                     "name":  "pushover_group_key",
-                                                                                     "type":  "string",
-                                                                                     "value":  "="
-                                                                                 }
-                                                                             ]
-                                                         },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "id":  "1f6aa4e6-e4df-452e-b09a-2c0844472154",
-                      "name":  "Set Workflow vars",
-                      "type":  "n8n-nodes-base.set",
-                      "position":  [
-                                       144,
-                                       544
-                                   ],
-                      "typeVersion":  3.4
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "getAll",
-                                         "tableId":  "reminders",
-                                         "returnAll":  true,
-                                         "matchType":  "allFilters",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "is_completed",
-                                                                                "condition":  "is",
-                                                                                "keyValue":  "false"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "has_due_date",
-                                                                                "condition":  "is",
-                                                                                "keyValue":  "true"
-                                                                            },
-                                                                            {
-                                                                                "keyName":  "source",
-                                                                                "condition":  "eq",
-                                                                                "keyValue":  "ios-notes"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       368,
-                                       544
-                                   ],
-                      "id":  "831974a9-14f6-4978-b02a-9b5176f97e49",
-                      "name":  "Get Notes Reminders with Due Dates",
-                      "credentials":  {
-
-                                      }
-                  }
+  "updatedAt": "2025-07-28T18:17:25.000Z",
+  "createdAt": "2025-07-28T18:16:07.990Z",
+  "id": "X5ifhYKLt8Z3xJyG",
+  "name": "Dev - Send Reminders (Notes)",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "675f28be-744c-4b49-a136-8f5530228103",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -80,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
               ],
-    "connections":  {
-                        "When clicking ‘Test workflow’":  {
-                                                                  "main":  [
-                                                                               [
-                                                                                   {
-                                                                                       "node":  "Set Workflow vars",
-                                                                                       "type":  "main",
-                                                                                       "index":  0
-                                                                                   }
-                                                                               ]
-                                                                           ]
-                                                              },
-                        "Schedule Trigger":  {
-                                                 "main":  [
-                                                              [
-                                                                  {
-                                                                      "node":  "Set Workflow vars",
-                                                                      "type":  "main",
-                                                                      "index":  0
-                                                                  }
-                                                              ]
-                                                          ]
-                                             },
-                        "Pushover":  {
-                                         "main":  [
-                                                      [
-                                                          {
-                                                              "node":  "Update Reminder Info",
-                                                              "type":  "main",
-                                                              "index":  0
-                                                          }
-                                                      ]
-                                                  ]
-                                     },
-                        "Loop Over Overdue Items":  {
-                                                        "main":  [
-                                                                     [
-                                                                         {
-                                                                             "node":  "Merge groups",
-                                                                             "type":  "main",
-                                                                             "index":  0
-                                                                         }
-                                                                     ],
-                                                                     [
-                                                                         {
-                                                                             "node":  "Overdue Note",
-                                                                             "type":  "main",
-                                                                             "index":  0
-                                                                         }
-                                                                     ]
-                                                                 ]
-                                                    },
-                        "Loop Over Upcoming Items":  {
-                                                         "main":  [
-                                                                      [
-                                                                          {
-                                                                              "node":  "Merge groups",
-                                                                              "type":  "main",
-                                                                              "index":  1
-                                                                          }
-                                                                      ],
-                                                                      [
-                                                                          {
-                                                                              "node":  "Upcoming Note",
-                                                                              "type":  "main",
-                                                                              "index":  0
-                                                                          }
-                                                                      ]
-                                                                  ]
-                                                     },
-                        "Overdue Note":  {
-                                             "main":  [
-                                                          [
-                                                              {
-                                                                  "node":  "Loop Over Overdue Items",
-                                                                  "type":  "main",
-                                                                  "index":  0
-                                                              }
-                                                          ]
-                                                      ]
-                                         },
-                        "Upcoming Note":  {
-                                              "main":  [
-                                                           [
-                                                               {
-                                                                   "node":  "Loop Over Upcoming Items",
-                                                                   "type":  "main",
-                                                                   "index":  0
-                                                               }
-                                                           ]
-                                                       ]
-                                          },
-                        "Merge groups":  {
-                                             "main":  [
-                                                          [
-                                                              {
-                                                                  "node":  "Loop Over Items",
-                                                                  "type":  "main",
-                                                                  "index":  0
-                                                              }
-                                                          ]
-                                                      ]
-                                         },
-                        "Loop Over Items":  {
-                                                "main":  [
-                                                             [
-
-                                                             ],
-                                                             [
-                                                                 {
-                                                                     "node":  "Pushover",
-                                                                     "type":  "main",
-                                                                     "index":  0
-                                                                 }
-                                                             ]
-                                                         ]
-                                            },
-                        "Update Reminder Info":  {
-                                                     "main":  [
-                                                                  [
-                                                                      {
-                                                                          "node":  "Loop Over Items",
-                                                                          "type":  "main",
-                                                                          "index":  0
-                                                                      }
-                                                                  ]
-                                                              ]
-                                                 },
-                        "Sort by closest deadline":  {
-                                                         "main":  [
-                                                                      [
-                                                                          {
-                                                                              "node":  "If deadline is overdue",
-                                                                              "type":  "main",
-                                                                              "index":  0
-                                                                          }
-                                                                      ]
-                                                                  ]
-                                                     },
-                        "If deadline is overdue":  {
-                                                       "main":  [
-                                                                    [
-                                                                        {
-                                                                            "node":  "Loop Over Overdue Items",
-                                                                            "type":  "main",
-                                                                            "index":  0
-                                                                        }
-                                                                    ],
-                                                                    [
-                                                                        {
-                                                                            "node":  "Loop Over Upcoming Items",
-                                                                            "type":  "main",
-                                                                            "index":  0
-                                                                        }
-                                                                    ]
-                                                                ]
-                                                   },
-                        "Set Workflow vars":  {
-                                                  "main":  [
-                                                               [
-                                                                   {
-                                                                       "node":  "Get Notes Reminders with Due Dates",
-                                                                       "type":  "main",
-                                                                       "index":  0
-                                                                   }
-                                                               ]
-                                                           ]
-                                              },
-                        "Get Notes Reminders with Due Dates":  {
-                                                                   "main":  [
-                                                                                [
-                                                                                    {
-                                                                                        "node":  "Sort by closest deadline",
-                                                                                        "type":  "main",
-                                                                                        "index":  0
-                                                                                    }
-                                                                                ]
-                                                                            ]
-                                                               }
-                    },
-    "settings":  {
-                     "executionOrder":  "v1"
-                 },
-    "staticData":  {
-                       "node:Schedule Trigger":  {
-                                                     "recurrenceRules":  [
-
-                                                                         ]
-                                                 }
-                   },
-    "meta":  {
-                 "templateCredsSetupCompleted":  true
-             },
-    "pinData":  {
-
-                },
-    "versionId":  "4d71a63c-66fd-4684-8e77-76ce61c3b3d0",
-    "activeVersionId":  null,
-    "versionCounter":  1,
-    "triggerCount":  1,
-    "tags":  [
-                 {
-                     "updatedAt":  "2025-07-28T16:51:43.261Z",
-                     "createdAt":  "2025-07-28T16:51:43.261Z",
-                     "id":  "wFA0OT7LAjyTBsE4",
-                     "name":  "dev"
-                 }
-             ],
-    "shared":  [
-                   {
-                       "updatedAt":  "2025-07-28T18:16:07.993Z",
-                       "createdAt":  "2025-07-28T18:16:07.993Z",
-                       "role":  "workflow:owner",
-                       "workflowId":  "X5ifhYKLt8Z3xJyG",
-                       "projectId":  "LgilvFgQb45ZsfNg",
-                       "project":  {
-                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
-                                       "createdAt":  "2025-05-27T00:15:31.394Z",
-                                       "id":  "LgilvFgQb45ZsfNg",
-                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
-                                       "type":  "personal",
-                                       "icon":  null,
-                                       "description":  null,
-                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
-                                   }
-                   }
-               ],
-    "versionMetadata":  {
-                            "name":  null,
-                            "description":  null
-                        }
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "4f865a3f-651f-49f2-9b7a-f61051c2b1e7",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -80,
+        432
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "userKey": "=gvkf17dbdqe1bbcugoyijv4cdbd172",
+        "message": "={{ $json.message }}",
+        "priority": 0,
+        "additionalFields": {
+          "device": "iphone-cem",
+          "html": true
+        }
+      },
+      "id": "35cd3646-ef17-46b2-93e8-db88e23da32b",
+      "name": "Pushover",
+      "type": "n8n-nodes-base.pushover",
+      "position": [
+        2032,
+        528
+      ],
+      "typeVersion": 1,
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1024,
+        336
+      ],
+      "id": "97bf263f-5d17-438b-80ad-43226e9432d8",
+      "name": "Loop Over Overdue Items"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1024,
+        688
+      ],
+      "id": "1cad6405-2b16-4270-9c71-9be2293437d1",
+      "name": "Loop Over Upcoming Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0a2b2046-2fad-4911-839a-50155e603d13",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "98543f1c-6043-4840-9662-663910096c27",
+              "name": "message",
+              "value": "=📒🛑 <b>Notes Reminder</b>\n\n<b>Task:</b> {{ $json.title }}\n<b>Deadline:</b> {{ $json.due_date.toDateTime().format('dd-MM-yyyy') }} \n<b>Status:</b> Overdue\n<b>Tags:</b> {{ $json.source }}\n\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        432
+      ],
+      "id": "b0735ac5-66d6-4e3f-ba9b-81a70c795bad",
+      "name": "Overdue Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "97e96027-3f0d-4281-b3cc-1042172cfc83",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "98543f1c-6043-4840-9662-663910096c27",
+              "name": "message",
+              "value": "=📒 <b>Notes Reminder</b>\n\n<b>Task:</b> {{ $json.title }}\n<b>Deadline:</b> {{ $json.due_date.toDateTime().format('dd-MM-yyyy') }} \n<b>Status:</b> Upcoming\n<b>Tags:</b> {{ $json.source }}\n\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        768
+      ],
+      "id": "0376f232-da60-4632-bdcb-3d9f5fe0011b",
+      "name": "Upcoming Note"
+    },
+    {
+      "parameters": {},
+      "id": "f64f404f-ceb3-4483-ba8f-d18bf45ac8c7",
+      "name": "Merge groups",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1584,
+        528
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1808,
+        528
+      ],
+      "id": "c8f1666a-4565-4a5d-bed3-84c80b1f0bc1",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "reminders",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Loop Over Items').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "reminder_sent",
+              "fieldValue": "true"
+            },
+            {
+              "fieldId": "reminder_type",
+              "fieldValue": "standard"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        528
+      ],
+      "id": "15352d2c-89a2-4df6-b547-5ca65ccca94c",
+      "name": "Update Reminder Info",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "=due_date"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6a885a2c-1054-47fd-b900-f07ea372bae6",
+      "name": "Sort by closest deadline",
+      "type": "n8n-nodes-base.sort",
+      "position": [
+        592,
+        544
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "e65c0597-d067-423a-8496-35e91a8ddf1b",
+              "operator": {
+                "type": "dateTime",
+                "operation": "beforeOrEquals"
+              },
+              "leftValue": "={{ $json.due_date }}",
+              "rightValue": "={{ $now }}"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "68616ab9-1f23-4453-b55d-9c1207ef22c6",
+      "name": "If deadline is overdue",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        800,
+        544
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "976aac71-63c6-48a4-a965-8112ae3480bf",
+              "name": "logo_path",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "d9ec1fff-56ff-4c3e-befd-99520b78200e",
+              "name": "pushover_group_key",
+              "type": "string",
+              "value": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1f6aa4e6-e4df-452e-b09a-2c0844472154",
+      "name": "Set Workflow vars",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        144,
+        544
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "reminders",
+        "returnAll": true,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "is_completed",
+              "condition": "is",
+              "keyValue": "false"
+            },
+            {
+              "keyName": "has_due_date",
+              "condition": "is",
+              "keyValue": "true"
+            },
+            {
+              "keyName": "source",
+              "condition": "eq",
+              "keyValue": "ios-notes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        368,
+        544
+      ],
+      "id": "831974a9-14f6-4978-b02a-9b5176f97e49",
+      "name": "Get Notes Reminders with Due Dates",
+      "credentials": {}
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set Workflow vars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Workflow vars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pushover": {
+      "main": [
+        [
+          {
+            "node": "Update Reminder Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Overdue Items": {
+      "main": [
+        [
+          {
+            "node": "Merge groups",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Overdue Note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Upcoming Items": {
+      "main": [
+        [
+          {
+            "node": "Merge groups",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Upcoming Note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Overdue Note": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Overdue Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upcoming Note": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Upcoming Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge groups": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Pushover",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Reminder Info": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort by closest deadline": {
+      "main": [
+        [
+          {
+            "node": "If deadline is overdue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If deadline is overdue": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Overdue Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Upcoming Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Workflow vars": {
+      "main": [
+        [
+          {
+            "node": "Get Notes Reminders with Due Dates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Notes Reminders with Due Dates": {
+      "main": [
+        [
+          {
+            "node": "Sort by closest deadline",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "4d71a63c-66fd-4684-8e77-76ce61c3b3d0",
+  "activeVersionId": null,
+  "versionCounter": 1,
+  "triggerCount": 1,
+  "tags": [
+    {
+      "updatedAt": "2025-07-28T16:51:43.261Z",
+      "createdAt": "2025-07-28T16:51:43.261Z",
+      "id": "wFA0OT7LAjyTBsE4",
+      "name": "dev"
+    }
+  ],
+  "shared": [
+    {
+      "updatedAt": "2025-07-28T18:16:07.993Z",
+      "createdAt": "2025-07-28T18:16:07.993Z",
+      "role": "workflow:owner",
+      "workflowId": "X5ifhYKLt8Z3xJyG",
+      "projectId": "LgilvFgQb45ZsfNg",
+      "project": {
+        "updatedAt": "2025-05-27T00:18:21.560Z",
+        "createdAt": "2025-05-27T00:15:31.394Z",
+        "id": "LgilvFgQb45ZsfNg",
+        "name": "Cem Kaspi <cem.kaspi97@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
 }

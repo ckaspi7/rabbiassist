@@ -1,488 +1,476 @@
 {
-    "updatedAt":  "2025-11-04T09:53:41.000Z",
-    "createdAt":  "2025-07-28T18:12:23.712Z",
-    "id":  "NBz3EUsoBANajTQk",
-    "name":  "Dev - Supabase Storage Receipt File Upload",
-    "description":  null,
-    "active":  true,
-    "isArchived":  false,
-    "nodes":  [
-                  {
-                      "parameters":  {
-                                         "amount":  2
-                                     },
-                      "type":  "n8n-nodes-base.wait",
-                      "typeVersion":  1.1,
-                      "position":  [
-                                       32,
-                                       64
-                                   ],
-                      "id":  "6053c77f-c01a-4ad9-aad7-3c70263cfea0",
-                      "name":  "Wait",
-                      "webhookId":  "b41f58e0-5806-4403-bbdc-7a0f2ddd60c2"
-                  },
-                  {
-                      "parameters":  {
-                                         "inputSource":  "passthrough"
-                                     },
-                      "type":  "n8n-nodes-base.executeWorkflowTrigger",
-                      "typeVersion":  1.1,
-                      "position":  [
-                                       -1120,
-                                       80
-                                   ],
-                      "id":  "05238122-39df-48ba-970c-fb63dc57efdb",
-                      "name":  "When Executed by Another Workflow",
-                      "notesInFlow":  false
-                  },
-                  {
-                      "parameters":  {
-                                         "operation":  "get",
-                                         "tableId":  "users",
-                                         "filters":  {
-                                                         "conditions":  [
-                                                                            {
-                                                                                "keyName":  "email",
-                                                                                "keyValue":  "={{ $json.to.text }}"
-                                                                            }
-                                                                        ]
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       -896,
-                                       80
-                                   ],
-                      "id":  "bd268ba7-fea7-4b33-8557-5b7cd83f9ac2",
-                      "name":  "Get User ID",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      }
-                  },
-                  {
-                      "parameters":  {
-                                         "jsCode":  "const output = [];\nfor (const item of $(\u0027When Executed by Another Workflow\u0027).all()) {\n  for (const [key, value] of Object.entries(item.binary || {})) {\n    // Get original extension if available, fallback to mime type-derived\n    const originalName = value.fileName || \u0027unknown\u0027;\n    const extension = originalName.includes(\u0027.\u0027)\n      ? originalName.split(\u0027.\u0027).pop()\n      : (value.mimeType?.split(\u0027/\u0027)[1] || \u0027bin\u0027);\n    const fileName = originalName.includes(\u0027.\u0027)\n      ? originalName\n      : `unknown.${extension}`;\n\n    output.push({\n      binary: {\n        data: value\n      },\n      json: {\n        originalKey: key,\n        fileName: fileName,\n        mimeType: value.mimeType || \u0027unknown\u0027\n      }\n    });\n  }\n}\nreturn output;"
-                                     },
-                      "type":  "n8n-nodes-base.code",
-                      "typeVersion":  2,
-                      "position":  [
-                                       -688,
-                                       80
-                                   ],
-                      "id":  "30cee4b7-0a3a-4cd1-8258-c0882c436345",
-                      "name":  "Separate Attachments"
-                  },
-                  {
-                      "parameters":  {
-                                         "rules":  {
-                                                       "values":  [
-                                                                      {
-                                                                          "conditions":  {
-                                                                                             "options":  {
-                                                                                                             "caseSensitive":  true,
-                                                                                                             "leftValue":  "",
-                                                                                                             "typeValidation":  "strict",
-                                                                                                             "version":  2
-                                                                                                         },
-                                                                                             "conditions":  [
-                                                                                                                {
-                                                                                                                    "leftValue":  "={{ $json.mimeType }}",
-                                                                                                                    "rightValue":  "application/pdf",
-                                                                                                                    "operator":  {
-                                                                                                                                     "type":  "string",
-                                                                                                                                     "operation":  "equals"
-                                                                                                                                 },
-                                                                                                                    "id":  "8e01eafc-0ef7-4845-bc9d-4cc201c55f79"
-                                                                                                                }
-                                                                                                            ],
-                                                                                             "combinator":  "and"
-                                                                                         }
-                                                                      },
-                                                                      {
-                                                                          "conditions":  {
-                                                                                             "options":  {
-                                                                                                             "caseSensitive":  true,
-                                                                                                             "leftValue":  "",
-                                                                                                             "typeValidation":  "strict",
-                                                                                                             "version":  2
-                                                                                                         },
-                                                                                             "conditions":  [
-                                                                                                                {
-                                                                                                                    "id":  "c6495fbc-5b41-4cdb-a847-e0c4f577f3ec",
-                                                                                                                    "leftValue":  "={{ $json.mimeType }}",
-                                                                                                                    "rightValue":  "application/pdf",
-                                                                                                                    "operator":  {
-                                                                                                                                     "type":  "string",
-                                                                                                                                     "operation":  "notEquals"
-                                                                                                                                 }
-                                                                                                                }
-                                                                                                            ],
-                                                                                             "combinator":  "and"
-                                                                                         }
-                                                                      }
-                                                                  ]
-                                                   },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.switch",
-                      "typeVersion":  3.2,
-                      "position":  [
-                                       -464,
-                                       80
-                                   ],
-                      "id":  "3fc73ff4-ef52-4618-bbbc-c71041cb1f4e",
-                      "name":  "PDF?"
-                  },
-                  {
-                      "parameters":  {
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.splitInBatches",
-                      "typeVersion":  3,
-                      "position":  [
-                                       -224,
-                                       64
-                                   ],
-                      "id":  "79e8df7d-a129-448f-b9ab-e3c60245781b",
-                      "name":  "Loop Over Items"
-                  },
-                  {
-                      "parameters":  {
-                                         "jsCode":  "return $input.all().map(item =\u003e {\n  const binaryKeys = Object.keys(item.binary || {});\n  const binaryKey = binaryKeys[0];\n  const fileName = item.binary \u0026\u0026 item.binary[binaryKey] \u0026\u0026 item.binary[binaryKey].fileName\n    ? item.binary[binaryKey].fileName\n    : \u0027Uploaded_File.bin\u0027;\n  item.json = {};\n  item.json.binaryFieldName = binaryKey;\n  item.json.fileName = fileName;\n  return item;\n});"
-                                     },
-                      "type":  "n8n-nodes-base.code",
-                      "typeVersion":  2,
-                      "position":  [
-                                       192,
-                                       64
-                                   ],
-                      "id":  "3f61ee93-5be3-4685-ae6e-2b3c6dc99cb4",
-                      "name":  "Prep Data"
-                  },
-                  {
-                      "parameters":  {
-                                         "method":  "POST",
-                                         "url":  "=https://cribvrunrkbrakpqmzbj.supabase.co/storage/v1/object/receipts/{{ $(\u0027Get User ID\u0027).item.json.id }}/{{ $json.fileName }}",
-                                         "sendHeaders":  true,
-                                         "headerParameters":  {
-                                                                  "parameters":  [
-                                                                                     {
-                                                                                         "name":  "Authorization",
-                                                                                         "value":  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyaWJ2cnVucmticmFrcHFtemJqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjUxNTE5NywiZXhwIjoyMDYyMDkxMTk3fQ.MzF4RC39KNKcArjOl01XH6BGbFtSawI7mjQGTEAXDQ4"
-                                                                                     },
-                                                                                     {
-                                                                                         "name":  "apikey",
-                                                                                         "value":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyaWJ2cnVucmticmFrcHFtemJqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjUxNTE5NywiZXhwIjoyMDYyMDkxMTk3fQ.MzF4RC39KNKcArjOl01XH6BGbFtSawI7mjQGTEAXDQ4"
-                                                                                     },
-                                                                                     {
-                                                                                         "name":  "Cache-Control",
-                                                                                         "value":  "3600"
-                                                                                     },
-                                                                                     {
-                                                                                         "name":  "x-upsert",
-                                                                                         "value":  "false"
-                                                                                     }
-                                                                                 ]
-                                                              },
-                                         "sendBody":  true,
-                                         "contentType":  "binaryData",
-                                         "inputDataFieldName":  "={{ $json.binaryFieldName }}",
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.httpRequest",
-                      "typeVersion":  4.2,
-                      "position":  [
-                                       352,
-                                       64
-                                   ],
-                      "id":  "9cc63097-0da6-412c-b6d6-e194712ce542",
-                      "name":  "Supabase Storage API Call",
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "tableId":  "receipts",
-                                         "fieldsUi":  {
-                                                          "fieldValues":  [
-                                                                              {
-                                                                                  "fieldId":  "file_name",
-                                                                                  "fieldValue":  "={{ $(\u0027Wait\u0027).item.json.fileName }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "mime_type",
-                                                                                  "fieldValue":  "={{ $(\u0027Wait\u0027).item.json.mimeType }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "=storage_path",
-                                                                                  "fieldValue":  "={{ $json.Key }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "user_id",
-                                                                                  "fieldValue":  "={{ $(\u0027Get User ID\u0027).item.json.id }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "vendor",
-                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.choices[0].message.content.vendor }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "total_amount",
-                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.choices[0].message.content.total_amount }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "received_date",
-                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.choices[0].message.content.received_date }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "expense_date",
-                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.choices[0].message.content.expense_date }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "category",
-                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.choices[0].message.content.category }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "details",
-                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.choices[0].message.content.details }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "document_url",
-                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.choices[0].message.content.document_url }}"
-                                                                              },
-                                                                              {
-                                                                                  "fieldId":  "email_id",
-                                                                                  "fieldValue":  "={{ $(\u0027When Executed by Another Workflow\u0027).item.json.choices[0].message.content.email_id }}"
-                                                                              }
-                                                                          ]
-                                                      }
-                                     },
-                      "type":  "n8n-nodes-base.supabase",
-                      "typeVersion":  1,
-                      "position":  [
-                                       736,
-                                       64
-                                   ],
-                      "id":  "a4850131-c375-4c8e-9e30-5370af3c2e82",
-                      "name":  "Add to Receipts",
-                      "credentials":  {
-                                          "supabaseApi":  {
-                                                              "id":  "eFDq1jTa6XhpCbtl",
-                                                              "name":  "Supabase account"
-                                                          }
-                                      },
-                      "onError":  "continueRegularOutput"
-                  },
-                  {
-                      "parameters":  {
-                                         "conditions":  {
-                                                            "options":  {
-                                                                            "caseSensitive":  true,
-                                                                            "leftValue":  "",
-                                                                            "typeValidation":  "strict",
-                                                                            "version":  2
-                                                                        },
-                                                            "conditions":  [
-                                                                               {
-                                                                                   "id":  "a8c0b5cc-0b71-45d1-8791-852f62fb1ee0",
-                                                                                   "leftValue":  "={{ $json.error }}",
-                                                                                   "rightValue":  "",
-                                                                                   "operator":  {
-                                                                                                    "type":  "object",
-                                                                                                    "operation":  "exists",
-                                                                                                    "singleValue":  true
-                                                                                                }
-                                                                               }
-                                                                           ],
-                                                            "combinator":  "and"
-                                                        },
-                                         "options":  {
-
-                                                     }
-                                     },
-                      "type":  "n8n-nodes-base.if",
-                      "typeVersion":  2.2,
-                      "position":  [
-                                       544,
-                                       64
-                                   ],
-                      "id":  "de6a1856-89d7-4a42-aea1-41f81f9c49a0",
-                      "name":  "If Error?"
-                  }
-              ],
-    "connections":  {
-                        "Wait":  {
-                                     "main":  [
-                                                  [
-                                                      {
-                                                          "node":  "Prep Data",
-                                                          "type":  "main",
-                                                          "index":  0
-                                                      }
-                                                  ]
-                                              ]
-                                 },
-                        "When Executed by Another Workflow":  {
-                                                                  "main":  [
-                                                                               [
-                                                                                   {
-                                                                                       "node":  "Get User ID",
-                                                                                       "type":  "main",
-                                                                                       "index":  0
-                                                                                   }
-                                                                               ]
-                                                                           ]
-                                                              },
-                        "Get User ID":  {
-                                            "main":  [
-                                                         [
-                                                             {
-                                                                 "node":  "Separate Attachments",
-                                                                 "type":  "main",
-                                                                 "index":  0
-                                                             }
-                                                         ]
-                                                     ]
-                                        },
-                        "Separate Attachments":  {
-                                                     "main":  [
-                                                                  [
-                                                                      {
-                                                                          "node":  "PDF?",
-                                                                          "type":  "main",
-                                                                          "index":  0
-                                                                      }
-                                                                  ]
-                                                              ]
-                                                 },
-                        "PDF?":  {
-                                     "main":  [
-                                                  [
-                                                      {
-                                                          "node":  "Loop Over Items",
-                                                          "type":  "main",
-                                                          "index":  0
-                                                      }
-                                                  ]
-                                              ]
-                                 },
-                        "Loop Over Items":  {
-                                                "main":  [
-                                                             [
-
-                                                             ],
-                                                             [
-                                                                 {
-                                                                     "node":  "Wait",
-                                                                     "type":  "main",
-                                                                     "index":  0
-                                                                 }
-                                                             ]
-                                                         ]
-                                            },
-                        "Prep Data":  {
-                                          "main":  [
-                                                       [
-                                                           {
-                                                               "node":  "Supabase Storage API Call",
-                                                               "type":  "main",
-                                                               "index":  0
-                                                           }
-                                                       ]
-                                                   ]
-                                      },
-                        "Supabase Storage API Call":  {
-                                                          "main":  [
-                                                                       [
-                                                                           {
-                                                                               "node":  "If Error?",
-                                                                               "type":  "main",
-                                                                               "index":  0
-                                                                           }
-                                                                       ]
-                                                                   ]
-                                                      },
-                        "Add to Receipts":  {
-                                                "main":  [
-                                                             [
-                                                                 {
-                                                                     "node":  "Loop Over Items",
-                                                                     "type":  "main",
-                                                                     "index":  0
-                                                                 }
-                                                             ]
-                                                         ]
-                                            },
-                        "If Error?":  {
-                                          "main":  [
-                                                       [
-                                                           {
-                                                               "node":  "Loop Over Items",
-                                                               "type":  "main",
-                                                               "index":  0
-                                                           }
-                                                       ],
-                                                       [
-                                                           {
-                                                               "node":  "Add to Receipts",
-                                                               "type":  "main",
-                                                               "index":  0
-                                                           }
-                                                       ]
-                                                   ]
-                                      }
-                    },
-    "settings":  {
-                     "executionOrder":  "v1"
-                 },
-    "staticData":  null,
-    "meta":  {
-                 "templateCredsSetupCompleted":  true
-             },
-    "pinData":  {
-
+  "updatedAt": "2025-11-04T09:53:41.000Z",
+  "createdAt": "2025-07-28T18:12:23.712Z",
+  "id": "NBz3EUsoBANajTQk",
+  "name": "Dev - Supabase Storage Receipt File Upload",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        64
+      ],
+      "id": "6053c77f-c01a-4ad9-aad7-3c70263cfea0",
+      "name": "Wait",
+      "webhookId": "b41f58e0-5806-4403-bbdc-7a0f2ddd60c2"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1120,
+        80
+      ],
+      "id": "05238122-39df-48ba-970c-fb63dc57efdb",
+      "name": "When Executed by Another Workflow",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "users",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "keyValue": "={{ $json.to.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        80
+      ],
+      "id": "bd268ba7-fea7-4b33-8557-5b7cd83f9ac2",
+      "name": "Get User ID",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = [];\nfor (const item of $('When Executed by Another Workflow').all()) {\n  for (const [key, value] of Object.entries(item.binary || {})) {\n    // Get original extension if available, fallback to mime type-derived\n    const originalName = value.fileName || 'unknown';\n    const extension = originalName.includes('.')\n      ? originalName.split('.').pop()\n      : (value.mimeType?.split('/')[1] || 'bin');\n    const fileName = originalName.includes('.')\n      ? originalName\n      : `unknown.${extension}`;\n\n    output.push({\n      binary: {\n        data: value\n      },\n      json: {\n        originalKey: key,\n        fileName: fileName,\n        mimeType: value.mimeType || 'unknown'\n      }\n    });\n  }\n}\nreturn output;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -688,
+        80
+      ],
+      "id": "30cee4b7-0a3a-4cd1-8258-c0882c436345",
+      "name": "Separate Attachments"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
                 },
-    "versionId":  "22851e88-a02d-481f-b68e-71a744b27acb",
-    "activeVersionId":  "22851e88-a02d-481f-b68e-71a744b27acb",
-    "versionCounter":  4,
-    "triggerCount":  0,
-    "tags":  [
-                 {
-                     "updatedAt":  "2025-07-28T16:51:43.261Z",
-                     "createdAt":  "2025-07-28T16:51:43.261Z",
-                     "id":  "wFA0OT7LAjyTBsE4",
-                     "name":  "dev"
-                 }
-             ],
-    "shared":  [
-                   {
-                       "updatedAt":  "2025-07-28T18:12:23.717Z",
-                       "createdAt":  "2025-07-28T18:12:23.717Z",
-                       "role":  "workflow:owner",
-                       "workflowId":  "NBz3EUsoBANajTQk",
-                       "projectId":  "LgilvFgQb45ZsfNg",
-                       "project":  {
-                                       "updatedAt":  "2025-05-27T00:18:21.560Z",
-                                       "createdAt":  "2025-05-27T00:15:31.394Z",
-                                       "id":  "LgilvFgQb45ZsfNg",
-                                       "name":  "Cem Kaspi \u003ccem.kaspi97@gmail.com\u003e",
-                                       "type":  "personal",
-                                       "icon":  null,
-                                       "description":  null,
-                                       "creatorId":  "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
-                                   }
-                   }
-               ],
-    "versionMetadata":  {
-                            "name":  null,
-                            "description":  null
-                        }
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.mimeType }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "8e01eafc-0ef7-4845-bc9d-4cc201c55f79"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c6495fbc-5b41-4cdb-a847-e0c4f577f3ec",
+                    "leftValue": "={{ $json.mimeType }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -464,
+        80
+      ],
+      "id": "3fc73ff4-ef52-4618-bbbc-c71041cb1f4e",
+      "name": "PDF?"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -224,
+        64
+      ],
+      "id": "79e8df7d-a129-448f-b9ab-e3c60245781b",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const binaryKeys = Object.keys(item.binary || {});\n  const binaryKey = binaryKeys[0];\n  const fileName = item.binary && item.binary[binaryKey] && item.binary[binaryKey].fileName\n    ? item.binary[binaryKey].fileName\n    : 'Uploaded_File.bin';\n  item.json = {};\n  item.json.binaryFieldName = binaryKey;\n  item.json.fileName = fileName;\n  return item;\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        64
+      ],
+      "id": "3f61ee93-5be3-4685-ae6e-2b3c6dc99cb4",
+      "name": "Prep Data"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://cribvrunrkbrakpqmzbj.supabase.co/storage/v1/object/receipts/{{ $('Get User ID').item.json.id }}/{{ $json.fileName }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyaWJ2cnVucmticmFrcHFtemJqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjUxNTE5NywiZXhwIjoyMDYyMDkxMTk3fQ.MzF4RC39KNKcArjOl01XH6BGbFtSawI7mjQGTEAXDQ4"
+            },
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyaWJ2cnVucmticmFrcHFtemJqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjUxNTE5NywiZXhwIjoyMDYyMDkxMTk3fQ.MzF4RC39KNKcArjOl01XH6BGbFtSawI7mjQGTEAXDQ4"
+            },
+            {
+              "name": "Cache-Control",
+              "value": "3600"
+            },
+            {
+              "name": "x-upsert",
+              "value": "false"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "={{ $json.binaryFieldName }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        352,
+        64
+      ],
+      "id": "9cc63097-0da6-412c-b6d6-e194712ce542",
+      "name": "Supabase Storage API Call",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "tableId": "receipts",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "file_name",
+              "fieldValue": "={{ $('Wait').item.json.fileName }}"
+            },
+            {
+              "fieldId": "mime_type",
+              "fieldValue": "={{ $('Wait').item.json.mimeType }}"
+            },
+            {
+              "fieldId": "=storage_path",
+              "fieldValue": "={{ $json.Key }}"
+            },
+            {
+              "fieldId": "user_id",
+              "fieldValue": "={{ $('Get User ID').item.json.id }}"
+            },
+            {
+              "fieldId": "vendor",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.choices[0].message.content.vendor }}"
+            },
+            {
+              "fieldId": "total_amount",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.choices[0].message.content.total_amount }}"
+            },
+            {
+              "fieldId": "received_date",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.choices[0].message.content.received_date }}"
+            },
+            {
+              "fieldId": "expense_date",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.choices[0].message.content.expense_date }}"
+            },
+            {
+              "fieldId": "category",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.choices[0].message.content.category }}"
+            },
+            {
+              "fieldId": "details",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.choices[0].message.content.details }}"
+            },
+            {
+              "fieldId": "document_url",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.choices[0].message.content.document_url }}"
+            },
+            {
+              "fieldId": "email_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.choices[0].message.content.email_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        736,
+        64
+      ],
+      "id": "a4850131-c375-4c8e-9e30-5370af3c2e82",
+      "name": "Add to Receipts",
+      "credentials": {
+        "supabaseApi": {
+          "id": "eFDq1jTa6XhpCbtl",
+          "name": "Supabase account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a8c0b5cc-0b71-45d1-8791-852f62fb1ee0",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        64
+      ],
+      "id": "de6a1856-89d7-4a42-aea1-41f81f9c49a0",
+      "name": "If Error?"
+    }
+  ],
+  "connections": {
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Prep Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get User ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User ID": {
+      "main": [
+        [
+          {
+            "node": "Separate Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate Attachments": {
+      "main": [
+        [
+          {
+            "node": "PDF?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF?": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prep Data": {
+      "main": [
+        [
+          {
+            "node": "Supabase Storage API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Storage API Call": {
+      "main": [
+        [
+          {
+            "node": "If Error?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Receipts": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Error?": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add to Receipts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "22851e88-a02d-481f-b68e-71a744b27acb",
+  "activeVersionId": "22851e88-a02d-481f-b68e-71a744b27acb",
+  "versionCounter": 4,
+  "triggerCount": 0,
+  "tags": [
+    {
+      "updatedAt": "2025-07-28T16:51:43.261Z",
+      "createdAt": "2025-07-28T16:51:43.261Z",
+      "id": "wFA0OT7LAjyTBsE4",
+      "name": "dev"
+    }
+  ],
+  "shared": [
+    {
+      "updatedAt": "2025-07-28T18:12:23.717Z",
+      "createdAt": "2025-07-28T18:12:23.717Z",
+      "role": "workflow:owner",
+      "workflowId": "NBz3EUsoBANajTQk",
+      "projectId": "LgilvFgQb45ZsfNg",
+      "project": {
+        "updatedAt": "2025-05-27T00:18:21.560Z",
+        "createdAt": "2025-05-27T00:15:31.394Z",
+        "id": "LgilvFgQb45ZsfNg",
+        "name": "Cem Kaspi <cem.kaspi97@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "371c9bf2-47e1-438e-a4fd-72dda9044ce2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
 }
