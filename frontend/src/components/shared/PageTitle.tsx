@@ -9,9 +9,9 @@ interface PageTitleProps {
 const PageTitle = ({ title, subtitle }: PageTitleProps) => {
   return (
     <div className="mb-8">
-      <h1 className="text-3xl font-semibold text-torah-text">{title}</h1>
+      <h1 className="text-2xl md:text-3xl font-semibold text-zinc-900 dark:text-zinc-50 tracking-tight">{title}</h1>
       {subtitle && (
-        <p className="text-torah-lightText mt-2">{subtitle}</p>
+        <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">{subtitle}</p>
       )}
     </div>
   );

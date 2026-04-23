@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import PageTitle from '../components/shared/PageTitle';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Switch } from '../components/ui/switch';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -110,184 +109,105 @@ const Settings = () => {
   };
   
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-2xl mx-auto">
       <PageTitle title="Settings" />
-      
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl text-gray-900 dark:text-gray-100">Account Settings</CardTitle>
-            <CardDescription className="text-gray-500 dark:text-gray-400">
-              Manage your account preferences and information
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl divide-y divide-zinc-100 dark:divide-zinc-800 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
+        {/* Account */}
+        <div className="px-6 py-5">
+          <p className="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-4">Account</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Profile Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                <div>
-                  <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Email</label>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-md text-gray-900 dark:text-gray-100">{user?.email}</div>
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">User ID</label>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-md text-gray-900 dark:text-gray-100">{user?.id?.substring(0, 8)}...</div>
-                </div>
-              </div>
+              <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1.5">Email</label>
+              <div className="bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300">{user?.email}</div>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl text-gray-900 dark:text-gray-100">Security</CardTitle>
-            <CardDescription className="text-gray-500 dark:text-gray-400">
-              Manage your account security settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1.5">User ID</label>
+              <div className="bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-3 py-2 text-sm text-zinc-400 dark:text-zinc-500 font-mono">{user?.id?.substring(0, 8)}…</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Security */}
+        <div className="px-6 py-5">
+          <p className="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-4">Security</p>
+          <div className="space-y-5">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-medium text-gray-800 dark:text-gray-200">Two-Factor Authentication</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Add an extra layer of security</p>
+                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Two-Factor Authentication</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Add an extra layer of security</p>
               </div>
-              <Switch 
+              <Switch
                 checked={notificationSettings.twoFactor}
                 onCheckedChange={() => handleSwitchChange('twoFactor')}
               />
             </div>
-            
+
             {!isChangingPassword ? (
-              <div>
-                <Button 
-                  variant="outline" 
-                  className="w-full mt-2 border-blue-500 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
-                  onClick={() => setIsChangingPassword(true)}
-                >
-                  Change Password
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                onClick={() => setIsChangingPassword(true)}
+              >
+                Change Password
+              </Button>
             ) : (
-              <form onSubmit={handleUpdatePassword} className="space-y-4 border border-gray-200 dark:border-gray-700 rounded-md p-4">
-                <h4 className="font-medium text-gray-800 dark:text-gray-200">Change Password</h4>
-                
-                {/* Current Password - note: Supabase doesn't require the current password */}
+              <form onSubmit={handleUpdatePassword} className="space-y-4 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4">
+                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Change Password</p>
                 <div>
-                  <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Current Password</label>
-                  <Input
-                    type="password"
-                    name="currentPassword"
-                    value={passwordData.currentPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full border-gray-300 dark:border-gray-600 bg-white dark:bg-black"
-                    required
-                  />
+                  <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1.5">Current Password</label>
+                  <Input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordChange} className="rounded-xl bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700" required />
                 </div>
-                
-                {/* New Password */}
                 <div>
-                  <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">New Password</label>
-                  <Input
-                    type="password"
-                    name="newPassword"
-                    value={passwordData.newPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full border-gray-300 dark:border-gray-600 bg-white dark:bg-black"
-                    required
-                    minLength={12}
-                    placeholder="Min 12 chars, uppercase, lowercase, number, symbol"
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Must contain: uppercase, lowercase, number, and special character
-                  </p>
+                  <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1.5">New Password</label>
+                  <Input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} className="rounded-xl bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700" required minLength={12} placeholder="Min 12 chars, uppercase, lowercase, number, symbol" />
+                  <p className="text-xs text-zinc-400 mt-1">Must contain: uppercase, lowercase, number, and special character</p>
                 </div>
-                
-                {/* Confirm Password */}
                 <div>
-                  <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Confirm Password</label>
-                  <Input
-                    type="password"
-                    name="confirmPassword"
-                    value={passwordData.confirmPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full border-gray-300 dark:border-gray-600 bg-white dark:bg-black"
-                    required
-                    minLength={6}
-                  />
+                  <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1.5">Confirm Password</label>
+                  <Input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordChange} className="rounded-xl bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700" required minLength={6} />
                 </div>
-                
-                {/* Action Buttons */}
                 <div className="flex justify-end gap-2">
-                  <Button 
-                    type="button" 
-                    variant="outline"
-                    onClick={cancelPasswordChange}
-                  >
-                    Cancel
-                  </Button>
-                  <Button 
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Updating...' : 'Update Password'}
+                  <Button type="button" variant="outline" size="sm" className="rounded-xl" onClick={cancelPasswordChange}>Cancel</Button>
+                  <Button type="submit" size="sm" className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white" disabled={isLoading}>
+                    {isLoading ? 'Updating…' : 'Update Password'}
                   </Button>
                 </div>
               </form>
             )}
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl text-gray-900 dark:text-gray-100">Notification Settings</CardTitle>
-            <CardDescription className="text-gray-500 dark:text-gray-400">
-              Configure how and when you receive notifications
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium text-gray-800 dark:text-gray-200">Email Notifications</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Receive notifications via email</p>
-              </div>
-              <Switch 
-                checked={notificationSettings.email}
-                onCheckedChange={() => handleSwitchChange('email')}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium text-gray-800 dark:text-gray-200">WhatsApp Notifications</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Receive notifications via WhatsApp</p>
-              </div>
-              <Switch 
-                checked={notificationSettings.whatsapp}
-                onCheckedChange={() => handleSwitchChange('whatsapp')}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium text-gray-800 dark:text-gray-200">Trip Reminders</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Receive reminders before upcoming trips</p>
-              </div>
-              <Switch 
-                checked={notificationSettings.tripReminders}
-                onCheckedChange={() => handleSwitchChange('tripReminders')}
-              />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <div className="flex justify-end gap-4">
-          <Button variant="outline">Cancel</Button>
-          <Button 
-            onClick={handleSave}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Save Changes
-          </Button>
+          </div>
         </div>
+
+        {/* Notifications */}
+        <div className="px-6 py-5">
+          <p className="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-4">Notifications</p>
+          <div className="space-y-5">
+            {[
+              { key: 'email', label: 'Email Notifications', desc: 'Receive notifications via email' },
+              { key: 'whatsapp', label: 'WhatsApp Notifications', desc: 'Receive notifications via WhatsApp' },
+              { key: 'tripReminders', label: 'Trip Reminders', desc: 'Receive reminders before upcoming trips' },
+            ].map(({ key, label, desc }) => (
+              <div key={key} className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{label}</p>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{desc}</p>
+                </div>
+                <Switch
+                  checked={notificationSettings[key as keyof typeof notificationSettings]}
+                  onCheckedChange={() => handleSwitchChange(key)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-3 mt-6">
+        <Button variant="outline" size="sm" className="rounded-xl border-zinc-200 dark:border-zinc-700">Cancel</Button>
+        <Button size="sm" onClick={handleSave} className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white">
+          Save Changes
+        </Button>
       </div>
     </div>
   );

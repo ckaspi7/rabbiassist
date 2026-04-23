@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Checkbox } from '../ui/checkbox';
 import { FileText, Download, Eye, File, Image as ImageIcon } from 'lucide-react';
@@ -71,26 +70,26 @@ const DocumentCard = ({ document, isSelected = false, onSelect }: DocumentCardPr
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'New':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+        return 'bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400';
       case 'Reviewed':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+        return 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400';
       case 'Exported':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+        return 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+        return 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400';
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'receipts':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
+        return 'bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400';
       case 'trips':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
+        return 'bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400';
       case 'whatsapp':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+        return 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+        return 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400';
     }
   };
 
@@ -185,17 +184,17 @@ const DocumentCard = ({ document, isSelected = false, onSelect }: DocumentCardPr
 
   return (
     <>
-      <Card 
-        className={`group overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800 cursor-pointer ${
-          isSelected ? 'ring-2 ring-primary bg-primary/5' : ''
+      <div
+        className={`group overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] transition-all duration-300 border border-zinc-100 dark:border-zinc-800 cursor-pointer ${
+          isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''
         }`}
         onClick={handleCardClick}
       >
         {/* Top Half - Thumbnail */}
-        <div className="relative aspect-[4/3] bg-gray-50 dark:bg-gray-800 overflow-hidden">
+        <div className="relative aspect-[4/3] bg-zinc-50 dark:bg-zinc-800 overflow-hidden">
           {/* Selection Checkbox */}
           <div className="checkbox-container absolute top-3 left-3 z-10" onClick={e => e.stopPropagation()}>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-1.5 shadow-md">
+            <div className="bg-white dark:bg-zinc-900 rounded-lg p-1.5 shadow-md">
               <Checkbox 
                 checked={isSelected}
                 onCheckedChange={onSelect}
@@ -214,30 +213,30 @@ const DocumentCard = ({ document, isSelected = false, onSelect }: DocumentCardPr
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
-              <FileText className="h-16 w-16 text-gray-400" />
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-700 dark:to-zinc-800">
+              <FileText className="h-14 w-14 text-zinc-300 dark:text-zinc-500" />
             </div>
           )}
           
           {/* MIME Type Icon */}
-          <div className="absolute top-3 right-3 bg-white dark:bg-gray-800 rounded-lg p-2 shadow-md">
+          <div className="absolute top-3 right-3 bg-white dark:bg-zinc-900 rounded-lg p-2 shadow-md">
             {getMimeTypeIcon()}
           </div>
 
           {/* Hover Overlay */}
-          <div className="action-button absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+          <div className="action-button absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
             <div className="flex gap-3">
               <button
                 onClick={handlePreview}
-                className="bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:scale-110 transition-transform"
+                className="bg-white dark:bg-zinc-800 p-3 rounded-full shadow-lg hover:scale-110 transition-transform"
               >
-                <Eye className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                <Eye className="h-5 w-5 text-zinc-700 dark:text-zinc-300" />
               </button>
               <button
                 onClick={handleDownload}
-                className="bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:scale-110 transition-transform"
+                className="bg-white dark:bg-zinc-800 p-3 rounded-full shadow-lg hover:scale-110 transition-transform"
               >
-                <Download className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                <Download className="h-5 w-5 text-zinc-700 dark:text-zinc-300" />
               </button>
             </div>
           </div>
@@ -245,68 +244,61 @@ const DocumentCard = ({ document, isSelected = false, onSelect }: DocumentCardPr
 
         {/* Bottom Half - Info */}
         <div className="p-4">
-          {/* File Name */}
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-1 truncate text-lg">
+          <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-0.5 truncate text-sm tracking-tight">
             {document.title}
           </h3>
-          
-          {/* Upload Date */}
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            Uploaded: {formatDate(document.uploadDate)}
+          <p className="text-xs text-zinc-400 dark:text-zinc-500 mb-3">
+            {formatDate(document.uploadDate)}
           </p>
 
-          {/* Amount for receipts */}
           {document.type === 'receipts' && document.amount && (
-            <p className="text-lg font-bold text-green-600 dark:text-green-400 mb-3">
+            <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 font-mono mb-3">
               ${document.amount}
             </p>
           )}
 
-          {/* Bottom Row - Labels and Actions */}
           <div className="flex items-center justify-between">
-            {/* Labels */}
-            <div className="flex gap-2">
-              <Badge className={`text-xs px-2 py-1 rounded-lg ${getTypeColor(document.type)}`}>
+            <div className="flex gap-1.5">
+              <Badge className={`text-xs px-2 py-0.5 rounded-full border-0 ${getTypeColor(document.type)}`}>
                 {getTypeLabel()}
               </Badge>
-              <Badge className={`text-xs px-2 py-1 rounded-lg ${getStatusColor(document.status)}`}>
+              <Badge className={`text-xs px-2 py-0.5 rounded-full border-0 ${getStatusColor(document.status)}`}>
                 {document.status}
               </Badge>
             </div>
 
-            {/* Actions */}
-            <div className="action-button flex gap-2">
+            <div className="action-button flex gap-1">
               <button
                 onClick={handlePreview}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               >
-                <Eye className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                <Eye className="h-3.5 w-3.5 text-zinc-500 dark:text-zinc-400" />
               </button>
               <button
                 onClick={handleDownload}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               >
-                <Download className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                <Download className="h-3.5 w-3.5 text-zinc-500 dark:text-zinc-400" />
               </button>
             </div>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Preview Modal */}
       {showPreviewModal && previewUrl && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setShowPreviewModal(false)}
         >
-          <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
+            <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 truncate">
                 {document.title}
               </h3>
               <button
                 onClick={() => setShowPreviewModal(false)}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 ml-4"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

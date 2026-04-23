@@ -2,37 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2') format('woff2-variations');
+}
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 98%;
+    --foreground: 240 10% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 240 10% 9%;
 
-    --primary: 215 82% 49%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 10% 9%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 4% 46%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 240 5% 94%;
+    --accent-foreground: 240 10% 9%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 215 82% 49%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 221 83% 53%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -40,47 +56,47 @@
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-border: 240 6% 90%;
+    --sidebar-ring: 221 83% 53%;
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+    --background: 240 10% 4%;
+    --foreground: 0 0% 95%;
 
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 6.7%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 215 82% 49%;
+    --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 6.7%;
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 240 5% 12%;
+    --secondary-foreground: 0 0% 85%;
 
-    --muted: 0 0% 6.7%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted: 240 5% 12%;
+    --muted-foreground: 240 4% 56%;
 
-    --accent: 0 0% 6.7%;
-    --accent-foreground: 0 0% 90%;
+    --accent: 240 5% 12%;
+    --accent-foreground: 0 0% 85%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62% 40%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 215 82% 49%;
-    
-    --sidebar-background: 0 0% 6.7%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 215 82% 49%;
+    --border: 240 5% 16%;
+    --input: 240 5% 16%;
+    --ring: 221 83% 53%;
+
+    --sidebar-background: 240 10% 6%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 221 83% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 14.9%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 0 0% 14.9%;
-    --sidebar-ring: 215 82% 49%;
+    --sidebar-accent: 240 5% 12%;
+    --sidebar-accent-foreground: 0 0% 85%;
+    --sidebar-border: 240 5% 16%;
+    --sidebar-ring: 221 83% 53%;
   }
 }
 
@@ -90,150 +106,119 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv11", "ss01";
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
-    @apply font-medium;
+    @apply font-semibold tracking-tight;
   }
-  
-  h1 {
-    @apply text-3xl md:text-4xl;
-  }
-  
-  h2 {
-    @apply text-2xl md:text-3xl;
-  }
-  
-  h3 {
-    @apply text-xl md:text-2xl;
-  }
-  
-  h4 {
-    @apply text-lg md:text-xl;
-  }
-  
-  p, li, a, span, div, button {
-    @apply text-base md:text-lg;
-  }
-  
-  /* Dark mode input and form fixes */
-  .dark input {
-    @apply bg-black text-white border-gray-600;
-  }
-  
-  .dark input:focus {
-    @apply border-gray-400 ring-gray-400;
-  }
-  
-  .dark select {
-    @apply bg-black text-white border-gray-600;
-  }
-  
+
+  h1 { @apply text-3xl md:text-4xl; }
+  h2 { @apply text-2xl md:text-3xl; }
+  h3 { @apply text-xl md:text-2xl; }
+  h4 { @apply text-lg md:text-xl; }
+
+  /* Dark mode form elements */
+  .dark input,
+  .dark select,
   .dark textarea {
-    @apply bg-black text-white border-gray-600;
+    @apply bg-zinc-900 text-zinc-100 border-zinc-700;
   }
-  
-  /* Calendar dark mode fixes */
-  .dark .rdp {
-    @apply bg-black text-white;
+  .dark input:focus,
+  .dark select:focus,
+  .dark textarea:focus {
+    @apply border-zinc-500 ring-zinc-500;
   }
-  
-  .dark .rdp-month {
-    @apply text-white;
-  }
-  
-  .dark .rdp-caption {
-    @apply text-white;
-  }
-  
-  .dark .rdp-head_cell {
-    @apply text-gray-300;
-  }
-  
-  .dark .rdp-cell {
-    @apply text-white;
-  }
-  
-  .dark .rdp-day {
-    @apply text-white hover:bg-gray-800;
-  }
-  
-  .dark .rdp-day_selected {
-    @apply bg-blue-600 text-white;
-  }
-  
-  /* Chat window dark mode fixes */
-  .dark .chat-message {
-    @apply bg-gray-900 text-white border-gray-700;
-  }
-  
-  .dark .chat-input {
-    @apply bg-black text-white border-gray-600;
-  }
-  
-  /* Sidebar dark mode fixes */
-  .dark .sidebar {
-    @apply bg-black text-white border-gray-700;
-  }
-  
-  .dark .sidebar-item {
-    @apply text-gray-200 hover:bg-gray-900 hover:text-white;
-  }
+
+  /* Calendar dark mode */
+  .dark .rdp { @apply bg-zinc-900 text-zinc-100; }
+  .dark .rdp-month { @apply text-zinc-100; }
+  .dark .rdp-caption { @apply text-zinc-100; }
+  .dark .rdp-head_cell { @apply text-zinc-400; }
+  .dark .rdp-cell { @apply text-zinc-100; }
+  .dark .rdp-day { @apply text-zinc-100 hover:bg-zinc-800; }
+  .dark .rdp-day_selected { @apply bg-blue-600 text-white; }
+
+  /* Chat dark mode */
+  .dark .chat-message { @apply bg-zinc-900 text-zinc-100 border-zinc-700; }
+  .dark .chat-input { @apply bg-zinc-900 text-zinc-100 border-zinc-700; }
 }
 
 @layer components {
+  .bento-card {
+    @apply bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800 rounded-2xl shadow-diffuse transition-all duration-300 ease-out;
+  }
+
+  .bento-card:hover {
+    @apply shadow-diffuse-md -translate-y-0.5;
+  }
+
   .menu-tile {
-    @apply flex flex-col items-center justify-center gap-4 bg-white dark:bg-black hover:bg-primary/5 dark:hover:bg-gray-900 p-6 rounded-xl shadow-md transition-colors duration-200 border border-gray-200 dark:border-gray-700;
+    @apply bento-card flex flex-col justify-between p-6 cursor-pointer;
+    transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s cubic-bezier(0.16,1,0.3,1);
   }
-  
+
   .checklist-item {
-    @apply flex items-center gap-2 text-gray-700 dark:text-gray-300;
+    @apply flex items-center gap-3 text-zinc-700 dark:text-zinc-300 py-1;
   }
-  
+
   .checklist-item-complete {
     @apply text-blue-600 dark:text-blue-400;
   }
-  
+
   .trip-card {
-    @apply bg-white dark:bg-black rounded-xl shadow-md p-6 mb-4 border border-gray-200 dark:border-gray-700;
+    @apply bento-card p-6 mb-4;
   }
-  
+
   .reminder-card {
-    @apply bg-white dark:bg-black rounded-xl shadow-md p-6 mb-4 border border-gray-200 dark:border-gray-700;
+    @apply bento-card p-5 mb-3;
   }
-  
+
   .badge-upcoming {
-    @apply bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 text-sm px-2 py-1 rounded-md;
+    @apply bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-xs font-medium px-2.5 py-1 rounded-full;
   }
-  
+
   .badge-overdue {
-    @apply bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 text-sm px-2 py-1 rounded-md;
+    @apply bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 text-xs font-medium px-2.5 py-1 rounded-full;
   }
-  
+
   .badge-routine {
-    @apply bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 text-sm px-2 py-1 rounded-md;
+    @apply bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 text-xs font-medium px-2.5 py-1 rounded-full;
   }
-  
+
   .badge-special {
-    @apply bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 text-sm px-2 py-1 rounded-md;
+    @apply bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-medium px-2.5 py-1 rounded-full;
   }
-  
-  /* Page title styling - lighter grey for better visibility */
-  .page-subtitle {
-    @apply text-gray-500 dark:text-gray-400;
-  }
-  
-  /* Enhanced dark mode contrast for page titles and labels */
+
   .page-title {
-    @apply text-gray-900 dark:text-gray-200;
+    @apply text-zinc-900 dark:text-zinc-50 tracking-tight;
   }
-  
+
+  .page-subtitle {
+    @apply text-zinc-500 dark:text-zinc-400 text-sm;
+  }
+
   .page-label {
-    @apply text-gray-700 dark:text-gray-300;
+    @apply text-zinc-700 dark:text-zinc-300;
   }
-  
+
   .section-title {
-    @apply text-gray-800 dark:text-gray-200;
+    @apply text-zinc-800 dark:text-zinc-200 font-semibold;
   }
+
+  .glass-nav {
+    @apply backdrop-blur-md bg-white/80 dark:bg-zinc-950/80 border-b border-zinc-200/50 dark:border-zinc-800/50;
+  }
+}
+
+/* Staggered fade-up animation for lists */
+.stagger-item {
+  opacity: 0;
+  animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

@@ -75,19 +75,19 @@ const ReminderCard = ({
     switch (source) {
       case 'ios-notes':
         return (
-          <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-full px-3 py-1">
+          <Badge className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 rounded-full px-2.5 py-0.5 text-xs font-medium border-0">
             Notes
           </Badge>
         );
       case 'trips':
         return (
-          <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 rounded-full px-3 py-1">
+          <Badge className="bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400 rounded-full px-2.5 py-0.5 text-xs font-medium border-0">
             Trips
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 rounded-full px-3 py-1">
+          <Badge className="bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 rounded-full px-2.5 py-0.5 text-xs font-medium border-0">
             {source}
           </Badge>
         );
@@ -97,28 +97,28 @@ const ReminderCard = ({
   const getStatusBadge = () => {
     if (reminder.is_completed) {
       return (
-        <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-full px-3 py-1">
+        <Badge className="bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400 rounded-full px-2.5 py-0.5 text-xs font-medium border-0">
           Completed
         </Badge>
       );
     }
-    
+
     if (isOverdue) {
       return (
-        <Badge className="bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 rounded-full px-3 py-1">
+        <Badge className="bg-red-50 text-red-500 dark:bg-red-950/50 dark:text-red-400 rounded-full px-2.5 py-0.5 text-xs font-medium border-0">
           Overdue
         </Badge>
       );
     }
-    
+
     if (isUpcoming) {
       return (
-        <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-full px-3 py-1">
+        <Badge className="bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 rounded-full px-2.5 py-0.5 text-xs font-medium border-0">
           Upcoming
         </Badge>
       );
     }
-    
+
     return null;
   };
 

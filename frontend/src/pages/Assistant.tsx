@@ -101,7 +101,7 @@ const Assistant = () => {
     <div className="max-w-4xl mx-auto">
       <PageTitle title="Virtual Assistant" />
       
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] overflow-hidden">
         <Chat messages={messages} onSendMessage={handleSendMessage} />
         <AssistantActions 
           onShowTrip={handleShowTrip}

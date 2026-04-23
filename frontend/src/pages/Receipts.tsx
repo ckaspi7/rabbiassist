@@ -4,8 +4,7 @@ import PageTitle from '../components/shared/PageTitle';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Card } from '../components/ui/card';
-import { 
+import {
   Select, 
   SelectContent, 
   SelectItem, 
@@ -499,71 +498,45 @@ const Receipts = () => {
         </div>
 
         {/* Status Summary */}
-        <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Card 
-            className="p-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-            onClick={() => setStatusFilter('all')}
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">All Receipts</span>
-            </div>
-            <span className="text-lg font-semibold text-blue-900 dark:text-blue-100">{receipts.length}</span>
-          </Card>
-          <Card 
-            className="p-4 bg-white dark:bg-black border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-            onClick={() => setStatusFilter('New')}
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">New</span>
-            </div>
-            <span className="text-lg font-semibold text-gray-900 dark:text-white">
-              {receipts.filter(r => r.status === 'New').length}
-            </span>
-          </Card>
-          <Card 
-            className="p-4 bg-white dark:bg-black border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-            onClick={() => setStatusFilter('Reviewed')}
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Reviewed</span>
-            </div>
-            <span className="text-lg font-semibold text-gray-900 dark:text-white">
-              {receipts.filter(r => r.status === 'Reviewed').length}
-            </span>
-          </Card>
-          <Card 
-            className="p-4 bg-white dark:bg-black border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-            onClick={() => setStatusFilter('Exported')}
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Exported</span>
-            </div>
-            <span className="text-lg font-semibold text-gray-900 dark:text-white">
-              {receipts.filter(r => r.status === 'Exported').length}
-            </span>
-          </Card>
+        <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { label: 'All', value: 'all', count: receipts.length, accent: true },
+            { label: 'New', value: 'New', count: receipts.filter(r => r.status === 'New').length, accent: false },
+            { label: 'Reviewed', value: 'Reviewed', count: receipts.filter(r => r.status === 'Reviewed').length, accent: false },
+            { label: 'Exported', value: 'Exported', count: receipts.filter(r => r.status === 'Exported').length, accent: false },
+          ].map(({ label, value, count, accent }) => (
+            <button
+              key={value}
+              onClick={() => setStatusFilter(value)}
+              className={`p-4 rounded-2xl border text-left transition-all duration-200 ${
+                statusFilter === value
+                  ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                  : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
+              }`}
+            >
+              <p className={`text-xs font-medium mb-1 ${statusFilter === value ? 'text-blue-100' : 'text-zinc-500 dark:text-zinc-400'}`}>{label}</p>
+              <p className={`text-2xl font-semibold tracking-tight ${statusFilter === value ? 'text-white' : 'text-zinc-900 dark:text-zinc-50'}`}>{count}</p>
+            </button>
+          ))}
         </div>
 
         {/* Receipts List */}
-        <Card className="bg-white dark:bg-black border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] overflow-hidden">
           {/* List Header */}
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={selectedReceipts.length === filteredReceipts.length && filteredReceipts.length > 0}
                   onChange={handleSelectAll}
-                  className="rounded border-gray-300 dark:border-gray-600"
+                  className="rounded border-zinc-300 dark:border-zinc-600"
                   aria-label="Select all receipts"
                 />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Select all
-                </span>
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">Select all</span>
               </div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Viewing 1-{filteredReceipts.length} of {receipts.length} results
+              <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                {filteredReceipts.length} of {receipts.length} receipts
               </span>
             </div>
           </div>
@@ -588,13 +561,14 @@ const Receipts = () => {
 
             {filteredReceipts.length === 0 && (
               <div className="text-center py-12">
-                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No receipts found</h3>
-                <p className="text-gray-500 dark:text-gray-400">
+                <FileText className="h-12 w-12 text-zinc-300 dark:text-zinc-600 mx-auto mb-4" />
+                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-1">No receipts found</h3>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
                   {searchTerm ? 'Try adjusting your search terms.' : 'Upload your first receipt to get started.'}
                 </p>
-                <Button 
-                  className="mt-4 bg-blue-600 hover:bg-blue-700 text-white"
+                <Button
+                  size="sm"
+                  className="mt-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <Upload className="h-4 w-4 mr-2" />
@@ -603,7 +577,7 @@ const Receipts = () => {
               </div>
             )}
           </div>
-        </Card>
+        </div>
 
         {/* Preview Modal */}
         <Dialog open={previewModal.isOpen} onOpenChange={(open) => setPreviewModal({ isOpen: open, receipt: null })}>

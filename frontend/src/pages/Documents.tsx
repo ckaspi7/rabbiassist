@@ -4,8 +4,7 @@ import PageTitle from '../components/shared/PageTitle';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Card } from '../components/ui/card';
-import { 
+import {
   Select, 
   SelectContent, 
   SelectItem, 
@@ -327,7 +326,7 @@ const Documents = () => {
       </div>
 
       {/* Documents Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {sortedDocuments.map((document) => (
           <DocumentCard
             key={`${document.type}-${document.id}`}
@@ -340,17 +339,18 @@ const Documents = () => {
 
       {sortedDocuments.length === 0 && (
         <div className="text-center py-16">
-          <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-12 max-w-md mx-auto">
-            <FileText className="h-16 w-16 text-gray-400 mx-auto mb-6" />
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">No documents found</h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-6">
+          <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl p-12 max-w-md mx-auto">
+            <FileText className="h-12 w-12 text-zinc-300 dark:text-zinc-600 mx-auto mb-4" />
+            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-1">No documents found</h3>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-5">
               {searchTerm ? 'Try adjusting your search terms.' : 'Upload your first document to get started.'}
             </p>
-            <Button 
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 py-3"
+            <Button
+              size="sm"
+              className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-5"
               onClick={() => fileInputRef.current?.click()}
             >
-              <Plus className="h-5 w-5 mr-2" />
+              <Plus className="h-4 w-4 mr-2" />
               Upload Document
             </Button>
           </div>

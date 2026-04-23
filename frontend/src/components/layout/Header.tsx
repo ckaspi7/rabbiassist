@@ -1,35 +1,42 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator 
 } from '../ui/dropdown-menu';
-import { 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '../ui/tooltip';
+import {
   Home,
-  PlaneTakeoff, 
-  CalendarCheck, 
-  Calendar, 
-  MessageSquare, 
-  Settings, 
+  PlaneTakeoff,
+  CalendarCheck,
+  Calendar,
+  MessageSquare,
+  Settings,
   FileText,
-  LogOut, 
-  Moon, 
-  Sun, 
-  Languages 
+  LogOut,
+  Moon,
+  Sun,
+  Languages,
+  Menu,
+  X,
 } from 'lucide-react';
 
 const Header = () => {
   const { logout } = useAuth();
   const { isDarkMode, toggleDarkMode, language, setLanguage, t } = useTheme();
   const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -46,104 +53,128 @@ const Header = () => {
     { to: '/events', icon: Calendar, label: t('eventOrganizer') },
     { to: '/documents', icon: FileText, label: 'Documents' },
     { to: '/assistant', icon: MessageSquare, label: t('assistant') },
-    { to: '/settings', icon: Settings, label: t('settings') }
+    { to: '/settings', icon: Settings, label: t('settings') },
   ];
 
+  const isActive = (path: string) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
+
   return (
-    <header className="bg-white dark:bg-black shadow-sm border-b border-gray-200 dark:border-gray-700">
-      <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+    <>
+      <header className="sticky top-0 z-50 glass-nav">
+        <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center justify-between gap-4">
+          {/* Logo */}
+          <Link
+            to="/"
+            className="flex items-center gap-2 shrink-0 font-semibold text-zinc-900 dark:text-zinc-50 tracking-tight text-base"
+          >
+            <span className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
+              <span className="text-white text-xs font-bold">RA</span>
+            </span>
             RabbiAssist
           </Link>
-          
-          <div className="flex items-center gap-4">
-            {/* Navigation Menu */}
-            <nav className="hidden md:flex items-center gap-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    location.pathname === item.to
-                      ? 'bg-blue-600 text-white dark:bg-blue-600'
-                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                  }`}
+
+          {/* Desktop nav — pill links */}
+          <nav className="hidden md:flex items-center gap-0.5 flex-1 justify-center">
+            {navItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                  isActive(item.to)
+                    ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-100/60 dark:hover:bg-zinc-800/60'
+                }`}
+              >
+                <item.icon className="h-3.5 w-3.5" />
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Right controls */}
+          <div className="flex items-center gap-1 shrink-0">
+            {/* Dark mode */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={toggleDarkMode}
+                  className="h-8 w-8 flex items-center justify-center rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                 >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+                  {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isDarkMode ? 'Light mode' : 'Dark mode'}</p>
+              </TooltipContent>
+            </Tooltip>
 
-            {/* Mobile Navigation Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild className="md:hidden">
-                <Button variant="outline" size="sm" className="bg-white dark:bg-black border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                  Menu
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-black border-gray-200 dark:border-gray-700">
-                {navItems.map((item) => (
-                  <DropdownMenuItem key={item.to} asChild>
-                    <Link to={item.to} className="flex items-center gap-2 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-900">
-                      <item.icon className="h-4 w-4" />
-                      {item.label}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Theme Toggle */}
-            <div className="flex items-center gap-2">
-              <Sun className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-              <Switch 
-                checked={isDarkMode} 
-                onCheckedChange={toggleDarkMode}
-                className="data-[state=checked]:bg-blue-600"
-              />
-              <Moon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-            </div>
-
-            {/* Language Switch */}
+            {/* Language */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="flex items-center gap-2 bg-white dark:bg-black border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-900">
-                  <Languages className="h-4 w-4" />
+                <button className="h-8 px-2.5 flex items-center gap-1 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors text-xs font-medium">
+                  <Languages className="h-3.5 w-3.5" />
                   {language.toUpperCase()}
-                </Button>
+                </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-white dark:bg-black border-gray-200 dark:border-gray-700">
-                <DropdownMenuItem 
-                  onClick={() => setLanguage('en')}
-                  className="text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-900"
-                >
-                  English
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => setLanguage('he')}
-                  className="text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-900"
-                >
-                  עברית
-                </DropdownMenuItem>
+              <DropdownMenuContent align="end" className="w-32">
+                <DropdownMenuItem onClick={() => setLanguage('en')}>English</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage('he')}>עברית</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Logout Button */}
-            <Button 
-              onClick={handleLogout}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2 bg-white dark:bg-black border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-900"
+            {/* Logout */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleLogout}
+                  className="h-8 w-8 flex items-center justify-center rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-500 transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t('logout')}</p>
+              </TooltipContent>
+            </Tooltip>
+
+            {/* Mobile menu toggle */}
+            <button
+              className="md:hidden h-8 w-8 flex items-center justify-center rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              onClick={() => setMobileOpen((v) => !v)}
             >
-              <LogOut className="h-4 w-4" />
-              {t('logout')}
-            </Button>
+              {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile nav drawer */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-40 pt-14" onClick={() => setMobileOpen(false)}>
+          <div
+            className="absolute top-14 left-0 right-0 glass-nav border-t-0 px-4 py-3 flex flex-col gap-1"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {navItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  isActive(item.to)
+                    ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50'
+                    : 'text-zinc-600 dark:text-zinc-400'
+                }`}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

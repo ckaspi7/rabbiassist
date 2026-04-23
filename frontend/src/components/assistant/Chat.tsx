@@ -42,16 +42,16 @@ const Chat = ({ messages, onSendMessage }: ChatProps) => {
               }`}
             >
               <div
-                className={`max-w-[70%] rounded-xl p-3 ${
+                className={`max-w-[70%] rounded-2xl px-4 py-3 text-sm ${
                   message.sender === 'user'
-                    ? 'bg-torah-blue text-white rounded-br-none'
-                    : 'bg-gray-100 text-gray-800 rounded-bl-none'
+                    ? 'bg-blue-600 text-white rounded-br-sm'
+                    : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 rounded-bl-sm'
                 }`}
               >
-                <div className="text-sm">{message.content}</div>
-                <div 
-                  className={`text-xs mt-1 ${
-                    message.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
+                <div>{message.content}</div>
+                <div
+                  className={`text-xs mt-1.5 ${
+                    message.sender === 'user' ? 'text-blue-200' : 'text-zinc-400 dark:text-zinc-500'
                   }`}
                 >
                   {message.timestamp}
@@ -63,17 +63,17 @@ const Chat = ({ messages, onSendMessage }: ChatProps) => {
         </div>
       </div>
       
-      <div className="p-4 border-t">
+      <div className="px-4 py-3 border-t border-zinc-100 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
             type="text"
-            placeholder="Type your message..."
+            placeholder="Type your message…"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-grow"
+            className="flex-grow rounded-xl bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"
           />
-          <Button type="submit" variant="default">
-            <Send size={18} />
+          <Button type="submit" size="sm" className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-4">
+            <Send size={16} />
           </Button>
         </form>
       </div>

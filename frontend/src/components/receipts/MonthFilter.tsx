@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { Check } from 'lucide-react';
 
@@ -20,8 +19,8 @@ const MonthFilter = ({ selectedMonths, onMonthToggle, onSelectAll, availableMont
   const allSelected = selectedMonths.includes('all') || selectedMonths.length === availableMonths.length;
 
   return (
-    <Card className="p-4 bg-white dark:bg-black border-gray-200 dark:border-gray-700">
-      <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">Filter by Month</h3>
+    <div className="p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
+      <p className="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-3">By Month</p>
       
       <div className="space-y-2">
         <Button
@@ -34,7 +33,7 @@ const MonthFilter = ({ selectedMonths, onMonthToggle, onSelectAll, availableMont
           {allSelected && <Check className="h-3 w-3" />}
         </Button>
         
-        {availableMonths.map((month) => {
+        {availableMonths.map((month: string) => {
           const monthIndex = parseInt(month.split('-')[1]) - 1;
           const year = month.split('-')[0];
           const monthName = monthNames[monthIndex];
@@ -55,7 +54,7 @@ const MonthFilter = ({ selectedMonths, onMonthToggle, onSelectAll, availableMont
           );
         })}
       </div>
-    </Card>
+    </div>
   );
 };
 
