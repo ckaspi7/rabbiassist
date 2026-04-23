@@ -3,3 +3,11 @@ credentials-backup.json
 workflows-backup.json
 *.env
 .env*
+
+# API build artifacts
+api/node_modules/
+api/dist/
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/dist/
